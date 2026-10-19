@@ -292,3 +292,28 @@ a.contact__item:hover { background: rgba(255,255,255,.16); }
 /* Logos partenaires */
 .partner__logo { background: var(--white); border: 1px solid #eef2ef; height: 120px; }
 .partner__logo img { max-height: 100px; max-width: 80%; object-fit: contain; }
+
+/* ---------- Boutons Commander (WhatsApp) ---------- */
+.btn--wa {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  background: #25d366; color: #fff; margin-top: 1rem; width: 100%;
+}
+.btn--wa:hover { background: #1ebe5a; }
+.order-link {
+  display: inline-flex; align-items: center; gap: .4rem; margin-top: .8rem;
+  font-weight: 600; font-size: .9rem; color: #128c4a; text-decoration: none;
+  padding: .45rem .8rem; border-radius: 999px; background: var(--white); border: 1px solid #bfe6cd;
+}
+.order-link:hover { background: #e9f9ef; }
+.cow .order-link { background: #f1faf4; }
+
+.howto { margin-top: 2.2rem; background: var(--white); border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow); }
+.howto h3 { text-align: center; margin-bottom: 1.2rem; }
+.howto__steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.howto__steps li { counter-increment: step; position: relative; padding-left: 2.6rem; }
+.howto__steps li::before {
+  content: counter(step); position: absolute; left: 0; top: 0; width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  background: var(--green-500); color: #fff; font-weight: 700; display: grid; place-items: center;
+}
+.howto__steps strong { display: block; color: var(--green-900); }
+.howto__steps span { color: var(--muted); font-size: .92rem; }
