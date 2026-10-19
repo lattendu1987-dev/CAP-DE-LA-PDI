@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -32,9 +34,7 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <!-- EMPLACEMENT LOGO : remplacez le bloc ci-dessous par
-           <img src="images/logo.png" alt="Logo CAP DE LA PDI" class="logo"> -->
-      <div class="logo logo--placeholder" aria-label="Emplacement du logo">LOGO</div>
+      <img src="images/logo-cap-pdi.png" alt="Logo CAP DE LA PDI" class="logo" width="56" height="56">
 
       <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
         <span></span><span></span><span></span>
@@ -187,8 +187,8 @@
 
       <!-- Races porcines pour l'insémination -->
       <div class="container breeds-wrap">
-        <h3 class="breeds-title">Races porcines disponibles en insémination</h3>
-        <p class="breeds-intro">Les grandes races sélectionnées en France par nos partenaires GENES DIFFUSION et AXIOM. Le croisement le plus courant associe une truie Large White × Landrace et un verrat Piétrain ou Duroc.</p>
+        <h3 class="breeds-title">Races porcines : semences pour l'insémination</h3>
+        <p class="breeds-intro">Les grandes races porcines sélectionnées en France par nos partenaires GENES DIFFUSION et AXIOM. Le croisement le plus courant associe une truie Large White × Landrace et un verrat Piétrain ou Duroc.</p>
         <div class="breeds">
           <article class="breed">
             <span class="breed__tag">Lignée maternelle</span>
@@ -211,6 +211,75 @@
             <p>Race rustique, bonne résistance à la chaleur, viande tendre et savoureuse grâce à son persillé.</p>
           </article>
         </div>
+
+        <h3 class="breeds-title breeds-title--cattle">Races bovines : semences pour l'insémination</h3>
+        <p class="breeds-intro">Grâce à GENES DIFFUSION, nous proposons des semences de taureaux sélectionnés, pour la viande comme pour le lait.</p>
+        <div class="cows">
+          <article class="cow">
+            <img src="images/race-charolaise.jpg" alt="Taureau de race Charolaise" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Viande</span>
+              <h4>Charolaise</h4>
+              <p>Race à viande très musclée, croissance rapide, excellente en croisement pour améliorer les troupeaux locaux.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-limousine.jpg" alt="Taureau de race Limousine" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Viande</span>
+              <h4>Limousine</h4>
+              <p>Carcasses de grande qualité, vêlages faciles, bonne rusticité.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-blonde-aquitaine.jpg" alt="Taureau de race Blonde d'Aquitaine" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Viande</span>
+              <h4>Blonde d'Aquitaine</h4>
+              <p>Format imposant et fort rendement en viande.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-salers.jpg" alt="Taureau de race Salers" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Mixte / viande</span>
+              <h4>Salers</h4>
+              <p>Race rustique, résistante, bonne mère, adaptée aux conditions difficiles.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-angus.jpg" alt="Taureau de race Angus" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Viande</span>
+              <h4>Angus</h4>
+              <p>Viande persillée, animaux sans cornes, vêlages faciles.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-brahman.jpg" alt="Taureau de race Brahman" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Viande – zébu</span>
+              <h4>Brahman</h4>
+              <p>Zébu très résistant à la chaleur et aux tiques : idéal en croisement en zone tropicale.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-holstein.jpg" alt="Taureau de race Holstein" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Lait</span>
+              <h4>Holstein</h4>
+              <p>Première race laitière au monde, très forte production de lait.</p>
+            </div>
+          </article>
+          <article class="cow">
+            <img src="images/race-montbeliarde.jpg" alt="Taureau de race Montbéliarde" loading="lazy">
+            <div class="cow__body">
+              <span class="breed__tag">Lait / mixte</span>
+              <h4>Montbéliarde</h4>
+              <p>Bonne production de lait riche, robuste, bonne valeur bouchère.</p>
+            </div>
+          </article>
+        </div>
         <p class="note">Lignées et disponibilités à confirmer selon les arrivages : contactez-nous pour choisir la génétique adaptée à votre élevage.</p>
       </div>
     </section>
@@ -221,20 +290,36 @@
         <header class="section__head">
           <p class="eyebrow">À télécharger</p>
           <h2>Guides &amp; formations</h2>
-          <p>Nos documents pratiques pour les éleveurs, disponibles en téléchargement payant et sécurisé sur Chariow.</p>
+          <p>Nos outils Excel pour piloter votre élevage, en téléchargement immédiat. Paiement sécurisé via Chariow.</p>
         </header>
         <div class="guides">
           <article class="guide">
-            <div class="guide__icon">📘</div>
-            <h3>Guide pratique n° 1</h3>
-            <p>Document téléchargeable pour les éleveurs.</p>
-            <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_txlatneq" target="_blank" rel="noopener">Voir le prix et acheter</a>
+            <img class="guide__img" src="images/calculateur-aliment-porc.jpg" alt="Calculateur aliment porc – fichier Excel" loading="lazy">
+            <div class="guide__body">
+              <h3>Calculateur aliment porc</h3>
+              <ul class="guide__list">
+                <li>5 formules équilibrées : porcelets, croissance, finition, truies</li>
+                <li>Quantités exactes à peser</li>
+                <li>Coût au kg et au sac calculé</li>
+              </ul>
+              <p class="guide__meta">Fichier Excel · Téléchargement immédiat</p>
+              <p class="guide__price"><small>Prix de lancement</small>14 900 FCFA</p>
+              <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_txlatneq" target="_blank" rel="noopener">Acheter</a>
+            </div>
           </article>
           <article class="guide">
-            <div class="guide__icon">📗</div>
-            <h3>Guide pratique n° 2</h3>
-            <p>Document téléchargeable pour les éleveurs.</p>
-            <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_xmkoxo9e" target="_blank" rel="noopener">Voir le prix et acheter</a>
+            <img class="guide__img" src="images/suivi-des-truies.jpg" alt="Suivi des truies – fichier Excel" loading="lazy">
+            <div class="guide__body">
+              <h3>Suivi des truies</h3>
+              <ul class="guide__list">
+                <li>Mises bas et chaleurs calculées</li>
+                <li>Alerte consanguinité</li>
+                <li>Classement des truies rentables</li>
+              </ul>
+              <p class="guide__meta">Fichier Excel · Téléchargement immédiat</p>
+              <p class="guide__price"><small>Prix de lancement</small>9 900 FCFA</p>
+              <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_xmkoxo9e" target="_blank" rel="noopener">Acheter</a>
+            </div>
           </article>
         </div>
       </div>
@@ -281,13 +366,12 @@
         </header>
         <div class="partners">
           <article class="partner">
-            <!-- EMPLACEMENT LOGO PARTENAIRE : <img src="images/genes-diffusion.png" alt="GENES DIFFUSION"> -->
-            <div class="partner__logo">GENES DIFFUSION</div>
-            <p>Génétique animale – CAP DE LA PDI est son représentant pour les deux Congos.</p>
+            <div class="partner__logo"><img src="images/logo-genes-diffusion.jpg" alt="GENES DIFFUSION" loading="lazy"></div>
+            <p>Génétique bovine et porcine – CAP DE LA PDI est son représentant pour les deux Congos.</p>
           </article>
           <article class="partner">
-            <div class="partner__logo">AXIOM</div>
-            <p>Partenaire de CAP DE LA PDI.</p>
+            <div class="partner__logo"><img src="images/logo-axiom.png" alt="AXIOM – La génétique française" loading="lazy"></div>
+            <p>Génétique porcine française.</p>
           </article>
           <article class="partner">
             <div class="partner__logo">ANIMAX</div>

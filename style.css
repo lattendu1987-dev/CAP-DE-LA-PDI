@@ -68,7 +68,7 @@ img { max-width: 100%; display: block; }
 .nav a:hover { color: var(--green-500); }
 
 /* Logo en haut à droite */
-.logo { height: 50px; width: auto; flex-shrink: 0; }
+.logo { height: 56px; width: 56px; object-fit: contain; flex-shrink: 0; }
 .logo--placeholder {
   width: 50px; display: grid; place-items: center; border-radius: 50%;
   border: 2px dashed var(--green-500); color: var(--green-700);
@@ -264,3 +264,31 @@ a.contact__item:hover { background: rgba(255,255,255,.16); }
 .guide { background: var(--white); border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: flex-start; }
 .guide__icon { font-size: 2rem; margin-bottom: .6rem; }
 .guide p { color: var(--muted); margin-bottom: 1.2rem; flex: 1; }
+
+/* ---------- Fichiers Excel (version avec visuels) ---------- */
+.guide { padding: 0; overflow: hidden; }
+.guide__img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.guide__body { padding: 1.4rem 1.5rem 1.6rem; display: flex; flex-direction: column; align-items: flex-start; flex: 1; width: 100%; }
+.guide__list { padding-left: 1.1rem; color: var(--muted); font-size: .95rem; margin: .3rem 0 .8rem; }
+.guide__list li { margin: .2rem 0; }
+.guide__meta { font-size: .85rem; color: var(--green-700); font-weight: 600; margin-bottom: .8rem !important; flex: 0 !important; }
+.guide__price {
+  background: #f4c542; color: #1f1f1f; font-family: "Poppins", sans-serif; font-weight: 700;
+  font-size: 1.4rem; line-height: 1.2; padding: .5rem 1rem; border-radius: 10px; margin-bottom: 1rem !important; flex: 0 !important;
+}
+.guide__price small { display: block; font-size: .7rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: #3d3d3d; }
+.guide .btn { width: 100%; text-align: center; margin-top: auto; }
+
+/* ---------- Races bovines ---------- */
+.breeds-title--cattle { margin-top: 3rem; }
+.cows { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
+.cow { background: var(--white); border: 1px solid #e4ece6; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.cow img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.cow__body { padding: 1rem 1.2rem 1.3rem; }
+.cow__body .breed__tag { background: var(--green-100); }
+.cow h4 { font-family: "Poppins", sans-serif; color: var(--green-900); font-size: 1.1rem; margin: .45rem 0 .25rem; }
+.cow p { color: var(--muted); font-size: .92rem; }
+
+/* Logos partenaires */
+.partner__logo { background: var(--white); border: 1px solid #eef2ef; height: 120px; }
+.partner__logo img { max-height: 100px; max-width: 80%; object-fit: contain; }
