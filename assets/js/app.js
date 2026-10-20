@@ -261,7 +261,7 @@
     let d; try { d = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Brazzaville" })); } catch (e) { return; }
     const day = d.getDay(), m = d.getHours() * 60 + d.getMinutes();
     const open = (day >= 1 && day <= 5 && ((m >= 480 && m < 720) || (m >= 810 && m < 1020))) || (day === 6 && m >= 480 && m < 720);
-    $$("[data-open-status]").forEach((el) => { el.textContent = open ? "Ouvert maintenant" : "Fermé actuellement"; el.classList.add(open ? "is-open" : "is-closed"); });
+    $$("[data-open-status]").forEach((el) => { el.textContent = open ? "Bureau ouvert maintenant" : "Bureau fermé actuellement"; el.classList.add(open ? "is-open" : "is-closed"); });
   })();
   $$("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
 

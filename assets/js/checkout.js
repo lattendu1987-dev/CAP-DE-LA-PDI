@@ -89,8 +89,8 @@
       <span class="ref">Référence : ${m.ref}</span>
       <ol>
         <li>Nous vérifions la disponibilité et vous confirmons le montant total.</li>
-        <li>Vous recevez les instructions de paiement (Mobile Money, virement ou espèces).</li>
-        <li>Vous récupérez votre commande au dépôt choisi, ou nous organisons la livraison.</li>
+        <li>Vous recevez les instructions de paiement (Airtel Money, virement bancaire ou espèces au bureau).</li>
+        <li>Vous récupérez votre commande au point choisi, ou nous l'expédions où que vous soyez.</li>
       </ol>
       <div style="display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center">
         <a class="btn btn--wa" href="${wa}" target="_blank" rel="noopener">Renvoyer par WhatsApp</a>

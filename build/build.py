@@ -115,7 +115,7 @@ def write_catalog_js():
         d["image"] = img_data(c["img"]) if c.get("img") else None
         cats.append(d)
     data = {
-        "site": C.SITE, "depots": C.DEPOTS, "hours": C.HOURS, "delivery": C.DELIVERY,
+        "site": C.SITE, "depots": C.DEPOTS, "hours": C.HOURS, "depotHours": C.DEPOT_HOURS, "delivery": C.DELIVERY,
         "payments": C.PAYMENTS, "announcements": C.ANNOUNCEMENTS, "testimonials": C.TESTIMONIALS,
         "categories": cats, "products": prods,
     }
@@ -202,7 +202,7 @@ def header(root, overlay):
 def footer(root):
     cats = "".join(f'<li><a href="{root}boutique.html?cat={c["id"]}">{E(c["label"])}</a></li>' for c in C.CATEGORIES[:8])
     depots = "".join(f'<li><strong>{E(d["name"])}</strong><br>{E(d["addr"])}' + (f'<br><a href="tel:{d["tel"][0]}">{d["tel"][1]}</a>' if d["tel"] else "") + "</li>" for d in C.DEPOTS)
-    hours = "".join(f"<li><span>{a}</span><span>{b}</span></li>" for a, b in C.HOURS)
+    hours = "".join(f"<li><span>{a}</span><span>{b}</span></li>" for a, b in C.HOURS) + f"<li><span>Dépôts d'aliment</span><span>{C.DEPOT_HOURS}</span></li>"
     pays = "".join(f'<span class="paybadge">{E(p["label"])}</span>' for p in C.PAYMENTS)
     phones = "".join(f'<a href="tel:{t}">{ICON["phone"]} {d}</a>' for t, d in C.SITE["phones"])
     return f'''
@@ -238,7 +238,7 @@ def footer(root):
       <li><a href="{root}cgv.html">Conditions générales de vente</a></li><li><a href="{root}confidentialite.html">Confidentialité</a></li>
       <li><a href="{root}mentions-legales.html">Mentions légales</a></li></ul></div>
     <div><h3>Nos dépôts</h3><ul class="ftr__depots">{depots}</ul></div>
-    <div><h3>Horaires</h3><ul class="ftr__hours">{hours}</ul><p class="open-status" data-open-status></p></div>
+    <div><h3>Horaires du bureau</h3><ul class="ftr__hours">{hours}</ul><p class="open-status" data-open-status></p></div>
   </div>
   <div class="wrap ftr__pay"><span>Paiements acceptés</span>{pays}</div>
   <div class="wrap ftr__legal">
@@ -347,7 +347,7 @@ ORG = {
         {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:00"},
         {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "13:30", "closes": "17:00"},
         {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}],
-    "currenciesAccepted": "XAF", "paymentAccepted": "Mobile Money, virement bancaire, espèces",
+    "currenciesAccepted": "XAF", "paymentAccepted": "Airtel Money, virement bancaire, espèces",
 }
 
 # ------------------------------------------------------------------ pages
@@ -422,7 +422,7 @@ def product_page(p):
 
     if p.get("link"):
         buy = f'''<div class="pp__buy"><a class="btn btn--primary btn--lg btn--block" href="{p["link"]}" target="_blank" rel="noopener">Acheter maintenant – paiement sécurisé</a></div>
-        <p class="pp__note">Paiement en ligne par MTN Mobile Money ou Airtel Money sur Chariow. Téléchargement immédiat après paiement.</p>'''
+        <p class="pp__note">Paiement en ligne sécurisé sur Chariow. Téléchargement immédiat après paiement.</p>'''
     else:
         quote = is_quote(p)
         buy = f'''<div class="pp__buy">
@@ -446,7 +446,7 @@ def product_page(p):
 
     flag = "Paiement en ligne" if p.get("link") else ("Sur commande / devis" if is_quote(p) else "Prix affiché")
     delivery = ("Fichier envoyé immédiatement par Chariow après paiement." if p.get("link") else
-                "Retrait gratuit dans nos dépôts de Pointe-Noire (siège La Base et nos 3 dépôts : La Datcha, Côte Matève, arrêt Supermarché). Livraison à Pointe-Noire ou expédition vers Brazzaville et l'intérieur : frais communiqués avant validation.")
+                "Retrait gratuit au bureau (La Base) ou dans nos 3 dépôts (La Datcha, Côte Matève, arrêt Supermarché). Livraison à Pointe-Noire, au Congo et partout dans le monde : frais communiqués avant validation. Expédition express possible pour les petites commandes ; grosses commandes : 1,5 à 2 mois.")
     if p["cat"] == "reproducteurs":
         delivery = "Animaux livrés par avion : enlèvement à l'aéroport du Congo aux frais de l'acheteur. Fret et dédouanement inclus dans le prix."
 
@@ -476,7 +476,7 @@ def product_page(p):
     <div class="acc">
       <details open><summary>Description</summary><div><ul class="ticks">{details}</ul></div></details>
       <details><summary>Livraison & retrait</summary><div><p>{E(delivery)}</p><p><a href="{{{{root}}}}livraison-retours.html">Toutes les conditions de livraison et de retour</a></p></div></details>
-      <details><summary>Paiement</summary><div><p>{"Paiement en ligne sécurisé sur Chariow (MTN Mobile Money, Airtel Money)." if p.get("link") else "Après confirmation de votre commande par notre équipe : MTN Mobile Money, Airtel Money, virement bancaire (UBA) ou espèces au dépôt."}</p></div></details>
+      <details><summary>Paiement</summary><div><p>{"Paiement en ligne sécurisé sur Chariow." if p.get("link") else "Après confirmation de votre commande par notre équipe : Airtel Money, virement bancaire (UBA) ou espèces au bureau."}</p></div></details>
       <details><summary>Avis clients</summary><div><p>Aucun avis publié pour le moment.</p><p><a href="https://wa.me/{C.SITE["whatsapp"]}?text={E("Bonjour, je souhaite donner mon avis sur : " + p["name"])}" target="_blank" rel="noopener">Vous avez acheté ce produit ? Donnez-nous votre avis</a></p></div></details>
     </div>
   </div>

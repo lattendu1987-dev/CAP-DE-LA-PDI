@@ -52,21 +52,22 @@ DEPOTS = [
     {"id": "depot-3", "name": "Dépôt 3 – Arrêt Supermarché", "addr": "Arrêt Supermarché (Djeno) · aliment de bétail", "tel": None, "kind": "Dépôt"},
 ]
 
-HOURS = [("Lundi – vendredi", "8h00 – 12h00 · 13h30 – 17h00"), ("Samedi", "8h00 – 12h00"), ("Dimanche", "Fermé")]
+HOURS = [("Lundi – vendredi", "8h00 – 12h00 · 13h30 – 17h00"), ("Samedi", "8h00 – 12h00"), ("Dimanche", "Fermé")]  # horaires du BUREAU
+DEPOT_HOURS = "7h00 – 18h00"  # horaires des dépôts d'aliment
 
 # Options de livraison proposées à la commande (configurables)
 DELIVERY = [
-    {"id": "retrait", "label": "Retrait en dépôt", "desc": "Gratuit. Choisissez votre point de retrait ci-dessous.", "fee": 0},
+    {"id": "retrait", "label": "Retrait au bureau ou en dépôt", "desc": "Gratuit. Choisissez votre point de retrait ci-dessous.", "fee": 0},
     {"id": "livraison-pn", "label": "Livraison à Pointe-Noire", "desc": "Frais selon le quartier, communiqués avant validation.", "fee": None},
-    {"id": "expedition", "label": "Expédition hors Pointe-Noire", "desc": "Brazzaville et autres villes : frais et délai communiqués sur devis.", "fee": None},
+    {"id": "expedition", "label": "Expédition au Congo et partout dans le monde", "desc": "Frais et délai communiqués sur devis. Grosses commandes : 1,5 à 2 mois.", "fee": None},
+    {"id": "express", "label": "Expédition express (petites commandes)", "desc": "Pour les petits colis urgents : tarif et délai communiqués sur devis.", "fee": None},
 ]
 
 # Moyens de paiement acceptés (paiement après confirmation de la commande par notre équipe)
 PAYMENTS = [
-    {"id": "mtn", "label": "MTN Mobile Money"},
     {"id": "airtel", "label": "Airtel Money"},
     {"id": "virement", "label": "Virement bancaire (UBA)"},
-    {"id": "especes", "label": "Espèces au dépôt"},
+    {"id": "especes", "label": "Espèces au bureau"},
 ]
 
 # Annonces de la barre supérieure (« until » = date de fin d'affichage, AAAA-MM-JJ)
@@ -76,7 +77,8 @@ ANNOUNCEMENTS = [
     {"text": "Suivi des Truies : 9 900 F au lieu de 15 000 F — téléchargement immédiat", "href": "produits/suivi-truies.html"},
     {"text": "Reproducteurs AXIOM : nouveaux tarifs négociés, fret et dédouanement inclus", "href": "boutique.html?cat=reproducteurs"},
     {"text": "Prix de gros et commandes par conteneur : demandez votre devis", "href": "produits/commande-gros-conteneur.html"},
-    {"text": "Commandez en ligne, payez par MTN Mobile Money ou Airtel Money", "href": "livraison-retours.html"},
+    {"text": "Livraison partout dans le monde · expédition express pour les petites commandes", "href": "livraison-retours.html"},
+    {"text": "Devenez représentant CAP DE LA PDI dans votre ville ou votre pays : un partenariat gagnant-gagnant", "href": "index.html#representants"},
 ]
 
 # Avis clients : n'ajoutez que de vrais avis, avec l'accord du client. La section reste masquée tant que la liste est vide.
@@ -86,8 +88,8 @@ TESTIMONIALS = [
 
 CATEGORIES = [
     {"id": "reproducteurs", "label": "Reproducteurs porcins", "short": "Reproducteurs AXIOM", "icon": "🐷", "img": "axiom-adenia", "intro": "Animaux vivants AXIOM de 30 à 59,9 kg, importés de France. Prix TTC : fret et dédouanement inclus. Enlèvement à l'aéroport aux frais de l'acheteur. Paiement : 80 % à la signature du devis, 20 % au plus tard 1 mois avant le départ."},
-    {"id": "porcins", "label": "Semences porcines", "short": "Semences porcines", "icon": "🧬", "img": "verrat-xxv", "intro": "Semences de verrats sélectionnés en France (GENES DIFFUSION / AXIOM), sur commande. Insémination par nos techniciens."},
-    {"id": "bovins", "label": "Semences bovines", "short": "Génétique bovine", "icon": "🐄", "img": "race-charolaise", "intro": "Taureaux sélectionnés GENES DIFFUSION, en semence conventionnelle ou sexée. Prix par dose."},
+    {"id": "porcins", "label": "Semences porcines", "short": "Semences porcines", "icon": "🧬", "img": "verrat-xxv", "intro": "Semences de verrats et de taureaux sélectionnés en France (AXIOM / GENES DIFFUSION), sur commande. Insémination par nos techniciens."},
+    {"id": "bovins", "label": "Semences bovines", "short": "Génétique bovine", "icon": "🐄", "img": "race-charolaise", "intro": "Semences de verrats et de taureaux sélectionnés en France (AXIOM / GENES DIFFUSION), sur commande. Insémination par nos techniciens. Prix par dose."},
     {"id": "sante", "label": "Santé animale", "short": "Santé animale", "icon": "💊", "img": "oxytetracycline", "intro": "Médicaments vétérinaires de notre partenaire ANIMAX et vaccins de France, délivrés sur conseil."},
     {"id": "repro", "label": "Insémination & reproduction", "short": "Matériel d'insémination", "icon": "🔬", "img": "race-montbeliarde", "intro": "Tout le matériel pour réussir vos inséminations."},
     {"id": "soins", "label": "Matériel vétérinaire", "short": "Matériel vétérinaire", "icon": "💉", "img": "seringue-automatique", "intro": "Pour soigner, vacciner, identifier et manipuler vos animaux."},
@@ -95,7 +97,7 @@ CATEGORIES = [
     {"id": "equipement", "label": "Équipement d'élevage", "short": "Équipement", "icon": "🏗️", "img": "cage-truie", "intro": "Fabrication d'aliment, pesée, logement, alimentation et hygiène."},
     {"id": "volailles", "label": "Volailles & œufs", "short": "Volailles & œufs", "icon": "🐔", "img": None, "intro": "Animaux vivants et œufs frais."},
     {"id": "services", "label": "Services techniques", "short": "Services", "icon": "🧑‍🔬", "img": None, "intro": "Nos techniciens se déplacent dans votre élevage."},
-    {"id": "excel", "label": "Outils Excel", "short": "Outils Excel", "icon": "📊", "img": "calculateur", "intro": "Téléchargement immédiat après paiement en ligne sécurisé (MTN / Airtel Money) via Chariow."},
+    {"id": "excel", "label": "Outils Excel", "short": "Outils Excel", "icon": "📊", "img": "calculateur", "intro": "Téléchargement immédiat après paiement en ligne sécurisé via Chariow."},
 ]
 
 SEXEE = ["Sexée femelle", "Sexée mâle"]
@@ -116,6 +118,7 @@ PRODUCTS = [
     {"id": "cochette-landrace", "origin": "fr", "cat": "reproducteurs", "sub": "Cochette – AXIOM", "name": "Cochette Landrace", "tagline": "Prolifique et robuste", "desc": "Prolifique et robuste.", "details": ["« Prolifique et robuste »", "Lignée maternelle : grandes portées"] + AXIOM_DETAILS, "price": 1285000, "unit": "animal", "quote": True, "prefix": AXIOM, "imgs": ["axiom-landrace"], "fit": "cover", "new": True},
     {"id": "cochette-duroc", "origin": "fr", "cat": "reproducteurs", "sub": "Cochette – AXIOM", "name": "Cochette Duroc", "tagline": "La qualité de la viande", "desc": "La qualité de la viande.", "details": ["« La qualité de la viande »", "Race rustique, bonne tolérance à la chaleur"] + AXIOM_DETAILS, "price": 1350000, "unit": "animal", "quote": True, "prefix": AXIOM, "imgs": ["axiom-duroc"], "fit": "cover", "new": True},
     {"id": "cochette-pietrain", "origin": "fr", "cat": "reproducteurs", "sub": "Cochette – AXIOM", "name": "Cochette Piétrain", "tagline": "L'indice et la conformation", "desc": "L'indice et la conformation.", "details": ["« L'indice et la conformation »", "Carcasses très musclées"] + AXIOM_DETAILS, "price": 1350000, "unit": "animal", "quote": True, "prefix": AXIOM, "imgs": ["axiom-pietrain"], "fit": "cover", "new": True},
+    {"id": "porc-vif", "cat": "reproducteurs", "sub": "Élevé au Congo", "name": "Porc vif (races pures, issu d'IA)", "desc": "Porcs de races pures issus de l'insémination artificielle, élevés chez nous.", "details": ["Porc vif de races pures, issu de l'insémination artificielle", "Élevé dans notre ferme porcine", "Prix : 5 000 F le kg vif"], "price": 5000, "unit": "kg vif", "icon": "🐖", "featured": True},
     {"id": "verrat-xxv", "origin": "fr", "cat": "reproducteurs", "sub": "Verrat – génétique française", "badge": "Le verrat gagnant", "name": "Verrat XXV", "tagline": "Le verrat gagnant", "desc": "Disponible sur commande uniquement : demandez-nous les informations et les conditions.", "details": ["« Le verrat gagnant » : verrat de génétique française", "Disponible sur commande uniquement", "Informations, disponibilité et prix communiqués sur demande", "Importation organisée par CAP DE LA PDI avec nos transitaires"], "price": None, "unit": "animal", "quote": True, "imgs": ["verrat-xxv"], "featured": True, "new": True, "stock": "Sur commande – informations sur demande"},
     {"id": "verrat-thor", "origin": "fr", "cat": "reproducteurs", "sub": "Verrat – AXIOM", "badge": "Vigueur hybride", "name": "Verrat Thor", "tagline": "La vigueur hybride", "desc": "La vigueur hybride, déjà éprouvée chez nous au Congo.", "details": ["« La vigueur hybride » : verrat hybride AXIOM", "Déjà utilisé chez nous au Congo : la 2e photo montre un porcelet sevré issu de la génétique THOR"] + AXIOM_DETAILS, "price": 2440000, "unit": "animal", "quote": True, "prefix": AXIOM, "imgs": ["axiom-thor", "thor-porcelet", "thor-ferme"], "fit": "cover", "featured": True, "new": True},
     {"id": "verrat-valens", "origin": "fr", "cat": "reproducteurs", "sub": "Verrat – AXIOM", "name": "Verrat Valens", "tagline": "L'excellence validée", "desc": "L'excellence validée.", "details": ["« L'excellence validée »"] + AXIOM_DETAILS, "price": 2440000, "unit": "animal", "quote": True, "prefix": AXIOM, "imgs": ["axiom-valens"], "fit": "cover", "new": True},
@@ -191,21 +194,31 @@ PRODUCTS = [
 
     # ===== Alimentation & nutrition =====
     {"id": "son-fin", "cat": "nutrition", "sub": "Matière première", "name": "Son fin", "desc": "En sac de 30 ou 40 kg.", "details": ["Sac de 30 kg : 2 500 F", "Sac de 40 kg : 3 000 F"], "price": 2500, "unit": "sac", "icon": "🌾",
-     "options": [{"label": "Sac 30 kg", "price": 2500}, {"label": "Sac 40 kg", "price": 3000}]},
-    {"id": "tourteau-palmiste", "cat": "nutrition", "sub": "Matière première", "name": "Tourteau de palmiste", "desc": "Sac de 50 kg.", "details": ["Sac de 50 kg"], "price": 8000, "unit": "sac", "icon": "🌴"},
+     "options": [{"label": "Sac 30 kg", "price": 2500}, {"label": "Sac 40 kg", "price": 3000}, {"label": "Vrac (au kg)", "price": 100, "unit": "kg"}]},
+    {"id": "tourteau-palmiste", "cat": "nutrition", "sub": "Matière première", "name": "Tourteau de palmiste", "desc": "En sac de 50 kg ou au détail.", "details": ["Sac de 50 kg : 8 000 F", "Au détail : 200 F le kg"], "price": 8000, "unit": "sac", "icon": "🌴", "options": [{"label": "Sac 50 kg", "price": 8000, "unit": "sac"}, {"label": "Au détail (kg)", "price": 200, "unit": "kg"}]},
     {"id": "huile-de-palme", "cat": "nutrition", "sub": "Matière première", "name": "Huile de palme", "desc": "Énergie pour vos formules d'aliment.", "details": ["Source d'énergie pour vos formules d'aliment", "Vendue au litre"], "price": 1000, "unit": "litre", "icon": "🫒"},
-    {"id": "aliments-porcins", "cat": "nutrition", "sub": "Aliment complet", "name": "Aliments porcins", "desc": "Porcelet, croissance, porc unique, truie allaitante.", "details": ["Aliment porcelet, croissance, porc unique et truie allaitante", "Disponibles dans nos dépôts"], "price": None, "unit": "sac", "icon": "🐖"},
-    {"id": "aliments-volailles", "cat": "nutrition", "sub": "Aliment complet", "name": "Aliments volailles", "desc": "Démarrage, poulette, ponte.", "details": ["Aliment démarrage, poulette et ponte", "Disponibles dans nos dépôts"], "price": None, "unit": "sac", "icon": "🐔"},
+    {"id": "mais", "cat": "nutrition", "sub": "Matière première", "name": "Maïs", "desc": "Écrasé ou non écrasé, au kg.", "details": ["Maïs écrasé : 300 F le kg", "Maïs non écrasé : 275 F le kg", "Prix de gros et conteneur sur devis"], "price": 275, "unit": "kg", "icon": "🌽", "options": [{"label": "Non écrasé", "price": 275}, {"label": "Écrasé", "price": 300}]},
+    {"id": "ble", "cat": "nutrition", "sub": "Matière première", "name": "Blé", "desc": "Écrasé ou non écrasé, au kg.", "details": ["Blé écrasé : 300 F le kg", "Blé non écrasé : 275 F le kg"], "price": 275, "unit": "kg", "icon": "🌾", "options": [{"label": "Non écrasé", "price": 275}, {"label": "Écrasé", "price": 300}]},
+    {"id": "son-de-ble", "cat": "nutrition", "sub": "Matière première", "name": "Son de blé", "desc": "Vendu au kg.", "details": ["Son de blé : 100 F le kg"], "price": 100, "unit": "kg", "icon": "🌾"},
+    {"id": "tourteau-soja", "cat": "nutrition", "sub": "Matière première", "name": "Tourteau de soja", "desc": "Source de protéines pour vos formules.", "details": ["Tourteau de soja : 600 F le kg", "Prix de gros et conteneur sur devis"], "price": 600, "unit": "kg", "icon": "🫘"},
+    {"id": "farine-poisson", "cat": "nutrition", "sub": "Matière première", "name": "Farine de poisson", "desc": "Protéines de haute qualité.", "details": ["Farine de poisson : 600 F le kg"], "price": 600, "unit": "kg", "icon": "🐟"},
+    {"id": "calcaire", "cat": "nutrition", "sub": "Minéral", "name": "Calcaire", "desc": "Apport de calcium.", "details": ["Calcaire : 100 F le kg"], "price": 100, "unit": "kg", "icon": "🪨"},
+    {"id": "sel", "cat": "nutrition", "sub": "Minéral", "name": "Sel", "desc": "Vendu au kg.", "details": ["Sel : 400 F le kg"], "price": 400, "unit": "kg", "icon": "🧂"},
+    {"id": "phosphate-bicalcique", "cat": "nutrition", "sub": "Minéral", "name": "Phosphate bicalcique", "desc": "Apport de phosphore et de calcium.", "details": ["Phosphate bicalcique : 1 000 F le kg"], "price": 1000, "unit": "kg", "icon": "🧪"},
+    {"id": "cmav-ponte", "cat": "nutrition", "sub": "Complément", "name": "CMAV Ponte", "desc": "Complément minéral et vitaminé pour pondeuses.", "details": ["CMAV Ponte : 1 000 F le kg"], "price": 1000, "unit": "kg", "icon": "🥚"},
+    {"id": "nutrimax", "cat": "nutrition", "sub": "Complément", "name": "Nutrimax", "desc": "Complément alimentaire.", "details": ["Nutrimax : 1 500 F le kg"], "price": 1500, "unit": "kg", "icon": "🧂"},
+    {"id": "aliments-porcins", "cat": "nutrition", "sub": "Aliment complet", "name": "Aliments porcins", "desc": "Porcelet, croissance, porc unique, truie allaitante.", "details": ["Aliment porcelet, croissance, porc unique et truie allaitante", "Disponibles dans nos dépôts"], "price": 325, "unit": "kg", "icon": "🐖", "options": [{"label": "Porc unique (P.U.)", "price": 325}, {"label": "Croissance (C.R.)", "price": 350}, {"label": "Truie allaitante", "price": 350}, {"label": "Porcelet", "price": 380}]},
+    {"id": "aliments-volailles", "cat": "nutrition", "sub": "Aliment complet", "name": "Aliments volailles", "desc": "Démarrage, poulette, ponte.", "details": ["Aliment démarrage, poulette et ponte", "Disponibles dans nos dépôts"], "price": 450, "unit": "kg", "icon": "🐔", "options": [{"label": "Poulette", "price": 450}, {"label": "Démarrage", "price": 500}, {"label": "Ponte", "price": 500}]},
     {"id": "aliments-ruminants", "cat": "nutrition", "sub": "Aliment complet", "name": "Aliments ruminants", "desc": "Bovins, ovins, caprins.", "details": ["Pour bovins, ovins et caprins"], "price": None, "unit": "sac", "icon": "🐄"},
     {"id": "booster-croissance-porc", "cat": "nutrition", "sub": "Booster", "name": "Booster Croissance Porc", "desc": "Pour une croissance plus rapide.", "details": ["Favorise une croissance plus rapide des porcs"], "price": 2500, "unit": "sachet", "icon": "📈"},
     {"id": "booster-lait-truie", "cat": "nutrition", "sub": "Booster", "name": "Booster Lait Truie", "desc": "Soutient la production de lait.", "details": ["Soutient la production de lait des truies"], "price": 2500, "unit": "sachet", "icon": "🍼"},
     {"id": "booster-probiotique-porc", "cat": "nutrition", "sub": "Booster", "name": "Booster Probiotique Porc", "desc": "Favorise une bonne digestion.", "details": ["Probiotique : favorise une bonne digestion"], "price": 2000, "unit": "sachet", "icon": "🦠"},
     {"id": "bio-earn", "cat": "nutrition", "sub": "Complément", "name": "Bio Earn", "desc": "Complément pour l'élevage.", "details": ["Complément pour l'élevage", "Demandez conseil à nos techniciens pour l'utilisation"], "price": 2000, "unit": "sachet", "icon": "🧂"},
-    {"id": "dl-methionine", "cat": "nutrition", "sub": "Acide aminé", "name": "DL-Méthionine 99 %", "desc": "Acide aminé essentiel pour équilibrer vos formules d'aliment.", "details": ["DL-Méthionine 99 %, qualité alimentation animale", "Acide aminé essentiel : croissance, plumage, production", "Indispensable pour équilibrer les formules à base de maïs et de soja", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": None, "unit": "sac", "imgs": ["methionine"], "new": True},
-    {"id": "lysine-hcl", "cat": "nutrition", "sub": "Acide aminé", "name": "Lysine HCl", "desc": "Premier acide aminé limitant chez le porc : pour une croissance rapide.", "details": ["L-Lysine HCl, qualité alimentation animale", "Premier acide aminé limitant chez le porc", "Améliore la croissance et l'indice de consommation", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": None, "unit": "sac", "imgs": ["lysine"], "new": True},
+    {"id": "dl-methionine", "cat": "nutrition", "sub": "Acide aminé", "name": "DL-Méthionine 99 %", "desc": "Acide aminé essentiel pour équilibrer vos formules d'aliment.", "details": ["DL-Méthionine 99 %, qualité alimentation animale", "Acide aminé essentiel : croissance, plumage, production", "Indispensable pour équilibrer les formules à base de maïs et de soja", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": 3800, "unit": "kg", "imgs": ["methionine"], "new": True},
+    {"id": "lysine-hcl", "cat": "nutrition", "sub": "Acide aminé", "name": "Lysine HCl", "desc": "Premier acide aminé limitant chez le porc : pour une croissance rapide.", "details": ["L-Lysine HCl, qualité alimentation animale", "Premier acide aminé limitant chez le porc", "Améliore la croissance et l'indice de consommation", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": 3000, "unit": "kg", "imgs": ["lysine"], "new": True},
     {"id": "premix-vitamines", "cat": "nutrition", "sub": "Prémix", "name": "Prémix vitaminé", "desc": "Vitamines et oligo-éléments à incorporer dans l'aliment.", "details": ["Vitamines et oligo-éléments pour aliment complet", "Pour porcs, volailles et ruminants", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": None, "unit": "sac", "imgs": ["premix-vitamines"], "new": True},
-    {"id": "anti-mycotoxines", "cat": "nutrition", "sub": "Additif", "name": "Anti-mycotoxines (enzyme)", "desc": "Protège vos animaux des toxines des céréales moisies.", "details": ["Réduit l'effet des mycotoxines présentes dans les céréales", "Protège la santé, la fertilité et la croissance", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": None, "unit": "sac", "imgs": ["anti-mycotoxines"], "new": True},
-    {"id": "bicarbonate-de-sodium", "cat": "nutrition", "sub": "Additif", "name": "Bicarbonate de sodium", "desc": "Régulateur digestif, utile en période de chaleur.", "details": ["Régulateur de l'acidité digestive", "Utile en période de forte chaleur", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": None, "unit": "sac", "imgs": ["bicarbonate-sodium"], "new": True},
+    {"id": "anti-mycotoxines", "cat": "nutrition", "sub": "Additif", "name": "Anti-mycotoxines (enzyme)", "desc": "Protège vos animaux des toxines des céréales moisies.", "details": ["Réduit l'effet des mycotoxines présentes dans les céréales", "Protège la santé, la fertilité et la croissance", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": 5000, "unit": "kg", "imgs": ["anti-mycotoxines"], "new": True},
+    {"id": "bicarbonate-de-sodium", "cat": "nutrition", "sub": "Additif", "name": "Bicarbonate de sodium", "desc": "Régulateur digestif, utile en période de chaleur.", "details": ["Régulateur de l'acidité digestive", "Utile en période de forte chaleur", "Prix de gros et commande par conteneur possibles : demandez votre devis"], "price": 1000, "unit": "kg", "imgs": ["bicarbonate-sodium"], "new": True},
     {"id": "pierres-a-lecher", "cat": "nutrition", "sub": "Complément minéral", "name": "Pierres à lécher minérales", "desc": "Sel enrichi en minéraux et oligo-éléments.", "details": ["Sel enrichi en minéraux et oligo-éléments", "Pour bovins, ovins et caprins", "Les animaux se servent selon leurs besoins"], "price": None, "unit": "bloc", "imgs": ["pierres-a-lecher", "pierre-a-lecher-vache"], "fit": "cover"},
     {"id": "croquettes-chien-premium", "cat": "nutrition", "sub": "Animaux de compagnie", "name": "Croquettes chien Premium 20 kg", "desc": "28 % de protéines, 13 % de matières grasses.", "details": ["Marque Haisenpet, sac de 20 kg", "Tous âges, goût mixte", "28 % de protéines, 13 % de matières grasses"], "price": None, "unit": "sac", "imgs": ["croquettes-chien"]},
     {"id": "booster-chien", "cat": "nutrition", "sub": "Animaux de compagnie", "name": "Booster Chien", "desc": "Complément pour chiens.", "details": ["Complément pour chiens, en boîte"], "price": 10000, "unit": "boîte", "icon": "🐕"},
