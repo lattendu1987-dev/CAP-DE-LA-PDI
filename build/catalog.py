@@ -47,9 +47,9 @@ SITE = {
 # Points de retrait / dépôts (utilisés dans la commande, le pied de page et la page contact)
 DEPOTS = [
     {"id": "la-base", "name": "Siège – La Base", "addr": "Avenue Félix TCHIKAYA, Pointe-Noire", "tel": None, "kind": "Siège"},
-    {"id": "depot-1", "name": "Dépôt 1 – La Datcha", "addr": "Arrêt La Datcha (Ngoyo), Pointe-Noire · aliment de bétail", "tel": ("+242067434310", "06 743 43 10"), "kind": "Dépôt"},
+    {"id": "depot-1", "name": "Dépôt 1 – La Datcha", "addr": "Arrêt La Datcha (Ngoyo), Pointe-Noire · aliment de bétail", "tel": None, "kind": "Dépôt"},
     {"id": "depot-2", "name": "Dépôt 2 – Côte Matève", "addr": "Côte Matève, Pointe-Noire · aliment de bétail", "tel": None, "kind": "Dépôt"},
-    {"id": "depot-3", "name": "Dépôt 3 – Arrêt Supermarché", "addr": "Arrêt Supermarché (Djeno) · aliment de bétail", "tel": ("+242067958233", "06 795 82 33"), "kind": "Dépôt"},
+    {"id": "depot-3", "name": "Dépôt 3 – Arrêt Supermarché", "addr": "Arrêt Supermarché (Djeno) · aliment de bétail", "tel": None, "kind": "Dépôt"},
 ]
 
 HOURS = [("Lundi – vendredi", "8h00 – 12h00 · 13h30 – 17h00"), ("Samedi", "8h00 – 12h00"), ("Dimanche", "Fermé")]
