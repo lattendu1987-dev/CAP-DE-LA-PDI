@@ -94,6 +94,7 @@ const PRODUCTS = [
   // ===== Équipement d'élevage =====
   { id: "broyeur", fit: "cover", cat: "equipement", sub: "Fabrication d'aliment", name: "Broyeur-mélangeur d'aliment", desc: "Broie et mélange vos matières premières pour fabriquer votre propre aliment à la ferme.", price: null, unit: "machine", img: P + "broyeur-melangeur.jpg" },
   { id: "balance", cat: "equipement", sub: "Pesée", name: "Balance plateforme électronique", desc: "Pesée des animaux, des sacs et de l'aliment, avec afficheur digital.", price: null, unit: "pièce", img: P + "balance-plateforme.jpg" },
+  { id: "cage-truie", cat: "equipement", sub: "Logement des truies", name: "Cage pour truie (case de gestation)", desc: "Acier galvanisé avec auge individuelle. Dimensions : 220 cm × 60 ou 70 cm, hauteur 100 cm.", price: null, unit: "cage", img: P + "cage-truie.jpg", options: ["Largeur 60 cm", "Largeur 70 cm"] },
   { id: "nourrisseur", cat: "equipement", sub: "Alimentation", name: "Nourrisseur inox pour porcs", desc: "Trémie en acier inoxydable à plusieurs places, solide et facile à nettoyer.", price: null, unit: "pièce", img: P + "nourrisseur-inox.jpg" },
   { id: "bottes", fit: "cover", cat: "equipement", sub: "Hygiène & sécurité", name: "Bottes d'élevage", desc: "Caoutchouc imperméable, semelle antidérapante.", price: null, unit: "paire", img: P + "bottes.jpg", options: ["Pointure 39", "Pointure 40", "Pointure 41", "Pointure 42", "Pointure 43", "Pointure 44", "Pointure 45", "Pointure 46"] },
 
