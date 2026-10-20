@@ -40,6 +40,9 @@
   document.addEventListener("visibilitychange", () => { if (document.hidden) clearTimeout(timer); else schedule(); });
   setPaused(reduce); go(0);
 
+  // Bandeaux datés (masqués après la date de fin)
+  $$("[data-until]").forEach((el) => { if (new Date().toISOString().slice(0, 10) > el.dataset.until) el.hidden = true; });
+
   // Compte à rebours (réservation du vaccin)
   $$("[data-countdown]").forEach((el) => {
     const end = new Date(el.dataset.countdown).getTime(), box = $(".countdown", el);

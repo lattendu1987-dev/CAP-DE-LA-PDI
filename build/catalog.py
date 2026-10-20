@@ -71,6 +71,7 @@ PAYMENTS = [
 
 # Annonces de la barre supérieure (« until » = date de fin d'affichage, AAAA-MM-JJ)
 ANNOUNCEMENTS = [
+    {"text": "AXIOM Génétique sera présent à l'Africa Agri Forum, du 3 au 5 novembre 2026 à Abidjan (Côte d'Ivoire)", "href": "index.html#evenement", "until": "2026-11-05"},
     {"text": "Nouveau : vaccin porc 3-en-1 de France — arrivage le 20 novembre, réservez avant le 13 novembre", "href": "produits/vaccin-3en1.html", "until": "2026-11-20"},
     {"text": "Suivi des Truies : 9 900 F au lieu de 15 000 F — téléchargement immédiat", "href": "produits/suivi-truies.html"},
     {"text": "Reproducteurs AXIOM : nouveaux tarifs négociés, fret et dédouanement inclus", "href": "boutique.html?cat=reproducteurs"},
