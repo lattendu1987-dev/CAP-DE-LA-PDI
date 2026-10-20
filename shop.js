@@ -82,7 +82,7 @@ const PRODUCTS = [
   // ===== Matériel vétérinaire =====
   { id: "seringue-auto", cat: "soins", sub: "Injection", name: "Seringue automatique doseuse", desc: "Vaccinations et traitements en série, dose réglable, se fixe sur le flacon.", price: null, unit: "pièce", img: P + "seringue-automatique.jpg" },
   { id: "aiguilles", cat: "soins", sub: "Injection", name: "Aiguilles vétérinaires inox", desc: "Réutilisables, plusieurs calibres (7 à 16).", price: null, unit: "lot", img: P + "aiguilles.jpg" },
-  { id: "lasso", cat: "soins", sub: "Contention", name: "Lasso de contention pour porcs", desc: "Câble acier et poignée en T pour immobiliser le porc pendant les soins.", price: null, unit: "pièce", img: P + "lasso-contention.jpg" },
+  { id: "lasso", cat: "soins", sub: "Contention", name: "Lasso de contention pour porcs", desc: "Câble acier et poignée en T pour immobiliser le porc pendant les soins.", price: 10000, unit: "pièce", img: P + "lasso-contention.jpg" },
 
   // ===== Alimentation & nutrition =====
   { id: "pierres-lecher", fit: "cover", cat: "nutrition", sub: "Complément minéral", name: "Pierres à lécher minérales", desc: "Sel enrichi en minéraux et oligo-éléments (zinc, fer, cuivre, sélénium…). Bovins, ovins, caprins.", price: null, unit: "bloc", img: P + "pierres-a-lecher.jpg" },
