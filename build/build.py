@@ -52,7 +52,8 @@ def build_images():
         if f.endswith(".webp") and f not in keep:
             os.remove(os.path.join(OUT_IMG, f))
     # image de partage (Open Graph) et logo en JPG/PNG pour les réseaux sociaux
-    og = Image.open(os.path.join(SRC, "verrat-xxv.jpg")).convert("RGB")
+    xxv = Image.open(os.path.join(SRC, "verrat-xxv.png")).convert("RGBA")
+    og = Image.new("RGBA", xxv.size, (23, 25, 27, 255)); og.alpha_composite(xxv); og = og.convert("RGB")
     og = og.resize((1200, round(og.height * 1200 / og.width)), Image.LANCZOS)
     top = max(0, (og.height - 630) // 2)
     og.crop((0, top, 1200, top + 630)).save(os.path.join(OUT_IMG, "og-cap-de-la-pdi.jpg"), quality=85)

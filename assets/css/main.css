@@ -799,3 +799,24 @@ p { max-width: 70ch; }
   .hero__slide--split .hero__visual, .hero__slide--split .hero__visual img { max-height: 20vh; }
   .hero__ctas .btn--ghost { display: none; }
 }
+
+/* Verrat XXV détouré */
+.hero__visual--pig { position: relative; }
+.hero__visual--pig::before { content: ""; position: absolute; inset: 8% 4%; background: radial-gradient(closest-side, rgba(242, 160, 90, .45), rgba(196, 71, 45, .12) 60%, transparent 75%); filter: blur(10px); }
+.hero__visual--pig img { position: relative; width: 100%; height: auto; max-height: none; border-radius: 0; box-shadow: none; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .55)); }
+a.hero__note { display: inline-block; color: var(--sun-2); text-decoration: none; font-weight: 600; font-size: .85rem; }
+a.hero__note:hover { text-decoration: underline; }
+@media (max-width: 900px) { .hero__visual--pig img { width: auto; max-height: 28vh; } }
+@media (max-width: 600px) { .hero__visual--pig img { max-height: 24vh; } }
+@media (max-width: 600px) and (max-height: 780px) { .hero__visual--pig img { max-height: 20vh; } }
+/* Gros & conteneurs */
+.wholesale { background: linear-gradient(120deg, #0b2d20, var(--forest-2)); color: rgba(255,255,255,.85); padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
+.wholesale__inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.wholesale__inner > * { min-width: 0; }
+.wholesale h2 { color: #fff; margin-bottom: 1rem; }
+.wholesale h2 em { font-style: italic; color: var(--sun-2); font-weight: 500; }
+.wholesale__list { list-style: none; display: grid; gap: .6rem; margin: 1.3rem 0 1.8rem; }
+.wholesale__grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+.wholesale__grid img { background: #fff; border-radius: var(--r); aspect-ratio: 1; width: 100%; padding: 4%; }
+@media (max-width: 860px) { .wholesale__inner { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { a.hero__note { display: none; } }

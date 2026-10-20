@@ -69,6 +69,7 @@
     if (form.ville.value.trim()) L.push(`Ville : ${clean(form.ville.value)}`);
     L.push(`Livraison : ${d.label}${d.id === "retrait" ? " – " + dep.name : " – " + clean(form.adresse.value)}`);
     L.push(`Paiement souhaité : ${pay.label}`);
+    if (form.gros.checked) L.push("Demande de PRIX DE GROS (palette / conteneur)");
     if (form.message.value.trim()) L.push("", `Message : ${clean(form.message.value)}`);
     return { ref, kind, text: L.join("\n") };
   }
