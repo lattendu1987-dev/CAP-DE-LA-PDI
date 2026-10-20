@@ -435,7 +435,7 @@ def product_page(p):
     badge = f'<span class="badge badge--hot">{E(p["badge"])}</span>' if p.get("badge") else ""
     flag = "Paiement en ligne" if p.get("link") else ("Sur commande / devis" if is_quote(p) else "Prix affiché")
     delivery = ("Fichier envoyé immédiatement par Chariow après paiement." if p.get("link") else
-                "Retrait gratuit dans nos dépôts de Pointe-Noire (La Base, Ngoyo, Djeno, Côte Matève). Livraison à Pointe-Noire ou expédition vers Brazzaville et l'intérieur : frais communiqués avant validation.")
+                "Retrait gratuit dans nos dépôts de Pointe-Noire (siège La Base et nos 3 dépôts : La Datcha, Côte Matève, arrêt Supermarché). Livraison à Pointe-Noire ou expédition vers Brazzaville et l'intérieur : frais communiqués avant validation.")
     if p["cat"] == "reproducteurs":
         delivery = "Animaux livrés par avion : enlèvement à l'aéroport du Congo aux frais de l'acheteur. Fret et dédouanement inclus dans le prix."
 
