@@ -1,0 +1,59 @@
+# Paramètres globaux du système. Toutes les valeurs monétaires sont en CAD, hors taxes (TPS/TVQ).
+# Les taux de change et frais sont des HYPOTHÈSES à vérifier avant tout engagement.
+
+[market]
+primary = "Canada (Québec en priorité)"
+currency = "CAD"
+usd_to_cad = 1.38   # hypothèse
+eur_to_cad = 1.55   # hypothèse
+
+[payments]
+# Shopify Payments, forfait Basic : 2,9 % + 0,30 $ (cartes canadiennes).
+# Cartes étrangères : environ +1 point. Source : blogues tiers 2026, à confirmer sur shopify.com.
+rate = 0.029
+fixed = 0.30
+
+[fixed_costs_monthly]
+shopify_basic = 54.0      # ~39 USD/mois en mensuel (29 USD en annuel)
+apps = 30.0               # avis, bannière témoins, divers
+email = 0.0               # Klaviyo gratuit jusqu'à 250 profils, ensuite ~20 USD
+domain = 2.0              # ~24 $/an
+accounting = 0.0          # Wave gratuit au départ, QuickBooks plus tard
+misc = 20.0
+
+[pricing]
+# Marge contributive minimale exigée APRÈS acquisition client (en % du prix encaissé).
+min_contribution_after_cac = 0.15
+# Marge contributive cible pour le calcul du prix suggéré.
+target_contribution_after_cac = 0.25
+
+[scoring.weights]
+# Somme = 1.0. Notes de 0 à 10 par critère.
+demand = 0.20
+evidence = 0.10
+margin = 0.20
+cac_efficiency = 0.10
+competition = 0.10
+supplier = 0.10
+delivery = 0.05
+return_risk = 0.05
+seasonality = 0.05
+regulatory = 0.05
+
+[ads_guardrails]
+# Plafonds durs : le système ne dépasse JAMAIS ces montants sans accord humain.
+daily_account_cap = 60.0
+monthly_account_cap = 1500.0
+test_budget_per_product = 300.0
+# Arrêt si dépense >= kill_no_sale_multiple x CPA d'équilibre sans aucune vente.
+kill_no_sale_multiple = 1.5
+# Arrêt si, après dépense >= judge_multiple x CPA d'équilibre, le CPA réel dépasse le CPA d'équilibre.
+judge_multiple = 3.0
+# Hausse de budget autorisée si CPA <= scale_cpa_ratio x CPA d'équilibre avec >= scale_min_purchases achats.
+scale_cpa_ratio = 0.7
+scale_min_purchases = 5
+scale_step = 0.20
+
+[orders]
+hold_if_order_total_above = 250.0
+max_quantity_per_line = 5

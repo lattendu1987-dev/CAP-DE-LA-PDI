@@ -1,0 +1,125 @@
+# Produits candidats. Montants en CAD hors taxes.
+# Notes 0-10 : plus haut = meilleur (ex. competition 8 = peu de concurrence ; return_risk 8 = peu de retours).
+# evidence_kind : "observed" (données mesurées par un tiers), "estimate" (estimation / blog), "hypothesis" (à valider).
+# Les coûts sont des ESTIMATIONS tirées de prix de gros publics ; ils doivent être confirmés par devis fournisseur
+# et commande d'échantillon avant mise en vente.
+
+[[product]]
+id = "chauffe-mains"
+name = "Chauffe-mains rechargeable (paire, 2 x 5000 mAh)"
+strategy = "Hiver avec son chien"
+season = "Nov-Fév"
+unit_cost = 16.0
+shipping_cost = 9.0
+price = 54.99
+est_cac = 18.0
+refund_rate = 0.06
+scores = { demand = 9, evidence = 7, competition = 4, supplier = 6, delivery = 6, return_risk = 5, seasonality = 4, regulatory = 5 }
+suppliers = ["CJdropshipping (entrepôt US)", "AliExpress via DSers", "Alibaba (stock privé plus tard)"]
+regulatory = "Batterie lithium : test UN38.3 + fiche de sécurité exigés ; Loi canadienne sur la sécurité des produits de consommation ; étiquetage bilingue."
+evidence = [
+  { kind = "observed", signal = "Ventes Amazon estimées ~205/mois (août 2025) -> ~8 300/mois (janv. 2026) pour un lot de 2 ; pic de recherche en décembre", url = "https://www.accio.com/business/electric-hand-warmer-trends" },
+  { kind = "observed", signal = "Chauffe-mains magnétiques : >18 000 unités en janvier 2026 sur Amazon (estimation tierce)", url = "https://www.accio.com/business/winter-gadgets-trends-2026" },
+]
+
+[[product]]
+id = "plaid-usb"
+name = "Plaid chauffant USB 5 V (lavable)"
+strategy = "Hiver avec son chien"
+season = "Nov-Mars"
+unit_cost = 20.0
+shipping_cost = 18.0
+price = 79.99
+est_cac = 25.0
+refund_rate = 0.07
+scores = { demand = 6, evidence = 4, competition = 2, supplier = 6, delivery = 4, return_risk = 5, seasonality = 4, regulatory = 6 }
+suppliers = ["Alibaba (12-15 USD, MOQ 1-200)", "CJdropshipping"]
+regulatory = "Basse tension (5 V) : moins contraignant qu'une couverture 120 V (CSA/cUL), mais sécurité thermique à vérifier sur échantillon."
+evidence = [
+  { kind = "estimate", signal = "Sondage Uswitch (R.-U., oct. 2025) : 31 % utilisent un plaid chauffant pour réduire la facture d'énergie", url = "https://www.clearscore.com/learn/managing-money/how-to-keep-warm" },
+  { kind = "observed", signal = "Concurrence prix : plaid chauffant à 22,99 USD sur Amazon US (mars 2026)", url = "https://camelcamelcamel.com/product/B0FNK5WPYT" },
+]
+
+[[product]]
+id = "rouleau-poils"
+name = "Rouleau anti-poils d'animaux réutilisable"
+strategy = "Marque animaux (permanent)"
+season = "Toute l'année"
+unit_cost = 6.5
+shipping_cost = 7.0
+price = 29.99
+est_cac = 14.0
+refund_rate = 0.03
+scores = { demand = 7, evidence = 6, competition = 4, supplier = 8, delivery = 7, return_risk = 9, seasonality = 9, regulatory = 9 }
+suppliers = ["BigBuy (4,28 EUR à 18 u.)", "CJdropshipping", "Alibaba (2-4 USD en volume)"]
+regulatory = "Faible risque. Ne pas utiliser la marque ou les visuels ChomChom."
+evidence = [
+  { kind = "observed", signal = "Référence du marché (ChomChom) vendue 25-35 USD, promotions récurrentes Amazon/Chewy", url = "https://www.chewy.com/chomchom-roller-limited-edition-pet/dp/255118" },
+  { kind = "estimate", signal = "E-commerce animaux : 34,6 G$ (2025) -> 38,7 G$ (2026), +11,8 %", url = "https://www.globenewswire.com/fr/news-release/2026/07/07/3322935/28124/en/Pet-Care-E-commerce-Market-Report-2026.html" },
+]
+
+[[product]]
+id = "plaid-portrait"
+name = "Plaid personnalisé avec portrait illustré de l'animal (impression à la demande)"
+strategy = "Marque animaux (permanent)"
+season = "Toute l'année, pic Noël"
+unit_cost = 48.0
+shipping_cost = 14.0
+price = 119.0
+est_cac = 30.0
+refund_rate = 0.04
+scores = { demand = 7, evidence = 5, competition = 6, supplier = 7, delivery = 6, return_risk = 7, seasonality = 7, regulatory = 9 }
+suppliers = ["Printify (impression Amérique du Nord)", "Gelato (production locale, à vérifier pour le Canada)", "Printful"]
+regulatory = "La photo appartient au client : consentement à l'usage + suppression après production (Loi 25). Pas de styles imitant un artiste vivant ou une marque."
+evidence = [
+  { kind = "estimate", signal = "Concurrents vendent le plaid portrait 79-110 USD (blogue Printify, intéressé)", url = "https://printify.com/knowledge-hub/deep-dive-into-custom-pet-blankets/" },
+  { kind = "estimate", signal = "Articles animaux personnalisés : +20 à 50 % en 2025 (détaillants suivis), prévision 2026 stable/légère baisse", url = "https://gripsintelligence.com/insights/industries/animals-pet-supplies/pet-accessories-and-custom-gear" },
+]
+
+[[product]]
+id = "brosse-angle-chat"
+name = "Brosse d'angle auto-toilettage pour chat (lot de 2)"
+strategy = "Marque animaux (permanent)"
+season = "Toute l'année"
+unit_cost = 4.5
+shipping_cost = 6.0
+price = 24.99
+est_cac = 12.0
+refund_rate = 0.03
+scores = { demand = 6, evidence = 4, competition = 4, supplier = 8, delivery = 7, return_risk = 9, seasonality = 9, regulatory = 9 }
+suppliers = ["CJdropshipping", "AliExpress via DSers"]
+regulatory = "Faible risque."
+evidence = [
+  { kind = "estimate", signal = "Désignée « produit viral TikTok » de la catégorie animaux (guide TikTok Shop, sans chiffres de ventes)", url = "https://www.dashboardly.io/tiktok-shop/pet-supplies" },
+]
+
+[[product]]
+id = "kit-anti-poils"
+name = "Kit anti-poils : rouleau réutilisable + 2 brosses d'angle (offre groupée)"
+strategy = "Marque animaux (permanent)"
+season = "Toute l'année"
+unit_cost = 11.0
+shipping_cost = 9.0
+price = 49.99
+est_cac = 16.0
+refund_rate = 0.03
+scores = { demand = 7, evidence = 6, competition = 6, supplier = 8, delivery = 7, return_risk = 9, seasonality = 9, regulatory = 9 }
+suppliers = ["CJdropshipping (un seul fournisseur pour expédier en un colis)", "BigBuy"]
+regulatory = "Faible risque. Un seul colis pour garder le coût de livraison bas."
+evidence = [
+  { kind = "hypothesis", signal = "Le kit répond au même besoin que les deux produits seuls ; une seule acquisition client pour un panier plus élevé. À valider en test.", url = "https://www.chewy.com/chomchom-roller-limited-edition-pet/dp/255118" },
+]
+
+# --- Produits écartés (gardés pour traçabilité) ---
+
+[[rejected]]
+name = "Réveil simulateur d'aube / lampe de luminothérapie"
+reason = "Aucune donnée de ventes vérifiable trouvée ; appareil 120 V nécessitant une certification CSA/cUL ; allégations santé risquées."
+
+[[rejected]]
+name = "Désodorisant concentré pour chenil (n° 1 TikTok Shop animaux US)"
+reason = "Produit chimique : étiquetage SIMDUT/consommation et transport plus contraignants ; ventes observées aux États-Unis seulement."
+
+[[rejected]]
+name = "Compléments alimentaires (magnésium, ashwagandha)"
+reason = "Licence de mise en marché (NPN) de Santé Canada obligatoire ; impossible en revente directe."
