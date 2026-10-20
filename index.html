@@ -123,11 +123,17 @@
         <header class="section__head">
           <p class="eyebrow">Boutique en ligne</p>
           <h2>Nos produits</h2>
-          <p>Ajoutez vos produits au panier, puis envoyez votre commande ou votre demande de devis en un clic.</p>
+          <p>Génétique, santé animale, matériel et équipement d'élevage : ajoutez vos produits au panier et envoyez votre commande ou votre demande de devis en un clic.</p>
         </header>
 
-        <div class="shop-filters" id="shopFilters" role="tablist" aria-label="Catégories"></div>
-        <div class="shop-grid" id="shopGrid"></div>
+        <div class="shop-tools">
+          <label class="shop-search">
+            <span aria-hidden="true">🔍</span>
+            <input type="search" id="shopSearch" placeholder="Rechercher un produit (ex. ivermectine, Charolaise, balance…)" aria-label="Rechercher un produit">
+          </label>
+          <div class="shop-filters" id="shopFilters" role="tablist" aria-label="Rayons"></div>
+        </div>
+        <div id="shopGrid"></div>
 
         <div class="howto">
           <h3>Comment commander ?</h3>

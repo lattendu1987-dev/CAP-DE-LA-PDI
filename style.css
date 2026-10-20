@@ -417,3 +417,66 @@ body.no-scroll { overflow: hidden; }
 .photo-img--hero { aspect-ratio: 4 / 3; box-shadow: 0 16px 40px rgba(0,0,0,.3); }
 .photo-img--tall { aspect-ratio: 4 / 5; }
 @media (max-width: 820px) { .photo-img--tall { aspect-ratio: 4 / 3; } }
+
+/* ==========================================================
+   VITRINE (rayons, recherche, cartes produits)
+   ========================================================== */
+.shop-tools { position: sticky; top: var(--header-h); z-index: 20; background: var(--cream); padding: .6rem 0 .2rem; margin-bottom: 1rem; }
+.shop-search {
+  display: flex; align-items: center; gap: .6rem; background: var(--white); border: 1px solid #d5e3d9;
+  border-radius: 999px; padding: .2rem 1rem; margin-bottom: .7rem; box-shadow: 0 2px 8px rgba(18,67,42,.05);
+}
+.shop-search input { flex: 1; border: 0; padding: .7rem 0; font: 400 1rem "Open Sans", sans-serif; background: none; min-width: 0; }
+.shop-search input:focus { outline: none; }
+.shop-search:focus-within { border-color: var(--green-500); box-shadow: 0 0 0 3px rgba(46,139,78,.15); }
+.chip em { font-style: normal; font-size: .75rem; opacity: .7; margin-left: .15rem; }
+.chip span { margin-right: .1rem; }
+
+.shelf { margin-bottom: 2.6rem; }
+.shelf__head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; padding-bottom: .8rem; border-bottom: 2px solid #e4ece6; }
+.shelf__icon { width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; background: var(--green-700); display: grid; place-items: center; font-size: 1.5rem; }
+.shelf__head h3 { margin: 0; font-size: 1.25rem; }
+.shelf__head p { color: var(--muted); font-size: .88rem; margin-top: .1rem; }
+.shelf__head > div { flex: 1; }
+.shelf__count { font-size: .8rem; font-weight: 600; color: var(--green-700); background: var(--green-100); padding: .25rem .7rem; border-radius: 999px; white-space: nowrap; }
+
+.shop-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.pcard { position: relative; transition: transform .2s, box-shadow .2s; }
+.pcard:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(18,67,42,.14); }
+.pcard__media { aspect-ratio: 1 / 1; background: #fff; overflow: hidden; border-bottom: 1px solid #eef2ef; }
+.pcard__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.pcard:hover .pcard__media img { transform: scale(1.04); }
+.pcard__media--icon { display: grid; place-items: center; font-size: 4rem; background: linear-gradient(135deg, var(--green-100), #f6faf7); }
+.pcard__flag {
+  position: absolute; top: 10px; left: 10px; font-size: .7rem; font-weight: 700; letter-spacing: .03em;
+  padding: .25rem .6rem; border-radius: 999px; background: #f5ecd6; color: #7a5b17; box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.pcard__flag--ok { background: var(--green-700); color: #fff; }
+.pcard__flag--dl { background: #f4c542; color: #1f1f1f; }
+.pcard__sub { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--green-500); }
+.pcard__body h3 { margin: .3rem 0 .3rem; }
+.pcard__rx { font-size: .78rem; color: #8a6a22; margin-top: .5rem; }
+.shop-empty { text-align: center; color: var(--muted); padding: 2rem 1rem; background: var(--white); border-radius: var(--radius); }
+
+@media (max-width: 480px) {
+  .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+  .pcard__body { padding: .75rem .75rem .9rem; }
+  .pcard__body h3 { font-size: .9rem; }
+  .pcard__desc { font-size: .8rem; }
+  .pcard__price { font-size: 1rem; }
+  .pcard__flag { font-size: .62rem; top: 6px; left: 6px; }
+  .pcard__buy { flex-direction: column; }
+  .qty { justify-content: space-between; }
+  .qty input { flex: 1; }
+  .pcard__add { padding: .6rem .4rem; font-size: .8rem; }
+  .pcard__opt { font-size: .85rem; padding: .45rem; }
+  .shelf__icon { width: 40px; height: 40px; font-size: 1.25rem; }
+  .shelf__head h3 { font-size: 1.05rem; }
+  .shelf__head p { display: none; }
+  .pcard__btn { font-size: .8rem; padding: .7rem .5rem; }
+}
+.pcard__media { aspect-ratio: 4 / 3; }
+.pcard__media img.fit-contain { object-fit: contain; background: #fff; }
+.pcard__media img.fit-cover { object-fit: cover; }
+.toast { opacity: 0; visibility: hidden; transition: transform .3s ease, opacity .3s ease, visibility .3s; }
+.toast.is-visible { opacity: 1; visibility: visible; }
