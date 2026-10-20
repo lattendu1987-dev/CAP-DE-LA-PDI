@@ -971,3 +971,17 @@ html.intro-on .hdr { opacity: 0; }
 }
 @media (max-width: 900px) { .hero__ui { padding-right: 84px; } .hero__dots { max-width: none; } }
 .ftr__motto { font-family: var(--ff-display); font-style: italic; color: var(--sun-2); font-size: 1.1rem; margin-top: -.4rem; }
+
+.ttc { font-size: .62em; font-weight: 700; letter-spacing: .04em; color: var(--muted); vertical-align: .15em; }
+.pp__price .ttc { font-family: var(--ff-body); font-size: .45em; }
+.shop__ttc { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+/* titres italiques : ne pas couper les lettres */
+.hero__title .w { padding-left: .06em; margin-left: -.06em; padding-right: .14em; margin-right: -.14em; }
+/* taureau : toujours voir la tête */
+.hero__pos-head { object-position: 70% 40%; }
+@media (max-width: 900px) { .hero__pos-head { object-position: 93% 30%; } }
+.hero__slide--sky .hero__bg { background: radial-gradient(900px 600px at 78% 40%, rgba(120, 170, 220, .25), transparent 60%), linear-gradient(135deg, #0f3324, #0b2219); }
+.hero__visual--portrait img { aspect-ratio: 845 / 971; object-fit: cover; max-height: 600px; }
+@media (max-width: 900px) { .hero__visual--portrait img { max-height: 30vh; } }
+@media (max-width: 600px) { .hero__visual--portrait img { max-height: 24vh; } }
+@media (max-width: 600px) and (max-height: 780px) { .hero__visual--portrait img { max-height: 20vh; } }

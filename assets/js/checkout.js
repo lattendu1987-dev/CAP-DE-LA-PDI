@@ -18,7 +18,7 @@
     const items = Cart.items(); if (!items.length) { emptyState(); return; }
     $("#coLines").innerHTML = linesHTML(true);
     const t = Cart.totals();
-    $("#coTotal").innerHTML = (t.priced.length ? `<div class="sum"><span>Sous-total</span><strong>${fmt(t.total)}</strong></div>` : "") +
+    $("#coTotal").innerHTML = (t.priced.length ? `<div class="sum"><span>Sous-total TTC</span><strong>${fmt(t.total)}</strong></div>` : "") +
       `<p class="sum-note">${t.quoted.length ? t.quoted.length + " article(s) sur devis, chiffré(s) par notre équipe. " : ""}Frais de livraison éventuels communiqués avant validation.</p>`;
     $("#coAirport").hidden = !items.some((l) => byId[l.id].cat === "reproducteurs");
   }
@@ -55,7 +55,7 @@
     if (t.priced.length) {
       L.push("", "À COMMANDER :");
       t.priced.forEach((l) => { const p = byId[l.id], pr = priceOf(p, l.option); L.push(`• ${l.qty} × ${p.name}${l.option ? " – " + l.option : ""} (${fmt(pr)} / ${unitOf(p, l.option)}) = ${fmt(pr * l.qty)}`); });
-      L.push(`Sous-total : ${fmt(t.total)} (hors frais de livraison éventuels)`);
+      L.push(`Sous-total TTC : ${fmt(t.total)} (hors frais de livraison éventuels)`);
     }
     if (t.quoted.length) {
       L.push("", "DEMANDE DE DEVIS :");

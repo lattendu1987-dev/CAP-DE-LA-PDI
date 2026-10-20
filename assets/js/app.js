@@ -39,7 +39,7 @@
     if (pr == null) return `<p class="${cls || "price"} price--quote">Prix sur devis</p>`;
     const pre = p.quote ? `<small>${esc(p.prefix || "À partir de")}</small>` : (p.options && p.options.some((o) => typeof o === "object") ? "<small>À partir de</small>" : "");
     const old = p.oldPrice ? `<s>${fmt(p.oldPrice)}</s>` : "";
-    return `<p class="${cls || "price"}">${pre}${fmt(pr)}${old} <em>/ ${esc(unitOf(p, label))}</em></p>`;
+    return `<p class="${cls || "price"}">${pre}${fmt(pr)} <b class="ttc">TTC</b>${old} <em>/ ${esc(unitOf(p, label))}</em></p>`;
   }
   function minPrice(p) {
     if (p.options && p.options.some((o) => typeof o === "object")) return Math.min(...p.options.map((o) => o.price));
@@ -136,7 +136,7 @@
     }
     body.innerHTML = linesHTML(false);
     const t = Cart.totals();
-    foot.innerHTML = `${t.priced.length ? `<div class="sum"><span>Sous-total</span><strong>${fmt(t.total)}</strong></div>` : ""}
+    foot.innerHTML = `${t.priced.length ? `<div class="sum"><span>Sous-total TTC</span><strong>${fmt(t.total)}</strong></div>` : ""}
       <p class="sum-note">${t.quoted.length ? "Les articles sur devis seront chiffrés par notre équipe. " : ""}Frais de livraison éventuels communiqués avant validation.</p>
       <a class="btn btn--primary btn--lg btn--block" href="${ROOT}commande.html">${t.priced.length ? "Passer la commande" : "Envoyer ma demande de devis"}</a>
       <button class="btn btn--outline btn--block" data-close-cart>Continuer mes achats</button>`;

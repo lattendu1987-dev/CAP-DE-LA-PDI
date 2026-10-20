@@ -416,7 +416,7 @@ def product_page(p):
     else:
         pre = f'<small>{E(p.get("prefix", "À partir de"))}</small>' if p.get("quote") else ""
         old = f' <s>{fmt(p["oldPrice"])}</s>' if p.get("oldPrice") else ""
-        price_html = f'<p class="pp__price" data-price>{pre}<span data-amount>{fmt(price)}</span>{old} <em>/ <span data-unit>{E(p["unit"])}</span></em></p>'
+        price_html = f'<p class="pp__price" data-price>{pre}<span data-amount>{fmt(price)}</span> <b class="ttc">TTC</b>{old} <em>/ <span data-unit>{E(p["unit"])}</span></em></p>'
 
     opts = ""
     if p.get("options"):
