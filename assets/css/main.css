@@ -835,3 +835,11 @@ a.hero__note:hover { text-decoration: underline; }
 .event__ctas .btn { white-space: normal; text-align: center; }
 @media (max-width: 860px) { .event__inner { grid-template-columns: auto 1fr; } .event__ctas { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; } }
 @media (max-width: 480px) { .event__inner { grid-template-columns: 1fr; } .event__date { width: 72px; height: 72px; } .event__ctas { grid-template-columns: 1fr; } }
+
+.contact-person { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.6rem; margin-top: 2rem; }
+.contact-person > * { min-width: 0; }
+.contact-person__img { width: 220px; height: 220px; object-fit: cover; border-radius: 50%; }
+.contact-person h3 { font-size: 1.6rem; margin-bottom: .2rem; }
+.contact-person__role { font-weight: 600; color: var(--green); font-size: .92rem; margin-bottom: .7rem; }
+.contact-person p:not(.eyebrow):not(.contact-person__role) { color: var(--muted); margin-bottom: 1.1rem; }
+@media (max-width: 760px) { .contact-person { grid-template-columns: 1fr; text-align: center; justify-items: center; } .contact-person__img { width: 160px; height: 160px; } .contact-person p { margin-inline: auto; } }
