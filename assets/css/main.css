@@ -985,3 +985,12 @@ html.intro-on .hdr { opacity: 0; }
 @media (max-width: 900px) { .hero__visual--portrait img { max-height: 30vh; } }
 @media (max-width: 600px) { .hero__visual--portrait img { max-height: 24vh; } }
 @media (max-width: 600px) and (max-height: 780px) { .hero__visual--portrait img { max-height: 20vh; } }
+.nl-qr { display: flex; align-items: center; gap: .9rem; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: .7rem; }
+.nl-qr img { width: 96px; height: 96px; border-radius: 8px; background: #fff; padding: 4px; flex-shrink: 0; }
+.nl-qr span { font-size: .8rem; color: rgba(255,255,255,.7); }
+@media (hover: none) and (pointer: coarse) { .nl-qr { display: none; } }
+.ccard img.qr { width: 140px; height: 140px; margin-top: .4rem; border: 1px solid var(--line); border-radius: 10px; }
+.f2__group { display: flex; align-items: center; gap: 1rem; margin-top: 1.6rem; padding: .9rem; border-radius: 16px; background: rgba(37,211,102,.1); border: 1px solid rgba(37,211,102,.35); text-decoration: none; color: #fff; }
+.f2__group img { width: 88px; height: 88px; background: #fff; border-radius: 10px; padding: 4px; flex-shrink: 0; }
+.f2__group strong { display: block; font-size: .95rem; }
+.f2__group small { color: rgba(255,255,255,.7); font-size: .82rem; }

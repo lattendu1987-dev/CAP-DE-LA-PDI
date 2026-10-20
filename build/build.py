@@ -58,6 +58,7 @@ def build_images():
     top = max(0, (og.height - 630) // 2)
     og.crop((0, top, 1200, top + 630)).save(os.path.join(OUT_IMG, "og-cap-de-la-pdi.jpg"), quality=85)
     Image.open(os.path.join(SRC, "favicon.png")).save(os.path.join(OUT_IMG, "favicon.png"))
+    Image.open(os.path.join(SRC, "qr-groupe-insemination.png")).convert("RGB").save(os.path.join(OUT_IMG, "qr-groupe-insemination.png"))
     Image.open(os.path.join(SRC, "logo-cap-pdi.png")).convert("RGBA").resize((400, 400), Image.LANCZOS).save(os.path.join(OUT_IMG, "logo-cap-pdi.png"))
 
 
@@ -211,10 +212,11 @@ def footer(root):
     <div>
       <p class="eyebrow eyebrow--light">Restez informé</p>
       <h2 id="nl-title">Nouveautés, arrivages et promotions</h2>
-      <p>Rejoignez le groupe d'entraide des éleveurs sur WhatsApp, ou inscrivez votre e-mail : nous vous écrirons à chaque arrivage.</p>
+      <p>Éleveurs de porcs : rejoignez notre groupe WhatsApp « Insémination Congo Brazza ». Pour tous : inscrivez votre e-mail, nous vous écrirons à chaque arrivage.</p>
     </div>
     <div class="newsletter__actions">
-      <a class="btn btn--wa btn--lg" href="{C.SITE["group"]}" target="_blank" rel="noopener">{ICON["wa"]} Rejoindre le groupe WhatsApp</a>
+      <a class="btn btn--wa btn--lg" href="{C.SITE["group"]}" target="_blank" rel="noopener">{ICON["wa"]} Groupe « Insémination Congo Brazza »</a>
+      <div class="nl-qr"><img src="{root}assets/img/qr-groupe-insemination.png" width="120" height="120" alt="Code QR du groupe WhatsApp Insémination Congo Brazza" loading="lazy"><span>Sur ordinateur : scannez ce code avec la caméra de WhatsApp pour rejoindre le groupe.</span></div>
       <form class="nl-form" id="nlForm" novalidate>
         <label class="sr-only" for="nlEmail">Votre adresse e-mail</label>
         <input id="nlEmail" type="email" name="email" placeholder="Votre e-mail" autocomplete="email" required>
