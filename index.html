@@ -60,6 +60,12 @@
     </section>
 
     <!-- ===== CHIFFRES CLÉS ===== -->
+    <a class="ribbon" href="#produits" data-vaccin-ribbon>
+      <span class="ribbon__tag">Nouveau</span>
+      <span>Vaccin porc 3-en-1 de France : arrivage le <strong>20 novembre 2026</strong>, réservez avant le 13 novembre</span>
+      <span class="ribbon__go" aria-hidden="true">→</span>
+    </a>
+
     <div class="highlights">
       <div class="container highlights__grid">
         <div><strong>4</strong><span>sites à Pointe-Noire</span></div>
@@ -125,6 +131,30 @@
           <h2>Nos produits</h2>
           <p>Génétique, santé animale, matériel et équipement d'élevage : ajoutez vos produits au panier et envoyez votre commande ou votre demande de devis en un clic.</p>
         </header>
+
+        <aside class="promo" id="promoVaccin" aria-label="Précommande vaccin porc">
+          <img class="promo__img" src="images/vaccin-affiche.jpg" alt="Affiche : 1 seul vaccin, 3 maladies stoppées – rouget, parvovirose, leptospirose – 13 000 F CFA par porc vacciné" loading="lazy">
+          <div class="promo__body">
+            <p class="promo__eyebrow">🇫🇷 Nouveau · Produit de France · <span data-vaccin-status>Réservations ouvertes</span></p>
+            <h3>1 seul vaccin : 3 maladies stoppées</h3>
+            <ul class="promo__list">
+              <li><strong>Rouget</strong> : fièvre, plaques rouges, avortements</li>
+              <li><strong>Parvovirose</strong> : momies, mises bas ratées, petites portées</li>
+              <li><strong>Leptospirose</strong> : avortements, porcelets faibles</li>
+            </ul>
+            <p class="promo__price"><strong>13 000 F CFA</strong> par porc vacciné <span>primo-vaccination + rappel inclus</span></p>
+            <p class="promo__note">Vente par flacon de 10 doses = 5 porcs protégés = <strong>65 000 F CFA</strong>.</p>
+            <div class="promo__dates">
+              <div><small>Arrivage au Congo</small><strong>20 novembre 2026</strong></div>
+              <div><small>Réservez et payez avant le</small><strong>13 novembre 2026</strong></div>
+            </div>
+            <div class="promo__buy">
+              <label class="promo__qty">Flacons <input type="number" min="1" value="1" inputmode="numeric" data-vaccin-qty></label>
+              <button type="button" class="btn btn--primary" data-vaccin-add>Réserver mes vaccins</button>
+            </div>
+            <p class="promo__small">Places limitées aux doses commandées. Une portée perdue coûte bien plus cher qu'un vaccin.</p>
+          </div>
+        </aside>
 
         <div class="shop-tools">
           <label class="shop-search">
@@ -294,11 +324,12 @@
             <div class="guide__body">
               <h3>Calculateur aliment porc</h3>
               <ul class="guide__list">
-                <li>5 formules équilibrées : porcelets, croissance, finition, truies</li>
-                <li>Quantités exactes à peser</li>
-                <li>Coût au kg et au sac calculé</li>
+                <li>5 formules : porcelet 2e âge, croissance, finition, truie gestante, truie allaitante</li>
+                <li>Maïs, soja 49 %, son de blé, palmiste, farine de poisson, prémix 1 %</li>
+                <li>Poids exact de chaque ingrédient, coût au kg et au sac de 50 kg</li>
+                <li>Contrôle automatique de l'équilibre de l'aliment</li>
               </ul>
-              <p class="guide__meta">Fichier Excel · Téléchargement immédiat</p>
+              <p class="guide__meta">Fichier Excel · Paiement MTN / Airtel Money</p>
               <p class="guide__price"><small>Prix de lancement</small>14 900 FCFA</p>
               <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_txlatneq" target="_blank" rel="noopener">Acheter</a>
             </div>
@@ -308,16 +339,45 @@
             <div class="guide__body">
               <h3>Suivi des truies</h3>
               <ul class="guide__list">
-                <li>Mises bas et chaleurs calculées</li>
-                <li>Alerte consanguinité</li>
-                <li>Classement des truies rentables</li>
+                <li>Dates de chaleurs et de mise bas calculées</li>
+                <li>Classement des truies, de la plus à la moins rentable</li>
+                <li>Alertes de consanguinité</li>
+                <li>Simple, en français, sur téléphone ou ordinateur</li>
               </ul>
-              <p class="guide__meta">Fichier Excel · Téléchargement immédiat</p>
-              <p class="guide__price"><small>Prix de lancement</small>9 900 FCFA</p>
+              <p class="guide__meta">Fichier Excel · Paiement MTN / Airtel Money</p>
+              <p class="guide__price"><small>Promo · au lieu de <s>15 000 FCFA</s></small>9 900 FCFA</p>
               <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_xmkoxo9e" target="_blank" rel="noopener">Acheter</a>
             </div>
           </article>
         </div>
+
+        <!-- Programme d'affiliation -->
+        <div class="affil">
+          <div class="affil__head">
+            <span class="affil__pct">25 %</span>
+            <div>
+              <p class="eyebrow">Programme d'affiliation</p>
+              <h3>Recommandez nos outils et gagnez de l'argent</h3>
+              <p>Touchez <strong>25 % de commission</strong> sur chaque vente faite grâce à votre lien : environ <strong>3 700 F</strong> par Calculateur et <strong>2 500 F</strong> par Suivi des Truies. Chariow calcule et vous verse vos commissions automatiquement.</p>
+            </div>
+          </div>
+          <ol class="affil__steps">
+            <li><strong>Créez votre compte gratuit</strong> sur <a href="https://chariow.com" target="_blank" rel="noopener">chariow.com</a>.</li>
+            <li><strong>Ouvrez le « Catalogue » d'affiliation</strong> et cherchez l'identifiant du produit : <code>prd_txlatneq</code> (Calculateur) ou <code>prd_xmkoxo9e</code> (Suivi des Truies).</li>
+            <li><strong>Cliquez sur « Générer un lien d'affiliation »</strong> et partagez-le autour de vous.</li>
+          </ol>
+          <div class="affil__actions">
+            <a class="btn btn--primary" href="https://chariow.com" target="_blank" rel="noopener">Devenir affilié</a>
+            <a class="btn btn--wa" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20devenir%20affili%C3%A9%20et%20recevoir%20les%20images%20et%20textes%20de%20pub." target="_blank" rel="noopener">Recevoir les images et textes de pub</a>
+          </div>
+        </div>
+
+        <!-- Groupe d'entraide -->
+        <a class="community" href="https://chat.whatsapp.com/HusaXUhaVfu4SBQWiqmLqY" target="_blank" rel="noopener">
+          <span class="community__icon" aria-hidden="true">👥</span>
+          <span><strong>Rejoignez le groupe d'entraide CAP DE LA PDI</strong><small>Échangez avec d'autres éleveurs sur WhatsApp : conseils, alertes, bonnes affaires.</small></span>
+          <span class="community__go" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
 
@@ -349,12 +409,19 @@
           <article class="site">
             <span class="site__badge">Dépôt</span>
             <h3>Ngoyo</h3>
-            <p>Pointe-Noire</p>
+            <p>Arrêt La Datcha, Pointe-Noire<br>Aliment de bétail</p>
+            <a class="site__tel" href="tel:+242067434310">📞 06 743 43 10</a>
           </article>
           <article class="site">
             <span class="site__badge">Dépôt</span>
             <h3>Côte Matève</h3>
             <p>Pointe-Noire</p>
+          </article>
+          <article class="site">
+            <span class="site__badge">Dépôt</span>
+            <h3>Djeno</h3>
+            <p>Arrêt Supermarché, Djeno<br>Aliment de bétail</p>
+            <a class="site__tel" href="tel:+242067958233">📞 06 795 82 33</a>
           </article>
           <article class="site">
             <span class="site__badge site__badge--farm">Ferme</span>
@@ -413,6 +480,10 @@
             <span class="contact__icon">✉️</span>
             <span><small>E-mail</small>la-pdi@hotmail.com</span>
           </a>
+          <a class="contact__item" href="https://chat.whatsapp.com/HusaXUhaVfu4SBQWiqmLqY" target="_blank" rel="noopener">
+            <span class="contact__icon">👥</span>
+            <span><small>Groupe d'entraide WhatsApp</small>Rejoindre la communauté</span>
+          </a>
           <div class="contact__item">
             <span class="contact__icon">🕒</span>
             <span><small>Horaires <em data-open-status></em></small>Lun–ven 8h–12h / 13h30–17h · Sam 8h–12h · Dim fermé</span>
@@ -459,6 +530,7 @@
             <option>Retrait au siège La Base</option>
             <option>Retrait au dépôt Ngoyo</option>
             <option>Retrait au dépôt Côte Matève</option>
+            <option>Retrait au dépôt Djeno</option>
             <option>Expédition / livraison (à convenir)</option>
           </select>
         </label>
