@@ -12,7 +12,7 @@
   const dots = $$(".hero__dot", dotsBox);
   let cur = 0, timer = null, paused = reduce, hover = false;
 
-  function go(n) {
+  let go = function (n) {
     slides[cur].classList.remove("is-active"); slides[cur].setAttribute("aria-hidden", "true");
     cur = (n + slides.length) % slides.length;
     slides[cur].classList.add("is-active"); slides[cur].removeAttribute("aria-hidden");
@@ -38,7 +38,111 @@
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1)); x0 = null;
   }, { passive: true });
   document.addEventListener("visibilitychange", () => { if (document.hidden) clearTimeout(timer); else schedule(); });
-  setPaused(reduce); go(0);
+  /* ---- Titres : découpe mot par mot ---- */
+  $$(".hero__title", hero).forEach((t) => {
+    let i = 0;
+    const walk = (node) => Array.from(node.childNodes).forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+          const w = document.createElement("span"); w.className = "w";
+          const inner = document.createElement("span"); inner.textContent = part; inner.style.setProperty("--i", i++);
+          w.appendChild(inner); frag.appendChild(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(t);
+  });
+
+  /* ---- Balayage lumineux ---- */
+  const flash = document.createElement("div"); flash.className = "hero__flash"; hero.appendChild(flash);
+  const _go = go;
+  go = function (n) { _go(n); if (!reduce) { flash.classList.remove("go"); void flash.offsetWidth; flash.classList.add("go"); } };
+
+  /* ---- Parallaxe souris + défilement (ordinateur) ---- */
+  if (!reduce && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let raf = 0, mx = 0, my = 0;
+    hero.addEventListener("mousemove", (e) => {
+      const r = hero.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width - .5; my = (e.clientY - r.top) / r.height - .5;
+      if (!raf) raf = requestAnimationFrame(() => { hero.style.setProperty("--mx", mx.toFixed(3)); hero.style.setProperty("--my", my.toFixed(3)); raf = 0; });
+    });
+    let sraf = 0;
+    addEventListener("scroll", () => {
+      if (sraf) return;
+      sraf = requestAnimationFrame(() => { const v = Math.min(1, Math.max(0, scrollY / hero.offsetHeight)); hero.style.setProperty("--sy", v.toFixed(3)); sraf = 0; });
+    }, { passive: true });
+  }
+
+  /* ---- Introduction cinématique (une fois par session) ---- */
+  const root = document.documentElement, intro = $("#intro");
+  function startSite() { setPaused(reduce); go(0); }
+  if (intro && root.classList.contains("intro-on")) {
+    slides[0].classList.remove("is-active");
+    intro.setAttribute("aria-hidden", "false");
+    const brand = $(".intro__brand", intro);
+    brand.innerHTML = Array.from("CAP DE LA PDI").map((c, i) => `<span style="--i:${i}">${c === " " ? "&nbsp;" : c}</span>`).join("");
+    const motes = $(".intro__motes", intro), n = innerWidth < 600 ? 14 : 34;
+    let h = ""; for (let i = 0; i < n; i++) h += `<i style="left:${Math.random() * 100}%;--s:${2 + Math.random() * 5}px;--d:${2 + Math.random() * 1.6}s;--dl:${Math.random() * 1.2}s;--x:${(Math.random() - .5) * 120}px"></i>`;
+    motes.innerHTML = h;
+    let done = false;
+    const finish = () => {
+      if (done) return; done = true;
+      try { sessionStorage.setItem("pdi-intro", "1"); } catch (e) {}
+      root.classList.remove("intro-on"); intro.remove(); startSite();
+    };
+    const skip = () => { if (done) return; intro.classList.add("is-leaving"); setTimeout(finish, 650); };
+    intro.addEventListener("animationend", (e) => { if (e.target === intro) finish(); });
+    $(".intro__skip", intro).addEventListener("click", skip);
+    intro.addEventListener("click", (e) => { if (!e.target.closest(".intro__skip")) skip(); });
+    addEventListener("keydown", function k(e) { if (["Escape", "Enter", " "].includes(e.key)) { skip(); removeEventListener("keydown", k); } });
+    setTimeout(finish, 4500); // sécurité
+    $(".intro__skip", intro).focus({ preventScroll: true });
+  } else { startSite(); }
+
+  /* ---- Musique d'ambiance (désactivée par défaut, générée par le navigateur) ---- */
+  const sb = $(".hero__sound", hero);
+  if (sb) {
+    let ctx = null, master = null;
+    const startPad = () => {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+      const filter = ctx.createBiquadFilter(); filter.type = "lowpass"; filter.frequency.value = 900; filter.connect(master);
+      [130.81, 196.0, 261.63, 329.63, 392.0].forEach((f, i) => {
+        const o = ctx.createOscillator(), g = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+        o.type = i % 2 ? "sine" : "triangle"; o.frequency.value = f; o.detune.value = (i - 2) * 4;
+        g.gain.value = .05; lfo.frequency.value = .05 + i * .03; lg.gain.value = .03;
+        lfo.connect(lg); lg.connect(g.gain); o.connect(g); g.connect(filter); o.start(); lfo.start();
+      });
+    };
+    sb.addEventListener("click", () => {
+      const on = sb.getAttribute("aria-pressed") !== "true";
+      if (on && !ctx) startPad();
+      if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume();
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.linearRampToValueAtTime(on ? .5 : 0, ctx.currentTime + 1.2);
+      sb.setAttribute("aria-pressed", on); sb.setAttribute("aria-label", on ? "Couper la musique d'ambiance" : "Activer la musique d'ambiance");
+    });
+  }
+
+  /* ---- Vidéo chargée seulement quand elle est visible (et pas en mode économie de données) ---- */
+  $$("video[data-lazy-video]").forEach((v) => {
+    const conn = navigator.connection || {};
+    const light = conn.saveData || /2g/.test(conn.effectiveType || "");
+    const load = () => { const s = v.querySelector("source[data-src]"); if (s) { s.src = s.dataset.src; s.removeAttribute("data-src"); v.load(); } };
+    if (light || reduce) {
+      const b = document.createElement("button"); b.className = "f2__play"; b.type = "button"; b.setAttribute("aria-label", "Lire la vidéo"); b.textContent = "▶";
+      v.parentNode.appendChild(b);
+      b.addEventListener("click", () => { load(); v.play(); b.remove(); });
+      return;
+    }
+    if (!("IntersectionObserver" in window)) { load(); v.play().catch(() => {}); return; }
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) { load(); v.play().catch(() => {}); } else v.pause(); }, { threshold: .25 }).observe(v);
+  });
+
 
   // Bandeaux datés (masqués après la date de fin)
   $$("[data-until]").forEach((el) => { if (new Date().toISOString().slice(0, 10) > el.dataset.until) el.hidden = true; });

@@ -282,7 +282,7 @@ BASE = '''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{root}assets/css/main.css?v={v}">
-{preload}{jsonld}
+{preload}{jsonld}{headextra}
 </head>
 <body class="page-{page}" data-root="{root}">
 {header}
@@ -297,13 +297,13 @@ BASE = '''<!DOCTYPE html>
 </html>
 '''
 
-def render(page, body, root="", title="", desc="", canonical="", og_image=None, jsonld="", scripts="", overlay=False, og_type="website", preload=""):
+def render(page, body, root="", title="", desc="", canonical="", og_image=None, jsonld="", scripts="", overlay=False, og_type="website", preload="", headextra=""):
     body = expand(body, root)
     out = BASE.format(
         title=E(title), desc=E(desc), canonical=canonical or C.SITE["url"], og_image=og_image or C.SITE["url"] + "assets/img/og-cap-de-la-pdi.jpg",
         root=root, v=VERSION, jsonld=jsonld, page=page, header=header(root, overlay), body=body, footer=footer(root),
         scripts="\n".join(f'<script src="{root}assets/js/{s}.js?v={VERSION}"></script>' for s in scripts.split() if s),
-        og_type=og_type, preload=preload)
+        og_type=og_type, preload=preload, headextra=headextra)
     return out
 
 def expand(body, root):
@@ -334,6 +334,8 @@ def expand(body, root):
     body = body.replace("{{icon:arrow}}", ICON["arrow"]).replace("{{icon:wa}}", ICON["wa"])
     body = body.replace("{{icon:phone}}", ICON["phone"]).replace("{{icon:mail}}", ICON["mail"]).replace("{{icon:pin}}", ICON["pin"]).replace("{{icon:clock}}", ICON["clock"])
     return body
+
+INTRO_HEAD = """<script>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!sessionStorage.getItem('pdi-intro')&&!/[?&]nointro/.test(location.search))document.documentElement.classList.add('intro-on')}catch(e){}</script>"""
 
 def jsonld(obj):
     return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False) + "</script>"
@@ -384,7 +386,7 @@ def build_pages():
             d = img_data(meta["preload"])
             preload = f'<link rel="preload" as="image" href="{d["src"]}" imagesrcset="{d["srcset"]}" imagesizes="100vw" fetchpriority="high">\n'
         write(out, render(meta["page"], body, meta.get("root", ""), meta["title"], meta["desc"], canonical, jsonld=ld,
-                          scripts=meta.get("scripts", ""), overlay=meta.get("overlay", False), preload=preload))
+                          scripts=meta.get("scripts", ""), overlay=meta.get("overlay", False), preload=preload, headextra=INTRO_HEAD if meta.get("intro") else ""))
         if not meta.get("noindex"):
             urls.append(canonical)
     return urls
