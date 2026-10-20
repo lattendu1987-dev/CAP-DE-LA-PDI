@@ -229,6 +229,7 @@ def footer(root):
     <div class="ftr__brand">
       <a class="brand brand--light" href="{root}index.html"><img src="{root}assets/img/logo-cap-pdi.png" alt="" width="52" height="52" loading="lazy"><span class="brand__txt"><strong>CAP DE LA PDI</strong><small>{E(C.SITE["legal_name"])}</small></span></a>
       <p>Génétique, santé animale, alimentation et matériel d'élevage à Pointe-Noire. Représentant officiel de GENES DIFFUSION pour les deux Congos.</p>
+      <p class="ftr__motto">« Le travail continue ! »</p>
       <div class="ftr__contact">{phones}<a href="https://wa.me/{C.SITE["whatsapp"]}" target="_blank" rel="noopener">{ICON["wa"]} {C.SITE["whatsapp_display"]}</a><a href="mailto:{C.SITE["email"]}">{ICON["mail"]} {C.SITE["email"]}</a></div>
     </div>
     <div><h3>Boutique</h3><ul>{cats}</ul></div>

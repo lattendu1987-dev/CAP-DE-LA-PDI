@@ -970,3 +970,4 @@ html.intro-on .hdr { opacity: 0; }
   .rail.reveal > * { opacity: 1; transform: none; }
 }
 @media (max-width: 900px) { .hero__ui { padding-right: 84px; } .hero__dots { max-width: none; } }
+.ftr__motto { font-family: var(--ff-display); font-style: italic; color: var(--sun-2); font-size: 1.1rem; margin-top: -.4rem; }
