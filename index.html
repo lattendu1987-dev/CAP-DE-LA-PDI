@@ -151,7 +151,10 @@
     <!-- ===== GÉNÉTIQUE & INSÉMINATION ===== -->
     <section class="section" id="genetique">
       <div class="container split">
-        <img class="photo-img photo-img--tall" src="images/race-limousine.jpg" alt="Taureau Limousin sélectionné" loading="lazy">
+        <figure class="photo-fig">
+          <img class="photo-img photo-img--tall" src="images/porcelet-thor-afrique.jpg" alt="Porcelet sevré issu de la génétique THOR, porté par un éleveur dans sa porcherie au Congo" loading="lazy">
+          <figcaption>Porcelet sevré issu de la génétique <strong>THOR</strong>, élevé chez nous au Congo.</figcaption>
+        </figure>
         <div>
           <p class="eyebrow">Performance de vos élevages</p>
           <h2>Génétique &amp; insémination</h2>
@@ -325,6 +328,18 @@
           <p class="eyebrow">Où nous trouver</p>
           <h2>Nos dépôts</h2>
         </header>
+        <div class="hours">
+          <div class="hours__head">
+            <span class="hours__icon" aria-hidden="true">🕒</span>
+            <h3>Horaires d'ouverture</h3>
+            <span class="hours__status" data-open-status></span>
+          </div>
+          <table class="hours__table">
+            <tr><th>Lundi – vendredi</th><td>8h00 – 12h00<br>13h30 – 17h00</td></tr>
+            <tr><th>Samedi</th><td>8h00 – 12h00</td></tr>
+            <tr><th>Dimanche</th><td class="hours__closed">Fermé</td></tr>
+          </table>
+        </div>
         <div class="sites">
           <article class="site">
             <span class="site__badge">Siège</span>
@@ -398,6 +413,10 @@
             <span class="contact__icon">✉️</span>
             <span><small>E-mail</small>la-pdi@hotmail.com</span>
           </a>
+          <div class="contact__item">
+            <span class="contact__icon">🕒</span>
+            <span><small>Horaires <em data-open-status></em></small>Lun–ven 8h–12h / 13h30–17h · Sam 8h–12h · Dim fermé</span>
+          </div>
           <div class="contact__item">
             <span class="contact__icon">📍</span>
             <span><small>Siège</small>La Base, Avenue Félix TCHIKAYA, Pointe-Noire</span>
@@ -474,6 +493,18 @@
       toggle.setAttribute('aria-expanded', false);
     }));
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Ouvert / fermé maintenant (heure de Pointe-Noire)
+    (function () {
+      let d;
+      try { d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Brazzaville' })); } catch (e) { return; }
+      const day = d.getDay(), m = d.getHours() * 60 + d.getMinutes();
+      const open = (day >= 1 && day <= 5 && ((m >= 480 && m < 720) || (m >= 810 && m < 1020))) || (day === 6 && m >= 480 && m < 720);
+      document.querySelectorAll('[data-open-status]').forEach(el => {
+        el.textContent = open ? 'Ouvert maintenant' : 'Fermé actuellement';
+        el.classList.add(open ? 'is-open' : 'is-closed');
+      });
+    })();
   </script>
   <script src="shop.js"></script>
 </body>
