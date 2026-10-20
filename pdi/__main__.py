@@ -1,4 +1,4 @@
-"""Point d'entrée : `python -m pdi [classement|simulation|rapport]`.
+"""Point d'entrée : `python -m pdi [site|affiliation|classement|simulation|rapport]`.
 
 `rapport` produit un fichier Markdown chiffré (docs/rapport-chiffres.md) régénéré
 à chaque changement de configuration.
@@ -89,7 +89,13 @@ def report() -> str:
 def main(argv: list[str]) -> int:
     cmd = argv[1] if len(argv) > 1 else "rapport"
     settings, catalog = config.settings(), config.products()
-    if cmd == "classement":
+    if cmd == "site":
+        from .site import build
+        print(f"Site généré : {build()}")
+    elif cmd == "affiliation":
+        from .affiliate import table_md
+        print(table_md())
+    elif cmd == "classement":
         print(ranking_md(settings, catalog))
     elif cmd == "simulation":
         print(simulation_md(settings))
