@@ -1,0 +1,59 @@
+<!--{"page":"commande","title":"Finaliser ma commande | CAP DE LA PDI","desc":"Finalisez votre commande ou votre demande de devis CAP DE LA PDI : retrait en dépôt à Pointe-Noire ou livraison, paiement Mobile Money.","scripts":"checkout","noindex":true}-->
+<div class="wrap">
+  <nav class="crumbs" aria-label="Fil d'Ariane"><a href="{{root}}index.html">Accueil</a><span>/</span><a href="{{root}}boutique.html">Boutique</a><span>/</span><span aria-current="page">Commande</span></nav>
+</div>
+<div id="checkoutApp">
+  <div class="wrap checkout">
+    <form id="coForm" novalidate>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:.6rem">Finaliser ma commande</h1>
+      <p class="lead" style="margin-bottom:1.6rem">Votre commande est envoyée à notre équipe, qui vous confirme la disponibilité, le montant total et les modalités de paiement. Rien n'est payé sur ce site.</p>
+
+      <div class="box">
+        <h2><b>1</b> Vos coordonnées</h2>
+        <div class="fields">
+          <label class="field">Nom et prénom / société *<input name="nom" autocomplete="name" required maxlength="80"><span class="err"></span></label>
+          <label class="field">Téléphone (WhatsApp de préférence) *<input name="tel" type="tel" autocomplete="tel" required maxlength="25" placeholder="+242 06 …"><span class="err"></span></label>
+          <label class="field">E-mail (facultatif)<input name="email" type="email" autocomplete="email" maxlength="100"><span class="err"></span></label>
+          <label class="field">Ville<input name="ville" autocomplete="address-level2" maxlength="60" placeholder="Pointe-Noire"><span class="err"></span></label>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2><b>2</b> Retrait ou livraison</h2>
+        <div class="radios" id="coDelivery"></div>
+        <div class="fields" style="margin-top:1rem">
+          <label class="field field--full" id="depotField">Point de retrait<select name="depot" id="coDepot"></select></label>
+          <label class="field field--full" id="addrField" hidden>Adresse ou quartier de livraison *<input name="adresse" maxlength="160"><span class="err"></span></label>
+        </div>
+        <p class="sum-note" id="coAirport" hidden style="margin-top:.8rem">🐷 Reproducteurs AXIOM : enlèvement à l'aéroport du Congo aux frais de l'acheteur (fret et dédouanement inclus dans le prix).</p>
+      </div>
+
+      <div class="box">
+        <h2><b>3</b> Mode de paiement souhaité</h2>
+        <div class="radios" id="coPay"></div>
+        <p class="sum-note" style="margin-top:.8rem">Le paiement se fait après confirmation de votre commande par notre équipe, qui vous communique les instructions. Reproducteurs AXIOM : 80 % à la signature du devis, 20 % au plus tard 1 mois avant le départ.</p>
+      </div>
+
+      <div class="box">
+        <h2><b>4</b> Message (facultatif)</h2>
+        <label class="field field--full"><span class="sr-only">Message</span><textarea name="message" rows="3" maxlength="600" placeholder="Précisions, produit recherché, date souhaitée…"></textarea></label>
+        <label class="consent"><input type="checkbox" name="cgv" required> <span>J'accepte les <a href="{{root}}cgv.html" target="_blank">conditions générales de vente</a> et la <a href="{{root}}confidentialite.html" target="_blank">politique de confidentialité</a>. *</span></label>
+        <p class="field"><span class="err" id="cgvErr"></span></p>
+        <div style="display:grid;gap:.7rem">
+          <button class="btn btn--wa btn--lg btn--block" type="submit" data-via="whatsapp">{{icon:wa}} Envoyer ma commande par WhatsApp</button>
+          <button class="btn btn--outline btn--lg btn--block" type="submit" data-via="email">{{icon:mail}} Envoyer par e-mail</button>
+        </div>
+      </div>
+    </form>
+
+    <aside class="summary">
+      <div class="box">
+        <h2>Récapitulatif</h2>
+        <div id="coLines"></div>
+        <div id="coTotal" style="margin-top:1rem;display:grid;gap:.4rem"></div>
+        <a class="link-arrow" href="{{root}}boutique.html" style="margin-top:1rem">Continuer mes achats {{icon:arrow}}</a>
+        <p class="secure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>Vos informations ne sont pas enregistrées par ce site : elles sont uniquement transmises dans votre message à CAP DE LA PDI.</span></p>
+      </div>
+    </aside>
+  </div>
+</div>

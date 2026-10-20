@@ -1,583 +1,318 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAP DE LA PDI – Coopérative Agro-Pastorale | Pointe-Noire, Congo</title>
-  <meta name="description" content="CAP DE LA PDI, Coopérative Agro-Pastorale de la Production Diverse des IPOLO à Pointe-Noire : aliments pour bétail, produits vétérinaires, élevage porcin, génétique et insémination artificielle.">
-  <meta name="theme-color" content="#1f6b3a">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="apple-touch-icon" href="images/favicon.png">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAP DE LA PDI – Génétique, santé animale et matériel d&#x27;élevage à Pointe-Noire</title>
+<meta name="description" content="Coopérative agro-pastorale à Pointe-Noire : semences GENES DIFFUSION, reproducteurs porcins AXIOM, vaccins et médicaments vétérinaires, aliment et matériel d&#x27;élevage. Commande en ligne, paiement Mobile Money.">
+<link rel="canonical" href="https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/">
+<meta name="theme-color" content="#0e3b29">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CAP DE LA PDI">
+<meta property="og:title" content="CAP DE LA PDI – Génétique, santé animale et matériel d&#x27;élevage à Pointe-Noire">
+<meta property="og:description" content="Coopérative agro-pastorale à Pointe-Noire : semences GENES DIFFUSION, reproducteurs porcins AXIOM, vaccins et médicaments vétérinaires, aliment et matériel d&#x27;élevage. Commande en ligne, paiement Mobile Money.">
+<meta property="og:url" content="https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/">
+<meta property="og:image" content="https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/assets/img/og-cap-de-la-pdi.jpg">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/main.css?v=20261020">
+<link rel="preload" as="image" href="assets/img/race-charolaise-800.webp" imagesrcset="assets/img/race-charolaise-400.webp 400w, assets/img/race-charolaise-800.webp 800w, assets/img/race-charolaise-1200.webp 1200w, assets/img/race-charolaise-1800.webp 1800w" imagesizes="100vw" fetchpriority="high">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Store", "name": "CAP DE LA PDI", "legalName": "Coopérative Agro-Pastorale de la Production Diverse des IPOLO", "url": "https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/", "logo": "https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/assets/img/logo-cap-pdi.png", "image": "https://lattendu1987-dev.github.io/CAP-DE-LA-PDI/assets/img/og-cap-de-la-pdi.jpg", "email": "la-pdi@hotmail.com", "telephone": "+242 05 079 56 18", "address": {"@type": "PostalAddress", "streetAddress": "Quartier La Base, Avenue Félix TCHIKAYA", "addressLocality": "Pointe-Noire", "addressCountry": "CG"}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "12:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "13:30", "closes": "17:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00"}], "currenciesAccepted": "XAF", "paymentAccepted": "Mobile Money, virement bancaire, espèces"}</script>
 </head>
-<body>
+<body class="page-accueil" data-root="">
 
-  <!-- ===== EN-TÊTE ===== -->
-  <header class="header" id="top">
-    <div class="container header__inner">
-      <a href="#accueil" class="brand">
-        <span class="brand__name">CAP DE LA PDI</span>
-        <span class="brand__tag">Coopérative Agro-Pastorale</span>
-      </a>
-
-      <nav class="nav" id="nav" aria-label="Navigation principale">
-        <a href="#accueil">Accueil</a>
-        <a href="#activites">Nos activités</a>
-        <a href="#produits">Nos produits</a>
-        <a href="#genetique">Génétique &amp; insémination</a>
-        <a href="#guides">Guides</a>
-        <a href="#depots">Nos dépôts</a>
-        <a href="#partenaires">Partenaires</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <img src="images/logo-cap-pdi.png" alt="Logo CAP DE LA PDI" class="logo" width="56" height="56">
-
-      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <!-- ===== ACCUEIL ===== -->
-    <section class="hero" id="accueil">
-      <div class="container hero__inner">
-        <div class="hero__text">
-          <p class="eyebrow">Pointe-Noire · République du Congo</p>
-          <h1>Coopérative Agro-Pastorale de la Production Diverse des IPOLO</h1>
-          <p class="lead">Aliments pour bétail, produits vétérinaires, élevage porcin et amélioration génétique : nous accompagnons les éleveurs du Congo vers des élevages plus sains et plus productifs.</p>
-          <div class="hero__actions">
-            <a href="#activites" class="btn btn--primary">Découvrir nos activités</a>
-            <a href="#contact" class="btn btn--light">Nous contacter</a>
-          </div>
-        </div>
-        <img class="photo-img photo-img--hero" src="images/race-charolaise.jpg" alt="Taureau Charolais sélectionné – génétique GENES DIFFUSION">
-      </div>
-    </section>
-
-    <!-- ===== CHIFFRES CLÉS ===== -->
-    <a class="ribbon" href="#produits" data-vaccin-ribbon>
-      <span class="ribbon__tag">Nouveau</span>
-      <span>Vaccin porc 3-en-1 de France : arrivage le <strong>20 novembre 2026</strong>, réservez avant le 13 novembre</span>
-      <span class="ribbon__go" aria-hidden="true">→</span>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<div class="topbar" id="topbar" role="region" aria-label="Annonces">
+  <div class="topbar__track" id="topbarTrack"></div>
+  <button class="topbar__close" id="topbarClose" aria-label="Masquer les annonces"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+</div>
+<header class="hdr hdr--overlay" id="hdr">
+  <div class="hdr__inner wrap">
+    <button class="icon-btn hdr__burger" id="burger" aria-label="Ouvrir le menu" aria-controls="drawer" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="brand" href="index.html" aria-label="CAP DE LA PDI – accueil">
+      <img src="assets/img/logo-cap-pdi.png" alt="" width="44" height="44">
+      <span class="brand__txt"><strong>CAP DE LA PDI</strong><small>Coopérative Agro-Pastorale</small></span>
     </a>
-
-    <div class="highlights">
-      <div class="container highlights__grid">
-        <div><strong>4</strong><span>sites à Pointe-Noire</span></div>
-        <div><strong>2 Congos</strong><span>représentant GENES DIFFUSION</span></div>
-        <div><strong>7</strong><span>domaines d'expertise</span></div>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="index.html" data-nav="accueil">Accueil</a>
+      <div class="nav__dd">
+        <a href="boutique.html" data-nav="boutique" aria-haspopup="true">Boutique</a>
+        <div class="mega" role="menu"><div class="mega__grid"><a class="mega__item" href="boutique.html?cat=bovins"><span class="mega__icon" aria-hidden="true">🐄</span><span>Semences bovines</span></a><a class="mega__item" href="boutique.html?cat=reproducteurs"><span class="mega__icon" aria-hidden="true">🐷</span><span>Reproducteurs porcins</span></a><a class="mega__item" href="boutique.html?cat=porcins"><span class="mega__icon" aria-hidden="true">🧬</span><span>Semences porcines</span></a><a class="mega__item" href="boutique.html?cat=sante"><span class="mega__icon" aria-hidden="true">💊</span><span>Santé animale</span></a><a class="mega__item" href="boutique.html?cat=repro"><span class="mega__icon" aria-hidden="true">🔬</span><span>Insémination &amp; reproduction</span></a><a class="mega__item" href="boutique.html?cat=soins"><span class="mega__icon" aria-hidden="true">💉</span><span>Matériel vétérinaire</span></a><a class="mega__item" href="boutique.html?cat=nutrition"><span class="mega__icon" aria-hidden="true">🌾</span><span>Alimentation &amp; nutrition</span></a><a class="mega__item" href="boutique.html?cat=equipement"><span class="mega__icon" aria-hidden="true">🏗️</span><span>Équipement d&#x27;élevage</span></a><a class="mega__item" href="boutique.html?cat=volailles"><span class="mega__icon" aria-hidden="true">🐔</span><span>Volailles &amp; œufs</span></a><a class="mega__item" href="boutique.html?cat=services"><span class="mega__icon" aria-hidden="true">🧑‍🔬</span><span>Services techniques</span></a><a class="mega__item" href="boutique.html?cat=excel"><span class="mega__icon" aria-hidden="true">📊</span><span>Outils Excel</span></a></div>
+          <a class="mega__all" href="boutique.html">Voir toute la boutique <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
       </div>
+      <a href="boutique.html?filtre=nouveautes" data-nav="nouveautes">Nouveautés</a>
+      <a href="a-propos.html" data-nav="apropos">À propos</a>
+      <a href="contact.html" data-nav="contact">Contact</a>
+    </nav>
+    <div class="hdr__actions">
+      <button class="icon-btn" id="searchOpen" aria-label="Rechercher un produit"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <a class="icon-btn hide-sm" href="https://wa.me/33766551505" target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true" class="ico-fill"><path d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
+      <button class="icon-btn cart-btn" id="cartOpen" aria-label="Ouvrir le panier" aria-controls="cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="cart-btn__n" id="cartCount" hidden>0</span></button>
     </div>
+  </div>
+</header>
 
-    <!-- ===== NOS ACTIVITÉS ===== -->
-    <section class="section" id="activites">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">Ce que nous faisons</p>
-          <h2>Nos activités</h2>
-          <p>Un accompagnement complet de l'éleveur, de l'alimentation à la génétique.</p>
-        </header>
-        <div class="cards">
-          <article class="card">
-            <div class="card__icon">🌾</div>
-            <h3>Aliments pour bétail</h3>
-            <p>Aliments de qualité adaptés à chaque espèce et à chaque stade d'élevage.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">💊</div>
-            <h3>Produits vétérinaires</h3>
-            <p>Médicaments, compléments et produits d'hygiène pour la santé de vos animaux.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">💉</div>
-            <h3>Vaccins porcins</h3>
-            <p>Vaccins pour protéger vos porcs contre les principales maladies.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🐖</div>
-            <h3>Élevage porcin</h3>
-            <p>Production porcine dans notre ferme de Djeno, avec des pratiques modernes.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🧬</div>
-            <h3>Amélioration génétique</h3>
-            <p>Des reproducteurs et des lignées sélectionnés pour de meilleures performances.</p>
-          </article>
-          <article class="card">
-            <div class="card__icon">🔬</div>
-            <h3>Insémination artificielle</h3>
-            <p>Semences de qualité et mise en œuvre de l'insémination dans vos élevages.</p>
-          </article>
-          <article class="card card--wide">
-            <div class="card__icon">🤝</div>
-            <h3>Accompagnement &amp; formation des éleveurs</h3>
-            <p>Conseils techniques, suivi sur le terrain et formations pratiques pour faire progresser votre élevage.</p>
-          </article>
-        </div>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer__panel" role="dialog" aria-label="Menu">
+    <div class="drawer__head"><span class="brand__txt"><strong>CAP DE LA PDI</strong></span><button class="icon-btn" data-close-drawer aria-label="Fermer le menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <nav class="drawer__nav" aria-label="Menu mobile">
+      <a href="index.html">Accueil</a><a href="boutique.html">Toute la boutique</a><a href="boutique.html?filtre=nouveautes">Nouveautés</a>
+      <p class="drawer__label">Rayons</p><a href="boutique.html?cat=bovins"><span aria-hidden="true">🐄</span> Semences bovines</a><a href="boutique.html?cat=reproducteurs"><span aria-hidden="true">🐷</span> Reproducteurs porcins</a><a href="boutique.html?cat=porcins"><span aria-hidden="true">🧬</span> Semences porcines</a><a href="boutique.html?cat=sante"><span aria-hidden="true">💊</span> Santé animale</a><a href="boutique.html?cat=repro"><span aria-hidden="true">🔬</span> Insémination &amp; reproduction</a><a href="boutique.html?cat=soins"><span aria-hidden="true">💉</span> Matériel vétérinaire</a><a href="boutique.html?cat=nutrition"><span aria-hidden="true">🌾</span> Alimentation &amp; nutrition</a><a href="boutique.html?cat=equipement"><span aria-hidden="true">🏗️</span> Équipement d&#x27;élevage</a><a href="boutique.html?cat=volailles"><span aria-hidden="true">🐔</span> Volailles &amp; œufs</a><a href="boutique.html?cat=services"><span aria-hidden="true">🧑‍🔬</span> Services techniques</a><a href="boutique.html?cat=excel"><span aria-hidden="true">📊</span> Outils Excel</a>
+      <p class="drawer__label">Informations</p>
+      <a href="a-propos.html">À propos</a><a href="contact.html">Contact</a><a href="livraison-retours.html">Livraison & retours</a><a href="faq.html">Questions fréquentes</a>
+    </nav>
+    <a class="btn btn--wa drawer__wa" href="https://wa.me/33766551505" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true" class="ico-fill"><path d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg> WhatsApp +33 7 66 55 15 05</a>
+  </div>
+</div>
+
+<div class="search" id="search" aria-hidden="true">
+  <div class="search__panel wrap" role="dialog" aria-label="Recherche">
+    <form class="search__form" action="boutique.html" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" name="q" id="searchInput" placeholder="Rechercher : ivermectine, Charolaise, cage…" autocomplete="off" aria-label="Rechercher un produit">
+      <button type="button" class="icon-btn" data-close-search aria-label="Fermer la recherche"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </form>
+    <div class="search__results" id="searchResults" aria-live="polite"></div>
+  </div>
+</div>
+
+<main id="contenu">
+<section class="hero" id="hero" aria-roledescription="carrousel" aria-label="À la une">
+  <div class="hero__slide is-active" aria-roledescription="diapositive" aria-label="1 sur 5">
+    <div class="hero__bg"><img class="hero__pos-r" src="assets/img/race-charolaise-800.webp" srcset="assets/img/race-charolaise-400.webp 400w, assets/img/race-charolaise-800.webp 800w, assets/img/race-charolaise-1200.webp 1200w, assets/img/race-charolaise-1800.webp 1800w" sizes="100vw" width="1800" height="1282" alt="" fetchpriority="high"></div>
+    <div class="hero__inner wrap"><div class="hero__copy">
+      <p class="hero__kicker">Représentant GENES DIFFUSION · 2 Congos</p>
+      <h1 class="hero__title">La génétique qui <em>transforme</em> votre troupeau</h1>
+      <p class="hero__text">Semences de taureaux sélectionnés en France : Charolaise, Limousine, Holstein, Brahman… à partir de 16&nbsp;000&nbsp;F la dose, insémination par nos techniciens.</p>
+      <div class="hero__ctas"><a class="btn btn--sun btn--lg" href="boutique.html?cat=bovins">Découvrir la collection</a><a class="btn btn--ghost btn--lg" href="boutique.html?filtre=nouveautes">Voir nos nouveautés</a></div>
+    </div></div>
+  </div>
+  <div class="hero__slide hero__slide--split hero__slide--dark" aria-roledescription="diapositive" aria-label="2 sur 5">
+    <div class="hero__bg"></div>
+    <div class="hero__inner wrap">
+      <div class="hero__copy">
+        <p class="hero__kicker">Reproducteurs AXIOM · Importés de France</p>
+        <h2 class="hero__title">Des porcelets <em>lourds, nombreux</em> et homogènes</h2>
+        <div class="hero__price"><span>Cochette Adénia (F1), fret et dédouanement inclus</span><strong>985&nbsp;000&nbsp;F TTC</strong></div>
+        <div class="hero__ctas"><a class="btn btn--sun btn--lg" href="produits/cochette-adenia.html">Acheter maintenant</a><a class="btn btn--ghost btn--lg" href="boutique.html?cat=reproducteurs">Tous les reproducteurs</a></div>
       </div>
-    </section>
-
-    <!-- ===== BOUTIQUE (NOS PRODUITS) ===== -->
-    <!-- Le catalogue et les prix se modifient dans le fichier shop.js -->
-    <section class="section section--tint" id="produits">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">Boutique en ligne</p>
-          <h2>Nos produits</h2>
-          <p>Génétique, santé animale, matériel et équipement d'élevage : ajoutez vos produits au panier et envoyez votre commande ou votre demande de devis en un clic.</p>
-        </header>
-
-        <aside class="promo" id="promoVaccin" aria-label="Précommande vaccin porc">
-          <img class="promo__img" src="images/vaccin-affiche.jpg" alt="Affiche : 1 seul vaccin, 3 maladies stoppées – rouget, parvovirose, leptospirose – 13 000 F CFA par porc vacciné" loading="lazy">
-          <div class="promo__body">
-            <p class="promo__eyebrow">🇫🇷 Nouveau · Produit de France · <span data-vaccin-status>Réservations ouvertes</span></p>
-            <h3>1 seul vaccin : 3 maladies stoppées</h3>
-            <ul class="promo__list">
-              <li><strong>Rouget</strong> : fièvre, plaques rouges, avortements</li>
-              <li><strong>Parvovirose</strong> : momies, mises bas ratées, petites portées</li>
-              <li><strong>Leptospirose</strong> : avortements, porcelets faibles</li>
-            </ul>
-            <p class="promo__price"><strong>13 000 F CFA</strong> par porc vacciné <span>primo-vaccination + rappel inclus</span></p>
-            <p class="promo__note">Vente par flacon de 10 doses = 5 porcs protégés = <strong>65 000 F CFA</strong>.</p>
-            <div class="promo__dates">
-              <div><small>Arrivage au Congo</small><strong>20 novembre 2026</strong></div>
-              <div><small>Réservez et payez avant le</small><strong>13 novembre 2026</strong></div>
-            </div>
-            <div class="promo__buy">
-              <label class="promo__qty">Flacons <input type="number" min="1" value="1" inputmode="numeric" data-vaccin-qty></label>
-              <button type="button" class="btn btn--primary" data-vaccin-add>Réserver mes vaccins</button>
-            </div>
-            <p class="promo__small">Places limitées aux doses commandées. Une portée perdue coûte bien plus cher qu'un vaccin.</p>
-          </div>
-        </aside>
-
-        <div class="shop-tools">
-          <label class="shop-search">
-            <span aria-hidden="true">🔍</span>
-            <input type="search" id="shopSearch" placeholder="Rechercher un produit (ex. ivermectine, Charolaise, balance…)" aria-label="Rechercher un produit">
-          </label>
-          <div class="shop-filters" id="shopFilters" role="tablist" aria-label="Rayons"></div>
-        </div>
-        <div id="shopGrid"></div>
-
-        <div class="howto">
-          <h3>Comment commander ?</h3>
-          <ol class="howto__steps">
-            <li><strong>Remplissez votre panier</strong><span>Produits à prix affiché ou « sur devis » : tout va dans le même panier.</span></li>
-            <li><strong>Envoyez la demande</strong><span>Par WhatsApp ou par e-mail, avec votre nom et votre lieu.</span></li>
-            <li><strong>Confirmation</strong><span>Nous confirmons la disponibilité, le prix final et vous envoyons un devis ou une facture.</span></li>
-            <li><strong>Paiement &amp; retrait</strong><span>Mobile Money, virement bancaire ou au dépôt, puis retrait ou expédition selon accord.</span></li>
-          </ol>
-          <p class="shop-legal">Prix indicatifs en F CFA par unité, hors transport et dédouanement. Les produits vétérinaires, hormones, antibiotiques et vaccins sont délivrés sur commande et sur devis uniquement.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== GÉNÉTIQUE & INSÉMINATION ===== -->
-    <section class="section" id="genetique">
-      <div class="container split">
-        <figure class="photo-fig">
-          <img class="photo-img photo-img--tall" src="images/porcelet-thor-afrique.jpg" alt="Porcelet sevré issu de la génétique THOR, porté par un éleveur dans sa porcherie au Congo" loading="lazy">
-          <figcaption>Porcelet sevré issu de la génétique <strong>THOR</strong>, élevé chez nous au Congo.</figcaption>
-        </figure>
-        <div>
-          <p class="eyebrow">Performance de vos élevages</p>
-          <h2>Génétique &amp; insémination</h2>
-          <p>Représentant officiel de <strong>GENES DIFFUSION</strong> pour les deux Congos, CAP DE LA PDI met à la disposition des éleveurs une génétique reconnue pour améliorer la croissance, la prolificité et la qualité des animaux.</p>
-          <ul class="checklist">
-            <li>Semences porcines de lignées sélectionnées</li>
-            <li>Insémination artificielle réalisée ou encadrée par nos techniciens</li>
-            <li>Formation des éleveurs aux techniques d'insémination</li>
-            <li>Suivi des résultats et conseils en reproduction</li>
-          </ul>
-          <a href="#contact" class="btn btn--primary">Demander une intervention</a>
-        </div>
-      </div>
-
-      <!-- Races porcines pour l'insémination -->
-      <div class="container breeds-wrap">
-        <h3 class="breeds-title">Races porcines : semences pour l'insémination</h3>
-        <p class="breeds-intro">Les grandes races porcines sélectionnées en France par nos partenaires GENES DIFFUSION et AXIOM. Le croisement le plus courant associe une truie Large White × Landrace et un verrat Piétrain ou Duroc.</p>
-        <div class="breeds">
-          <article class="breed">
-            <span class="breed__tag">Lignée maternelle</span>
-            <h4>Large White</h4>
-            <p>Truie prolifique, bonne mère, croissance rapide. Base de la plupart des élevages modernes.</p>
-            <a class="order-link" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20commander%20des%20semences%20porcines%20de%20race%20Large%20White.%0ANombre%20de%20doses%20%3A%20%0AIns%C3%A9mination%20par%20vos%20techniciens%20%28oui/non%29%20%3A%20%0ALieu%20de%20l%27%C3%A9levage%20%3A%20%0ANom%20%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm6 15.7c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg><span>Commander des semences</span></a>
-          </article>
-          <article class="breed">
-            <span class="breed__tag">Lignée maternelle</span>
-            <h4>Landrace</h4>
-            <p>Grandes portées et bonne production laitière. Croisée avec la Large White, elle donne une truie F1 robuste et productive.</p>
-            <a class="order-link" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20commander%20des%20semences%20porcines%20de%20race%20Landrace.%0ANombre%20de%20doses%20%3A%20%0AIns%C3%A9mination%20par%20vos%20techniciens%20%28oui/non%29%20%3A%20%0ALieu%20de%20l%27%C3%A9levage%20%3A%20%0ANom%20%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm6 15.7c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg><span>Commander des semences</span></a>
-          </article>
-          <article class="breed">
-            <span class="breed__tag breed__tag--male">Verrat terminal</span>
-            <h4>Piétrain NN</h4>
-            <p>Carcasses très riches en muscle. La version « NN » est indemne du gène de sensibilité au stress, un atout en climat chaud.</p>
-            <a class="order-link" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20commander%20des%20semences%20porcines%20de%20race%20Pi%C3%A9train%20NN.%0ANombre%20de%20doses%20%3A%20%0AIns%C3%A9mination%20par%20vos%20techniciens%20%28oui/non%29%20%3A%20%0ALieu%20de%20l%27%C3%A9levage%20%3A%20%0ANom%20%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm6 15.7c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg><span>Commander des semences</span></a>
-          </article>
-          <article class="breed">
-            <span class="breed__tag breed__tag--male">Verrat terminal</span>
-            <h4>Duroc</h4>
-            <p>Race rustique, bonne résistance à la chaleur, viande tendre et savoureuse grâce à son persillé.</p>
-            <a class="order-link" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20commander%20des%20semences%20porcines%20de%20race%20Duroc.%0ANombre%20de%20doses%20%3A%20%0AIns%C3%A9mination%20par%20vos%20techniciens%20%28oui/non%29%20%3A%20%0ALieu%20de%20l%27%C3%A9levage%20%3A%20%0ANom%20%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm6 15.7c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg><span>Commander des semences</span></a>
-          </article>
-        </div>
-
-        <h3 class="breeds-title breeds-title--cattle">Races bovines : semences pour l'insémination</h3>
-        <p class="breeds-intro">Grâce à GENES DIFFUSION, nous proposons des semences de taureaux sélectionnés, pour la viande comme pour le lait.</p>
-        <div class="cows">
-          <article class="cow">
-            <img src="images/race-charolaise.jpg" alt="Taureau de race Charolaise" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Viande</span>
-              <h4>Charolaise</h4>
-              <p>Race à viande très musclée, croissance rapide, excellente en croisement pour améliorer les troupeaux locaux.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-limousine.jpg" alt="Taureau de race Limousine" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Viande</span>
-              <h4>Limousine</h4>
-              <p>Carcasses de grande qualité, vêlages faciles, bonne rusticité.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-blonde-aquitaine.jpg" alt="Taureau de race Blonde d'Aquitaine" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Viande</span>
-              <h4>Blonde d'Aquitaine</h4>
-              <p>Format imposant et fort rendement en viande.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-salers.jpg" alt="Taureau de race Salers" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Mixte / viande</span>
-              <h4>Salers</h4>
-              <p>Race rustique, résistante, bonne mère, adaptée aux conditions difficiles.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-angus.jpg" alt="Taureau de race Angus" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Viande</span>
-              <h4>Angus</h4>
-              <p>Viande persillée, animaux sans cornes, vêlages faciles.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-brahman.jpg" alt="Taureau de race Brahman" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Viande – zébu</span>
-              <h4>Brahman</h4>
-              <p>Zébu très résistant à la chaleur et aux tiques : idéal en croisement en zone tropicale.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-holstein.jpg" alt="Taureau de race Holstein" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Lait</span>
-              <h4>Holstein</h4>
-              <p>Première race laitière au monde, très forte production de lait.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-          <article class="cow">
-            <img src="images/race-montbeliarde.jpg" alt="Taureau de race Montbéliarde" loading="lazy">
-            <div class="cow__body">
-              <span class="breed__tag">Lait / mixte</span>
-              <h4>Montbéliarde</h4>
-              <p>Bonne production de lait riche, robuste, bonne valeur bouchère.</p>
-              <a class="order-link" href="#produits" data-shop-cat="bovins"><span>Voir le prix et commander</span></a>
-            </div>
-          </article>
-        </div>
-        <p class="note">Lignées et disponibilités à confirmer selon les arrivages : contactez-nous pour choisir la génétique adaptée à votre élevage.</p>
-      </div>
-    </section>
-
-    <!-- ===== GUIDES & FORMATIONS ===== -->
-    <section class="section section--tint" id="guides">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">À télécharger</p>
-          <h2>Guides &amp; formations</h2>
-          <p>Nos outils Excel pour piloter votre élevage, en téléchargement immédiat. Paiement sécurisé via Chariow.</p>
-        </header>
-        <div class="guides">
-          <article class="guide">
-            <img class="guide__img" src="images/calculateur-aliment-porc.jpg" alt="Calculateur aliment porc – fichier Excel" loading="lazy">
-            <div class="guide__body">
-              <h3>Calculateur aliment porc</h3>
-              <ul class="guide__list">
-                <li>5 formules : porcelet 2e âge, croissance, finition, truie gestante, truie allaitante</li>
-                <li>Maïs, soja 49 %, son de blé, palmiste, farine de poisson, prémix 1 %</li>
-                <li>Poids exact de chaque ingrédient, coût au kg et au sac de 50 kg</li>
-                <li>Contrôle automatique de l'équilibre de l'aliment</li>
-              </ul>
-              <p class="guide__meta">Fichier Excel · Paiement MTN / Airtel Money</p>
-              <p class="guide__price"><small>Prix de lancement</small>14 900 FCFA</p>
-              <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_txlatneq" target="_blank" rel="noopener">Acheter</a>
-            </div>
-          </article>
-          <article class="guide">
-            <img class="guide__img" src="images/suivi-des-truies.jpg" alt="Suivi des truies – fichier Excel" loading="lazy">
-            <div class="guide__body">
-              <h3>Suivi des truies</h3>
-              <ul class="guide__list">
-                <li>Dates de chaleurs et de mise bas calculées</li>
-                <li>Classement des truies, de la plus à la moins rentable</li>
-                <li>Alertes de consanguinité</li>
-                <li>Simple, en français, sur téléphone ou ordinateur</li>
-              </ul>
-              <p class="guide__meta">Fichier Excel · Paiement MTN / Airtel Money</p>
-              <p class="guide__price"><small>Promo · au lieu de <s>15 000 FCFA</s></small>9 900 FCFA</p>
-              <a class="btn btn--primary" href="https://boghdxow.mychariow.com/prd_xmkoxo9e" target="_blank" rel="noopener">Acheter</a>
-            </div>
-          </article>
-        </div>
-
-        <!-- Programme d'affiliation -->
-        <div class="affil">
-          <div class="affil__head">
-            <span class="affil__pct">25 %</span>
-            <div>
-              <p class="eyebrow">Programme d'affiliation</p>
-              <h3>Recommandez nos outils et gagnez de l'argent</h3>
-              <p>Touchez <strong>25 % de commission</strong> sur chaque vente faite grâce à votre lien : environ <strong>3 700 F</strong> par Calculateur et <strong>2 500 F</strong> par Suivi des Truies. Chariow calcule et vous verse vos commissions automatiquement.</p>
-            </div>
-          </div>
-          <ol class="affil__steps">
-            <li><strong>Créez votre compte gratuit</strong> sur <a href="https://chariow.com" target="_blank" rel="noopener">chariow.com</a>.</li>
-            <li><strong>Ouvrez le « Catalogue » d'affiliation</strong> et cherchez l'identifiant du produit : <code>prd_txlatneq</code> (Calculateur) ou <code>prd_xmkoxo9e</code> (Suivi des Truies).</li>
-            <li><strong>Cliquez sur « Générer un lien d'affiliation »</strong> et partagez-le autour de vous.</li>
-          </ol>
-          <div class="affil__actions">
-            <a class="btn btn--primary" href="https://chariow.com" target="_blank" rel="noopener">Devenir affilié</a>
-            <a class="btn btn--wa" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20devenir%20affili%C3%A9%20et%20recevoir%20les%20images%20et%20textes%20de%20pub." target="_blank" rel="noopener">Recevoir les images et textes de pub</a>
-          </div>
-        </div>
-
-        <!-- Groupe d'entraide -->
-        <a class="community" href="https://chat.whatsapp.com/HusaXUhaVfu4SBQWiqmLqY" target="_blank" rel="noopener">
-          <span class="community__icon" aria-hidden="true">👥</span>
-          <span><strong>Rejoignez le groupe d'entraide CAP DE LA PDI</strong><small>Échangez avec d'autres éleveurs sur WhatsApp : conseils, alertes, bonnes affaires.</small></span>
-          <span class="community__go" aria-hidden="true">→</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ===== NOS DÉPÔTS ===== -->
-    <section class="section" id="depots">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">Où nous trouver</p>
-          <h2>Nos dépôts</h2>
-        </header>
-        <div class="hours">
-          <div class="hours__head">
-            <span class="hours__icon" aria-hidden="true">🕒</span>
-            <h3>Horaires d'ouverture</h3>
-            <span class="hours__status" data-open-status></span>
-          </div>
-          <table class="hours__table">
-            <tr><th>Lundi – vendredi</th><td>8h00 – 12h00<br>13h30 – 17h00</td></tr>
-            <tr><th>Samedi</th><td>8h00 – 12h00</td></tr>
-            <tr><th>Dimanche</th><td class="hours__closed">Fermé</td></tr>
-          </table>
-        </div>
-        <div class="sites">
-          <article class="site">
-            <span class="site__badge">Siège</span>
-            <h3>La Base</h3>
-            <p>Avenue Félix TCHIKAYA<br>Pointe-Noire</p>
-          </article>
-          <article class="site">
-            <span class="site__badge">Dépôt</span>
-            <h3>Ngoyo</h3>
-            <p>Arrêt La Datcha, Pointe-Noire<br>Aliment de bétail</p>
-            <a class="site__tel" href="tel:+242067434310">📞 06 743 43 10</a>
-          </article>
-          <article class="site">
-            <span class="site__badge">Dépôt</span>
-            <h3>Côte Matève</h3>
-            <p>Pointe-Noire</p>
-          </article>
-          <article class="site">
-            <span class="site__badge">Dépôt</span>
-            <h3>Djeno</h3>
-            <p>Arrêt Supermarché, Djeno<br>Aliment de bétail</p>
-            <a class="site__tel" href="tel:+242067958233">📞 06 795 82 33</a>
-          </article>
-          <article class="site">
-            <span class="site__badge site__badge--farm">Ferme</span>
-            <h3>Ferme porcine de Djeno</h3>
-            <p>Djeno, Pointe-Noire</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== PARTENAIRES ===== -->
-    <section class="section section--tint" id="partenaires">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">Ils nous font confiance</p>
-          <h2>Partenaires</h2>
-        </header>
-        <div class="partners">
-          <article class="partner">
-            <div class="partner__logo"><img src="images/logo-genes-diffusion.jpg" alt="GENES DIFFUSION" loading="lazy"></div>
-            <p>Génétique bovine et porcine – CAP DE LA PDI est son représentant pour les deux Congos.</p>
-          </article>
-          <article class="partner">
-            <div class="partner__logo"><img src="images/logo-axiom.png" alt="AXIOM – La génétique française" loading="lazy"></div>
-            <p>Génétique porcine française.</p>
-          </article>
-          <article class="partner">
-            <div class="partner__logo"><img src="images/logo-animax.jpg" alt="ANIMAX" loading="lazy"></div>
-            <p>Médicaments vétérinaires : antibiotiques, antiparasitaires, vitamines.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== CONTACT ===== -->
-    <section class="section section--dark" id="contact">
-      <div class="container">
-        <header class="section__head">
-          <p class="eyebrow">Parlons de votre élevage</p>
-          <h2>Contact</h2>
-        </header>
-        <div class="contact">
-          <a class="contact__item" href="tel:+242050795618">
-            <span class="contact__icon">📞</span>
-            <span><small>Téléphone</small>+242 05 079 56 18</span>
-          </a>
-          <a class="contact__item" href="tel:+242044383024">
-            <span class="contact__icon">📞</span>
-            <span><small>Téléphone</small>+242 04 438 30 24</span>
-          </a>
-          <a class="contact__item" href="https://wa.me/33766551505" target="_blank" rel="noopener">
-            <span class="contact__icon">💬</span>
-            <span><small>WhatsApp</small>+33 7 66 55 15 05</span>
-          </a>
-          <a class="contact__item" href="mailto:la-pdi@hotmail.com">
-            <span class="contact__icon">✉️</span>
-            <span><small>E-mail</small>la-pdi@hotmail.com</span>
-          </a>
-          <a class="contact__item" href="https://chat.whatsapp.com/HusaXUhaVfu4SBQWiqmLqY" target="_blank" rel="noopener">
-            <span class="contact__icon">👥</span>
-            <span><small>Groupe d'entraide WhatsApp</small>Rejoindre la communauté</span>
-          </a>
-          <div class="contact__item">
-            <span class="contact__icon">🕒</span>
-            <span><small>Horaires <em data-open-status></em></small>Lun–ven 8h–12h / 13h30–17h · Sam 8h–12h · Dim fermé</span>
-          </div>
-          <div class="contact__item">
-            <span class="contact__icon">📍</span>
-            <span><small>Siège</small>La Base, Avenue Félix TCHIKAYA, Pointe-Noire</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <p>© <span id="year">2026</span> CAP DE LA PDI – Coopérative Agro-Pastorale de la Production Diverse des IPOLO · Pointe-Noire, République du Congo</p>
-      <p class="footer__legal">Quartier La Base, Avenue Félix TCHIKAYA · N° d'agrément 0491/MAEP/DGA-DAPR · NIU M250000007537101</p>
+      <div class="hero__visual hero__visual--wide"><img src="assets/img/axiom-adenia-800.webp" srcset="assets/img/axiom-adenia-400.webp 400w, assets/img/axiom-adenia-800.webp 800w, assets/img/axiom-adenia-952.webp 952w" sizes="(min-width:900px) 45vw, 90vw" width="952" height="608" alt="Cochette Adénia AXIOM" loading="lazy" decoding="async"></div>
     </div>
-  </footer>
-
-  <!-- ===== PANIER ===== -->
-  <button class="cart-fab" id="cartFab" aria-label="Ouvrir le panier" aria-controls="cartPanel">
-    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM5.2 4l.9 2H20a1 1 0 0 1 .9 1.4l-3.2 6.4a2 2 0 0 1-1.8 1.2H8.1l-.9 1.6V17h12v-2H8.4l.7-1.2h7.4L19.4 8H7.1L5.6 4H2V2h4.4z"/></svg>
-    <span class="cart-fab__count" id="cartCount">0</span>
-  </button>
-
-  <div class="cart-overlay" id="cartOverlay" hidden></div>
-  <aside class="cart" id="cartPanel" aria-label="Panier" aria-hidden="true">
-    <div class="cart__head">
-      <h2>Mon panier</h2>
-      <button class="cart__close" id="cartClose" aria-label="Fermer le panier">×</button>
+  </div>
+  <div class="hero__slide hero__slide--split" aria-roledescription="diapositive" aria-label="3 sur 5">
+    <div class="hero__bg"></div>
+    <div class="hero__inner wrap">
+      <div class="hero__copy">
+        <p class="hero__kicker">Nouveau · Produit de France</p>
+        <h2 class="hero__title">1 vaccin, <em>3 maladies</em> stoppées</h2>
+        <p class="hero__text">Rouget, parvovirose, leptospirose : une seule piqûre. Arrivage au Congo le 20 novembre 2026, réservez avant le 13 novembre.</p>
+        <div class="hero__price"><span>Par porc vacciné, primo-vaccination + rappel</span><strong>13&nbsp;000&nbsp;F</strong></div>
+        <div class="hero__ctas"><a class="btn btn--sun btn--lg" href="produits/vaccin-3en1.html">Réserver maintenant</a></div>
+      </div>
+      <div class="hero__visual"><img src="assets/img/vaccin-affiche-800.webp" srcset="assets/img/vaccin-affiche-400.webp 400w, assets/img/vaccin-affiche-800.webp 800w, assets/img/vaccin-affiche-1024.webp 1024w" sizes="(min-width:900px) 30vw, 60vw" width="1024" height="1536" alt="Affiche du vaccin porc 3-en-1" loading="lazy" decoding="async"></div>
     </div>
-    <div class="cart__body">
-      <div id="cartItems"></div>
-      <div class="cart__total" id="cartTotal"></div>
+  </div>
+  <div class="hero__slide hero__slide--split" aria-roledescription="diapositive" aria-label="4 sur 5">
+    <div class="hero__bg"></div>
+    <div class="hero__inner wrap">
+      <div class="hero__copy">
+        <p class="hero__kicker">Santé animale · Partenaire ANIMAX</p>
+        <h2 class="hero__title">Soignez vos animaux <em>avec les bons produits</em></h2>
+        <p class="hero__text">Antibiotiques, antiparasitaires, vitamines et fer pour porcelets, dès 2&nbsp;500&nbsp;F. Conseil de nos techniciens avant chaque traitement.</p>
+        <div class="hero__ctas"><a class="btn btn--sun btn--lg" href="boutique.html?cat=sante">Acheter maintenant</a><a class="btn btn--ghost btn--lg" href="https://wa.me/33766551505" target="_blank" rel="noopener">Demander conseil</a></div>
+      </div>
+      <div class="hero__visual hero__visual--duo"><img src="assets/img/ivermectine-800.webp" srcset="assets/img/ivermectine-400.webp 400w, assets/img/ivermectine-800.webp 800w, assets/img/ivermectine-1000.webp 1000w" sizes="(min-width:900px) 22vw, 45vw" width="1000" height="1000" alt="Ivermectine 1 % injectable" loading="lazy" decoding="async"><img src="assets/img/oxytetracycline-800.webp" srcset="assets/img/oxytetracycline-400.webp 400w, assets/img/oxytetracycline-800.webp 800w, assets/img/oxytetracycline-1000.webp 1000w" sizes="(min-width:900px) 22vw, 45vw" width="1000" height="1000" alt="Oxytétracycline 20 % injectable" loading="lazy" decoding="async"></div>
+    </div>
+  </div>
+  <div class="hero__slide hero__slide--split" aria-roledescription="diapositive" aria-label="5 sur 5">
+    <div class="hero__bg"></div>
+    <div class="hero__inner wrap">
+      <div class="hero__copy">
+        <p class="hero__kicker">Outils Excel · Téléchargement immédiat</p>
+        <h2 class="hero__title">Fabriquez votre aliment <em>vous-même</em></h2>
+        <p class="hero__text">5 formules équilibrées, le poids exact de chaque ingrédient et le coût au sac de 50&nbsp;kg. Paiement MTN ou Airtel Money.</p>
+        <div class="hero__price"><span>Prix de lancement</span><strong>14&nbsp;900&nbsp;F</strong></div>
+        <div class="hero__ctas"><a class="btn btn--sun btn--lg" href="produits/calculateur-aliment-porc.html">Acheter maintenant</a><a class="btn btn--ghost btn--lg" href="boutique.html?cat=excel">Voir les outils</a></div>
+      </div>
+      <div class="hero__visual hero__visual--wide"><img src="assets/img/calculateur-banniere-800.webp" srcset="assets/img/calculateur-banniere-400.webp 400w, assets/img/calculateur-banniere-800.webp 800w, assets/img/calculateur-banniere-1200.webp 1200w, assets/img/calculateur-banniere-1755.webp 1755w" sizes="(min-width:900px) 45vw, 90vw" width="1755" height="650" alt="Calculateur Aliment Porc" loading="lazy" decoding="async"></div>
+    </div>
+  </div>
+  <div class="hero__ui wrap">
+    <div class="hero__dots" role="tablist" aria-label="Choisir une diapositive"></div>
+    <span class="hero__count" aria-hidden="true">01 / 05</span>
+    <button class="hero__pause" type="button" aria-label="Mettre le carrousel en pause">❚❚</button>
+    <div class="hero__arrows"><button type="button" data-hero-prev aria-label="Diapositive précédente">‹</button><button type="button" data-hero-next aria-label="Diapositive suivante">›</button></div>
+  </div>
+</section>
 
-      <form class="cart-form" id="cartForm" novalidate>
-        <h3>Vos coordonnées</h3>
-        <label>Nom / société *<input name="nom" required autocomplete="name"></label>
-        <label>Téléphone *<input name="tel" type="tel" required autocomplete="tel"></label>
-        <label>Ville / lieu de l'élevage<input name="ville" autocomplete="address-level2"></label>
-        <label>Retrait ou livraison
-          <select name="retrait">
-            <option>Retrait au siège La Base</option>
-            <option>Retrait au dépôt Ngoyo</option>
-            <option>Retrait au dépôt Côte Matève</option>
-            <option>Retrait au dépôt Djeno</option>
-            <option>Expédition / livraison (à convenir)</option>
-          </select>
-        </label>
-        <label>Message (facultatif)<textarea name="message" rows="3"></textarea></label>
-        <p class="cart-form__error" id="cartError" role="alert"></p>
-        <button type="submit" class="btn btn--wa" data-via="whatsapp">Envoyer par WhatsApp</button>
-        <button type="submit" class="btn btn--outline" data-via="email">Envoyer par e-mail</button>
-        <button type="button" class="cart__clear" id="cartClear">Vider le panier</button>
+<section class="trust" aria-label="Nos engagements">
+  <ul class="trust__list wrap">
+    <li><span class="trust__ico" aria-hidden="true">🧬</span><div><strong>Génétique française</strong><span>GENES DIFFUSION & AXIOM</span></div></li>
+    <li><span class="trust__ico" aria-hidden="true">✅</span><div><strong>Agrément officiel</strong><span>N° 0491/MAEP/DGA-DAPR</span></div></li>
+    <li><span class="trust__ico" aria-hidden="true">📍</span><div><strong>4 points de retrait</strong><span>La Base, Ngoyo, Djeno, Côte Matève</span></div></li>
+    <li><span class="trust__ico" aria-hidden="true">📱</span><div><strong>Mobile Money</strong><span>MTN · Airtel · virement · espèces</span></div></li>
+  </ul>
+</section>
+
+<section class="section" aria-labelledby="cats-title">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><p class="eyebrow">Nos rayons</p><h2 id="cats-title">Tout pour un élevage performant</h2></div><a class="link-arrow" href="boutique.html">Voir toute la boutique <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+    <div class="cats reveal-stagger"><a class="cat cat--lg" href="boutique.html?cat=bovins"><img src="assets/img/race-charolaise-800.webp" srcset="assets/img/race-charolaise-400.webp 400w, assets/img/race-charolaise-800.webp 800w, assets/img/race-charolaise-1200.webp 1200w, assets/img/race-charolaise-1800.webp 1800w" sizes="(min-width:900px) 50vw, 100vw" width="1800" height="1282" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Semences bovines</h3><small>8 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat cat--lg" href="boutique.html?cat=reproducteurs"><img src="assets/img/axiom-adenia-800.webp" srcset="assets/img/axiom-adenia-400.webp 400w, assets/img/axiom-adenia-800.webp 800w, assets/img/axiom-adenia-952.webp 952w" sizes="(min-width:900px) 50vw, 100vw" width="952" height="608" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Reproducteurs porcins</h3><small>11 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=porcins"><img src="assets/img/axiom-duroc-800.webp" srcset="assets/img/axiom-duroc-400.webp 400w, assets/img/axiom-duroc-800.webp 800w, assets/img/axiom-duroc-952.webp 952w" sizes="(min-width:900px) 33vw, 50vw" width="952" height="572" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Semences porcines</h3><small>4 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=sante"><img src="assets/img/oxytetracycline-800.webp" srcset="assets/img/oxytetracycline-400.webp 400w, assets/img/oxytetracycline-800.webp 800w, assets/img/oxytetracycline-1000.webp 1000w" sizes="(min-width:900px) 33vw, 50vw" width="1000" height="1000" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Santé animale</h3><small>20 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=repro"><img src="assets/img/race-montbeliarde-735.webp" srcset="assets/img/race-montbeliarde-400.webp 400w, assets/img/race-montbeliarde-735.webp 735w" sizes="(min-width:900px) 33vw, 50vw" width="735" height="530" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Insémination &amp; reproduction</h3><small>14 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=soins"><img src="assets/img/seringue-automatique-800.webp" srcset="assets/img/seringue-automatique-400.webp 400w, assets/img/seringue-automatique-800.webp 800w, assets/img/seringue-automatique-1000.webp 1000w" sizes="(min-width:900px) 33vw, 50vw" width="1000" height="1000" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Matériel vétérinaire</h3><small>6 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=nutrition"><img src="assets/img/pierre-a-lecher-vache-800.webp" srcset="assets/img/pierre-a-lecher-vache-400.webp 400w, assets/img/pierre-a-lecher-vache-800.webp 800w, assets/img/pierre-a-lecher-vache-1000.webp 1000w" sizes="(min-width:900px) 33vw, 50vw" width="1000" height="1000" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Alimentation &amp; nutrition</h3><small>13 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=equipement"><img src="assets/img/cage-truie-800.webp" srcset="assets/img/cage-truie-400.webp 400w, assets/img/cage-truie-800.webp 800w, assets/img/cage-truie-1000.webp 1000w" sizes="(min-width:900px) 33vw, 50vw" width="1000" height="1000" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Équipement d&#x27;élevage</h3><small>7 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=volailles"><div class="ph"><span class="ph__icon" aria-hidden="true">🐔</span><span class="ph__tag">Visuel temporaire</span></div><div class="cat__body"><div><h3>Volailles &amp; œufs</h3><small>5 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=services"><div class="ph"><span class="ph__icon" aria-hidden="true">🧑‍🔬</span><span class="ph__tag">Visuel temporaire</span></div><div class="cat__body"><div><h3>Services techniques</h3><small>3 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a><a class="cat" href="boutique.html?cat=excel"><img src="assets/img/calculateur-800.webp" srcset="assets/img/calculateur-400.webp 400w, assets/img/calculateur-800.webp 800w, assets/img/calculateur-1200.webp 1200w" sizes="(min-width:900px) 33vw, 50vw" width="1200" height="1200" alt="" loading="lazy" decoding="async"><div class="cat__body"><div><h3>Outils Excel</h3><small>2 produits</small></div><span class="cat__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a></div>
+  </div>
+</section>
+
+<section class="section section--white" aria-labelledby="best-title">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><p class="eyebrow">Sélection de l'équipe</p><h2 id="best-title">Les incontournables</h2><p>Les produits que nos techniciens recommandent le plus souvent aux éleveurs.</p></div>
+      <div class="rail-nav"><button class="icon-btn" data-rail-prev aria-label="Produits précédents">‹</button><button class="icon-btn" data-rail-next aria-label="Produits suivants">›</button></div></div>
+    <div class="rail reveal" data-rail data-ids='["semence-charolaise", "semence-brahman", "cochette-adenia", "verrat-thor", "vaccin-3en1", "oxytetracycline-20", "ivermectine-1", "fer-dextran", "lasso-contention", "broyeur-melangeur", "calculateur-aliment-porc", "suivi-truies"]'></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="promo-title">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><p class="eyebrow">Offres du moment</p><h2 id="promo-title">À ne pas manquer</h2></div></div>
+    <div class="promos reveal-stagger">
+      <a class="promo promo--big" href="produits/vaccin-3en1.html" data-countdown="2026-11-13T23:59:00+01:00">
+        <div class="promo__bg"><img class="promo__img--top" src="assets/img/vaccin-porcelet-384.webp" srcset="assets/img/vaccin-porcelet-384.webp 384w" sizes="(min-width:860px) 55vw, 100vw" width="384" height="695" alt="" loading="lazy" decoding="async"></div>
+        <div class="promo__body">
+          <span class="badge badge--sun">Précommande</span>
+          <h3>Vaccin porc 3-en-1 : réservez vos doses</h3>
+          <p>Rouget, parvovirose et leptospirose en une piqûre. Places limitées aux doses commandées.</p>
+          <p class="promo__price"><strong>13&nbsp;000&nbsp;F</strong> par porc · flacon de 10 doses 65&nbsp;000&nbsp;F</p>
+          <div class="countdown" aria-label="Temps restant pour réserver"></div>
+          <span class="promo__cta">Réserver maintenant <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+      <a class="promo" href="produits/suivi-truies.html">
+        <div class="promo__bg"><img src="assets/img/suivi-truies-banniere-800.webp" srcset="assets/img/suivi-truies-banniere-400.webp 400w, assets/img/suivi-truies-banniere-800.webp 800w, assets/img/suivi-truies-banniere-1200.webp 1200w, assets/img/suivi-truies-banniere-1755.webp 1755w" sizes="(min-width:860px) 45vw, 100vw" width="1755" height="650" alt="" loading="lazy" decoding="async"></div>
+        <div class="promo__body"><span class="badge badge--hot">Promo</span><h3>Suivi des Truies</h3><p>Repérez les truies qui vous font perdre de l'argent.</p><p class="promo__price"><strong>9&nbsp;900&nbsp;F</strong><s>15&nbsp;000&nbsp;F</s></p><span class="promo__cta">Acheter maintenant <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+      <a class="promo" href="boutique.html?cat=reproducteurs">
+        <div class="promo__bg"><img src="assets/img/axiom-adenia-800.webp" srcset="assets/img/axiom-adenia-400.webp 400w, assets/img/axiom-adenia-800.webp 800w, assets/img/axiom-adenia-952.webp 952w" sizes="(min-width:860px) 45vw, 100vw" width="952" height="608" alt="" loading="lazy" decoding="async"></div>
+        <div class="promo__body"><span class="badge badge--sun">Nouveaux tarifs AXIOM</span><h3>Reproducteurs importés de France</h3><p>Prix TTC, fret et dédouanement inclus. Paiement 80&nbsp;% / 20&nbsp;%.</p><span class="promo__cta">Voir les reproducteurs <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white" aria-labelledby="new-title">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><p class="eyebrow">Fraîchement arrivés</p><h2 id="new-title">Nouveautés</h2></div>
+      <div class="rail-nav"><button class="icon-btn" data-rail-prev aria-label="Produits précédents">‹</button><button class="icon-btn" data-rail-next aria-label="Produits suivants">›</button></div></div>
+    <div class="rail reveal" data-rail data-ids='["cochette-adenia", "cochette-large-white", "cochette-landrace", "cochette-duroc", "cochette-pietrain", "verrat-thor", "verrat-valens", "verrat-pietrain-nn", "verrat-duroc", "verrat-large-white", "verrat-landrace", "vaccin-3en1", "detecteur-ovulation", "seringue-automatique", "cage-truie"]'></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="story-title">
+  <div class="wrap story">
+    <div class="story__media reveal"><img src="assets/img/thor-ferme-800.webp" srcset="assets/img/thor-ferme-400.webp 400w, assets/img/thor-ferme-800.webp 800w, assets/img/thor-ferme-1200.webp 1200w" sizes="(min-width:860px) 45vw, 100vw" width="1200" height="1600" alt="Porcelet sevré issu de la génétique THOR, porté par un éleveur au Congo" loading="lazy" decoding="async">
+      <div class="story__card"><strong>Génétique THOR</strong><span>Porcelet sevré, élevé chez nous au Congo.</span></div></div>
+    <div class="reveal">
+      <p class="eyebrow">Qui sommes-nous</p>
+      <h2 id="story-title">Une coopérative de terrain, au service des éleveurs du Congo</h2>
+      <p>Basée à Pointe-Noire, CAP DE LA PDI accompagne les éleveurs de porcs, de bovins et de volailles, de l'alimentation jusqu'à la génétique.</p>
+      <ul class="checks">
+        <li>Représentant officiel de GENES DIFFUSION pour les deux Congos</li>
+        <li>Importation de reproducteurs AXIOM, fret et dédouanement inclus</li>
+        <li>Techniciens d'insémination qui se déplacent dans votre élevage</li>
+        <li>Formation et outils de gestion pour les éleveurs</li>
+      </ul>
+      <a class="btn btn--primary btn--lg" href="a-propos.html">Découvrir notre histoire</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--forest" aria-labelledby="perks-title">
+  <div class="wrap">
+    <div class="sec-head sec-head--center reveal"><p class="eyebrow eyebrow--light">Pourquoi CAP DE LA PDI</p><h2 id="perks-title">Acheter en confiance</h2></div>
+    <div class="perks reveal-stagger">
+      <div class="perk"><div class="perk__ico" aria-hidden="true">🧬</div><h3>Génétique sélectionnée</h3><p>Semences GENES DIFFUSION et reproducteurs AXIOM, sélectionnés en France.</p></div>
+      <div class="perk"><div class="perk__ico" aria-hidden="true">📜</div><h3>Structure agréée</h3><p>Agrément n° 0491/MAEP/DGA-DAPR · NIU M250000007537101.</p></div>
+      <div class="perk"><div class="perk__ico" aria-hidden="true">🧑‍🔬</div><h3>Techniciens sur le terrain</h3><p>Insémination, protocole de synchronisation et suivi dans votre élevage.</p></div>
+      <div class="perk"><div class="perk__ico" aria-hidden="true">💬</div><h3>Conseil avant achat</h3><p>Une question sur un produit ou un traitement ? Réponse sur WhatsApp.</p></div>
+      <div class="perk"><div class="perk__ico" aria-hidden="true">📱</div><h3>Paiement simple</h3><p>MTN Mobile Money, Airtel Money, virement bancaire ou espèces au dépôt.</p></div>
+      <div class="perk"><div class="perk__ico" aria-hidden="true">🚚</div><h3>Retrait ou livraison</h3><p>Retrait gratuit dans nos dépôts, livraison et expédition au Congo sur devis.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white" id="reviews" hidden aria-labelledby="reviews-title">
+  <div class="wrap"><div class="sec-head sec-head--center"><p class="eyebrow">Ils nous font confiance</p><h2 id="reviews-title">L'avis des éleveurs</h2></div><div class="reviews" id="reviewsList"></div></div>
+</section>
+
+<section class="section" aria-labelledby="partners-title">
+  <div class="wrap">
+    <div class="sec-head sec-head--center reveal"><p class="eyebrow">Nos partenaires</p><h2 id="partners-title">Des marques de référence</h2></div>
+    <div class="logos reveal" aria-label="GENES DIFFUSION, AXIOM, ANIMAX"><div class="logos__track">
+      <div class="logo-card"><img src="assets/img/logo-genes-diffusion-400.webp" srcset="assets/img/logo-genes-diffusion-400.webp 400w" sizes="240px" width="400" height="429" alt="GENES DIFFUSION" loading="lazy" decoding="async"></div><div class="logo-card"><img src="assets/img/logo-axiom-400.webp" srcset="assets/img/logo-axiom-400.webp 400w" sizes="240px" width="400" height="181" alt="AXIOM" loading="lazy" decoding="async"></div><div class="logo-card"><img src="assets/img/logo-animax-319.webp" srcset="assets/img/logo-animax-319.webp 319w" sizes="240px" width="319" height="400" alt="ANIMAX" loading="lazy" decoding="async"></div>
+      <div class="logo-card"><img src="assets/img/logo-genes-diffusion-400.webp" srcset="assets/img/logo-genes-diffusion-400.webp 400w" sizes="240px" width="400" height="429" alt="GENES DIFFUSION" loading="lazy" decoding="async"></div><div class="logo-card"><img src="assets/img/logo-axiom-400.webp" srcset="assets/img/logo-axiom-400.webp 400w" sizes="240px" width="400" height="181" alt="AXIOM" loading="lazy" decoding="async"></div><div class="logo-card"><img src="assets/img/logo-animax-319.webp" srcset="assets/img/logo-animax-319.webp 319w" sizes="240px" width="319" height="400" alt="ANIMAX" loading="lazy" decoding="async"></div>
+      <div class="logo-card" aria-hidden="true"><img src="assets/img/logo-genes-diffusion-400.webp" srcset="assets/img/logo-genes-diffusion-400.webp 400w" sizes="240px" width="400" height="429" alt="" loading="lazy" decoding="async"></div><div class="logo-card" aria-hidden="true"><img src="assets/img/logo-axiom-400.webp" srcset="assets/img/logo-axiom-400.webp 400w" sizes="240px" width="400" height="181" alt="" loading="lazy" decoding="async"></div><div class="logo-card" aria-hidden="true"><img src="assets/img/logo-animax-319.webp" srcset="assets/img/logo-animax-319.webp 319w" sizes="240px" width="319" height="400" alt="" loading="lazy" decoding="async"></div>
+      <div class="logo-card" aria-hidden="true"><img src="assets/img/logo-genes-diffusion-400.webp" srcset="assets/img/logo-genes-diffusion-400.webp 400w" sizes="240px" width="400" height="429" alt="" loading="lazy" decoding="async"></div><div class="logo-card" aria-hidden="true"><img src="assets/img/logo-axiom-400.webp" srcset="assets/img/logo-axiom-400.webp 400w" sizes="240px" width="400" height="181" alt="" loading="lazy" decoding="async"></div><div class="logo-card" aria-hidden="true"><img src="assets/img/logo-animax-319.webp" srcset="assets/img/logo-animax-319.webp 319w" sizes="240px" width="319" height="400" alt="" loading="lazy" decoding="async"></div>
+    </div></div>
+  </div>
+</section>
+
+</main>
+
+<section class="newsletter reveal" aria-labelledby="nl-title">
+  <div class="wrap newsletter__inner">
+    <div>
+      <p class="eyebrow eyebrow--light">Restez informé</p>
+      <h2 id="nl-title">Nouveautés, arrivages et promotions</h2>
+      <p>Rejoignez le groupe d'entraide des éleveurs sur WhatsApp, ou inscrivez votre e-mail : nous vous écrirons à chaque arrivage.</p>
+    </div>
+    <div class="newsletter__actions">
+      <a class="btn btn--wa btn--lg" href="https://chat.whatsapp.com/HusaXUhaVfu4SBQWiqmLqY" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true" class="ico-fill"><path d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg> Rejoindre le groupe WhatsApp</a>
+      <form class="nl-form" id="nlForm" novalidate>
+        <label class="sr-only" for="nlEmail">Votre adresse e-mail</label>
+        <input id="nlEmail" type="email" name="email" placeholder="Votre e-mail" autocomplete="email" required>
+        <button class="btn btn--sun" type="submit">S'inscrire</button>
       </form>
+      <p class="nl-note">L'inscription par e-mail ouvre votre messagerie avec une demande prête à envoyer. Aucune donnée n'est enregistrée par ce site.</p>
     </div>
-  </aside>
+  </div>
+</section>
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div class="ftr__brand">
+      <a class="brand brand--light" href="index.html"><img src="assets/img/logo-cap-pdi.png" alt="" width="52" height="52" loading="lazy"><span class="brand__txt"><strong>CAP DE LA PDI</strong><small>Coopérative Agro-Pastorale de la Production Diverse des IPOLO</small></span></a>
+      <p>Génétique, santé animale, alimentation et matériel d'élevage à Pointe-Noire. Représentant officiel de GENES DIFFUSION pour les deux Congos.</p>
+      <div class="ftr__contact"><a href="tel:+242050795618"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg> +242 05 079 56 18</a><a href="tel:+242044383024"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg> +242 04 438 30 24</a><a href="https://wa.me/33766551505" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true" class="ico-fill"><path d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg> +33 7 66 55 15 05</a><a href="mailto:la-pdi@hotmail.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> la-pdi@hotmail.com</a></div>
+    </div>
+    <div><h3>Boutique</h3><ul><li><a href="boutique.html?cat=bovins">Semences bovines</a></li><li><a href="boutique.html?cat=reproducteurs">Reproducteurs porcins</a></li><li><a href="boutique.html?cat=porcins">Semences porcines</a></li><li><a href="boutique.html?cat=sante">Santé animale</a></li><li><a href="boutique.html?cat=repro">Insémination &amp; reproduction</a></li><li><a href="boutique.html?cat=soins">Matériel vétérinaire</a></li><li><a href="boutique.html?cat=nutrition">Alimentation &amp; nutrition</a></li><li><a href="boutique.html?cat=equipement">Équipement d&#x27;élevage</a></li></ul></div>
+    <div><h3>Informations</h3><ul>
+      <li><a href="a-propos.html">À propos</a></li><li><a href="contact.html">Contact</a></li>
+      <li><a href="livraison-retours.html">Livraison & retours</a></li><li><a href="faq.html">Questions fréquentes</a></li>
+      <li><a href="cgv.html">Conditions générales de vente</a></li><li><a href="confidentialite.html">Confidentialité</a></li>
+      <li><a href="mentions-legales.html">Mentions légales</a></li></ul></div>
+    <div><h3>Nos dépôts</h3><ul class="ftr__depots"><li><strong>Siège – La Base</strong><br>Avenue Félix TCHIKAYA, Pointe-Noire</li><li><strong>Dépôt Ngoyo</strong><br>Arrêt La Datcha, Pointe-Noire<br><a href="tel:+242067434310">06 743 43 10</a></li><li><strong>Dépôt Djeno</strong><br>Arrêt Supermarché, Djeno<br><a href="tel:+242067958233">06 795 82 33</a></li><li><strong>Dépôt Côte Matève</strong><br>Côte Matève, Pointe-Noire</li></ul></div>
+    <div><h3>Horaires</h3><ul class="ftr__hours"><li><span>Lundi – vendredi</span><span>8h00 – 12h00 · 13h30 – 17h00</span></li><li><span>Samedi</span><span>8h00 – 12h00</span></li><li><span>Dimanche</span><span>Fermé</span></li></ul><p class="open-status" data-open-status></p></div>
+  </div>
+  <div class="wrap ftr__pay"><span>Paiements acceptés</span><span class="paybadge">MTN Mobile Money</span><span class="paybadge">Airtel Money</span><span class="paybadge">Virement bancaire (UBA)</span><span class="paybadge">Espèces au dépôt</span></div>
+  <div class="wrap ftr__legal">
+    <p>© <span data-year>2026</span> Coopérative Agro-Pastorale de la Production Diverse des IPOLO (CAP DE LA PDI) · Agrément n° 0491/MAEP/DGA-DAPR · NIU M250000007537101</p>
+    <p>Pointe-Noire, République du Congo</p>
+  </div>
+</footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<a class="wa-float" href="https://wa.me/33766551505?text=Bonjour CAP DE LA PDI, j&#x27;ai une question." target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true" class="ico-fill"><path d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
 
-  <!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
-  <a class="whatsapp" href="https://wa.me/33766551505?text=Bonjour%20CAP%20DE%20LA%20PDI%2C%20je%20souhaite%20avoir%20des%20informations." target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp">
-    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.5L3 29l6.7-1.7c1.9 1 4.1 1.6 6.3 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.7c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8C5.1 10 10 5.2 16 5.2S26.9 10 26.9 16 22 26.7 16 26.7zm6-8c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.7.2-.2.3-.8 1.1-1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
-  </a>
+<div class="cart" id="cart" aria-hidden="true">
+  <div class="cart__panel" role="dialog" aria-label="Panier">
+    <div class="cart__head"><h2>Mon panier</h2><button class="icon-btn" data-close-cart aria-label="Fermer le panier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="cart__body" id="cartBody"></div>
+    <div class="cart__foot" id="cartFoot"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script>
-    // Menu mobile
-    const toggle = document.getElementById('navToggle');
-    const nav = document.getElementById('nav');
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      toggle.classList.toggle('is-open', open);
-      toggle.setAttribute('aria-expanded', open);
-    });
-    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      nav.classList.remove('is-open');
-      toggle.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', false);
-    }));
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Ouvert / fermé maintenant (heure de Pointe-Noire)
-    (function () {
-      let d;
-      try { d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Brazzaville' })); } catch (e) { return; }
-      const day = d.getDay(), m = d.getHours() * 60 + d.getMinutes();
-      const open = (day >= 1 && day <= 5 && ((m >= 480 && m < 720) || (m >= 810 && m < 1020))) || (day === 6 && m >= 480 && m < 720);
-      document.querySelectorAll('[data-open-status]').forEach(el => {
-        el.textContent = open ? 'Ouvert maintenant' : 'Fermé actuellement';
-        el.classList.add(open ? 'is-open' : 'is-closed');
-      });
-    })();
-  </script>
-  <script src="shop.js"></script>
+<script src="assets/js/catalog.js?v=20261020"></script>
+<script src="assets/js/app.js?v=20261020"></script>
+<script src="assets/js/home.js?v=20261020"></script>
 </body>
 </html>

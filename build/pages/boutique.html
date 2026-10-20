@@ -1,0 +1,35 @@
+<!--{"page":"boutique","title":"Boutique en ligne – Génétique, santé animale, aliment et matériel d'élevage | CAP DE LA PDI","desc":"Commandez en ligne vos semences bovines, reproducteurs porcins AXIOM, médicaments vétérinaires ANIMAX, vaccins, aliment et équipement d'élevage. Retrait à Pointe-Noire ou livraison au Congo.","scripts":"boutique"}-->
+<section class="page-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="{{root}}index.html">Accueil</a><span>/</span><span aria-current="page" id="crumbCat">Boutique</span></nav>
+    <h1 id="shopTitle">La boutique</h1>
+    <p id="shopLead">Génétique, santé animale, alimentation et matériel : {{count:products}} produits pour votre élevage.</p>
+  </div>
+</section>
+<div class="wrap shop">
+  <aside class="filters" id="filters" aria-label="Filtres">
+    <div class="filters__close"><strong>Filtrer</strong><button class="icon-btn" type="button" data-close-filters aria-label="Fermer les filtres">✕</button></div>
+    <div><h2>Rayons</h2><div id="fCats"></div></div>
+    <div><h2>Type de produit</h2>
+      <label class="fcheck"><input type="checkbox" value="priced" data-ftype> Prix affiché</label>
+      <label class="fcheck"><input type="checkbox" value="quote" data-ftype> Sur commande / devis</label>
+      <label class="fcheck"><input type="checkbox" value="download" data-ftype> Téléchargeable</label>
+      <label class="fcheck"><input type="checkbox" value="new" data-ftype> Nouveautés</label>
+    </div>
+    <button class="btn btn--primary btn--block" type="button" data-close-filters style="margin-top:.4rem">Voir les produits</button>
+  </aside>
+  <div>
+    <div class="chips" id="chips" role="tablist" aria-label="Rayons"></div>
+    <div class="shop__bar">
+      <label class="shop__search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">Rechercher</span><input type="search" id="shopQ" placeholder="Rechercher un produit…" autocomplete="off"></label>
+      <label><span class="sr-only">Trier</span><select class="select" id="shopSort">
+        <option value="reco">Recommandés</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="name">Nom (A → Z)</option></select></label>
+      <button class="btn btn--outline shop__filterbtn" type="button" id="openFilters">Filtres</button>
+    </div>
+    <div id="catIntro"></div>
+    <p class="shop__count" id="shopCount" aria-live="polite"></p>
+    <div class="grid" id="shopGrid" style="margin-top:1rem"></div>
+    <div class="shop__more"><button class="btn btn--outline btn--lg" type="button" id="shopMore" hidden>Afficher plus de produits</button></div>
+  </div>
+</div>
+<div class="backdrop" id="filtersBackdrop"></div>
