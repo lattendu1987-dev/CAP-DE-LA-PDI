@@ -449,7 +449,7 @@ def product_page(p):
 
     flag = "Paiement en ligne" if p.get("link") else ("Sur commande / devis" if is_quote(p) else "Prix affiché")
     delivery = ("Fichier envoyé immédiatement par Chariow après paiement." if p.get("link") else
-                "Retrait gratuit au bureau (La Base) ou dans nos 3 dépôts (La Datcha, Côte Matève, arrêt Supermarché). Livraison à Pointe-Noire, au Congo et partout dans le monde : frais communiqués avant validation. Expédition express possible pour les petites commandes ; grosses commandes : 1,5 à 2 mois.")
+                "Retrait gratuit au bureau (La Base) ou dans nos 3 dépôts (La Datcha, Côte Matève, arrêt Supermarché). Livraison possible au Congo-Brazzaville et partout dans le monde, aux frais du client (montant communiqué avant validation). Expédition express possible pour les petites commandes ; grosses commandes : 1,5 à 2 mois.")
     if p["cat"] == "reproducteurs":
         delivery = "Animaux livrés par avion : enlèvement à l'aéroport du Congo aux frais de l'acheteur. Fret et dédouanement inclus dans le prix."
 

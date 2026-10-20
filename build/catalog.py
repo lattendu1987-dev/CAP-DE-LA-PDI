@@ -58,7 +58,7 @@ DEPOT_HOURS = "Lundi – samedi · 7h00 – 18h00"  # horaires des dépôts d'al
 # Options de livraison proposées à la commande (configurables)
 DELIVERY = [
     {"id": "retrait", "label": "Retrait au bureau ou en dépôt", "desc": "Gratuit. Choisissez votre point de retrait ci-dessous.", "fee": 0},
-    {"id": "livraison-pn", "label": "Livraison à Pointe-Noire", "desc": "Frais selon le quartier, communiqués avant validation.", "fee": None},
+    {"id": "livraison-pn", "label": "Livraison au Congo-Brazzaville", "desc": "Possible pour tous nos produits disponibles au Congo, aux frais du client (montant communiqué avant validation).", "fee": None},
     {"id": "expedition", "label": "Expédition au Congo et partout dans le monde", "desc": "Frais et délai communiqués sur devis. Grosses commandes : 1,5 à 2 mois.", "fee": None},
     {"id": "express", "label": "Expédition express (petites commandes)", "desc": "Pour les petits colis urgents : tarif et délai communiqués sur devis.", "fee": None},
 ]
