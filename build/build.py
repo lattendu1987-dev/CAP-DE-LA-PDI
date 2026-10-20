@@ -52,7 +52,7 @@ def build_images():
         if f.endswith(".webp") and f not in keep:
             os.remove(os.path.join(OUT_IMG, f))
     # image de partage (Open Graph) et logo en JPG/PNG pour les réseaux sociaux
-    og = Image.open(os.path.join(SRC, "race-charolaise.jpg")).convert("RGB")
+    og = Image.open(os.path.join(SRC, "verrat-xxv.jpg")).convert("RGB")
     og = og.resize((1200, round(og.height * 1200 / og.width)), Image.LANCZOS)
     top = max(0, (og.height - 630) // 2)
     og.crop((0, top, 1200, top + 630)).save(os.path.join(OUT_IMG, "og-cap-de-la-pdi.jpg"), quality=85)
@@ -433,6 +433,16 @@ def product_page(p):
     details = "".join(f"<li>{E(d)}</li>" for d in p.get("details", []))
     rx = '<p class="pp__rx">⚕️ Produit vétérinaire : délivré sur conseil de nos techniciens ou de votre vétérinaire.</p>' if p.get("rx") else ""
     badge = f'<span class="badge badge--hot">{E(p["badge"])}</span>' if p.get("badge") else ""
+    if p.get("origin") == "fr":
+        badge += '<span class="badge badge--fr">🇫🇷 Qualité France</span>'
+    elif p.get("origin") == "fr-dist":
+        badge += '<span class="badge badge--fr">🇫🇷 Fournisseur français</span>'
+    origin_li = ""
+    if p.get("origin") == "fr":
+        origin_li = f'<li><span class="flag-fr" aria-hidden="true">🇫🇷</span><span><strong>Qualité France</strong>Produit sélectionné auprès de nos partenaires français et importé de France par CAP DE LA PDI.</span></li>'
+    elif p.get("origin") == "fr-dist":
+        origin_li = f'<li><span class="flag-fr" aria-hidden="true">🇫🇷</span><span><strong>Fournisseur français</strong>Semence distribuée par GENES DIFFUSION (France) et expédiée depuis la France.</span></li>'
+
     flag = "Paiement en ligne" if p.get("link") else ("Sur commande / devis" if is_quote(p) else "Prix affiché")
     delivery = ("Fichier envoyé immédiatement par Chariow après paiement." if p.get("link") else
                 "Retrait gratuit dans nos dépôts de Pointe-Noire (siège La Base et nos 3 dépôts : La Datcha, Côte Matève, arrêt Supermarché). Livraison à Pointe-Noire ou expédition vers Brazzaville et l'intérieur : frais communiqués avant validation.")
@@ -458,6 +468,7 @@ def product_page(p):
     {buy}
     {rx}
     <ul class="pp__assure">
+      {origin_li}
       <li>{ICON["pin"]}<span><strong>Retrait ou livraison</strong>{E(delivery)}</span></li>
       <li>{ICON["phone"]}<span><strong>Conseil d'un technicien</strong>Une question avant d'acheter ? Écrivez-nous sur WhatsApp au {C.SITE["whatsapp_display"]}.</span></li>
     </ul>

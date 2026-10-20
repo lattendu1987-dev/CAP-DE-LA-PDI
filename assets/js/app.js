@@ -56,6 +56,8 @@
       : placeholder(p);
     const badges = [];
     if (p.badge) badges.push(`<span class="badge badge--hot">${esc(p.badge)}</span>`);
+    if (p.origin === "fr") badges.push('<span class="badge badge--fr">🇫🇷 Qualité France</span>');
+    if (p.origin === "fr-dist") badges.push('<span class="badge badge--fr">🇫🇷 Fournisseur français</span>');
     if (p.link) badges.push('<span class="badge badge--dl">Téléchargement</span>');
     else if (isQuote(p)) badges.push('<span class="badge badge--quote">Sur commande</span>');
     const direct = !p.link && !p.options;
