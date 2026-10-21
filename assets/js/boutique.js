@@ -45,12 +45,16 @@
     $("#shopCount").textContent = l.length + " produit" + (l.length > 1 ? "s" : "") + (st.q ? ` pour « ${st.q} »` : "");
     const grid = $("#shopGrid");
     if (!l.length) {
-      grid.innerHTML = `<div class="shop__empty" style="grid-column:1/-1"><p><strong>Aucun produit ne correspond.</strong></p><p>Essayez un autre mot ou un autre rayon, ou <a href="https://wa.me/${D.site.whatsapp}?text=${encodeURIComponent("Bonjour, je cherche : " + st.q)}" target="_blank" rel="noopener">demandez-nous sur WhatsApp</a> : nous pouvons le commander pour vous.</p></div>`;
+      const filtered = st.q || st.types.size;
+      grid.innerHTML = `<div class="shop__empty" style="grid-column:1/-1"><p><strong>Aucun produit ne correspond${filtered ? " à vos filtres" : ""}.</strong></p>${filtered ? '<p><button class="btn btn--primary" type="button" id="clearFilters">Effacer la recherche et les filtres</button></p>' : ""}<p>Vous cherchez un produit précis ? <a href="https://wa.me/${D.site.whatsapp}?text=${encodeURIComponent("Bonjour, je cherche : " + st.q)}" target="_blank" rel="noopener">Demandez-nous sur WhatsApp</a> : nous pouvons le commander pour vous.</p></div>`;
+      const cf = $("#clearFilters"); if (cf) cf.addEventListener("click", () => { st.q = ""; st.types.clear(); update(); });
       $("#shopMore").hidden = true; return;
     }
-    grid.innerHTML = l.slice(0, st.shown).map(cardHTML).join("");
-    grid.classList.remove("is-in"); grid.classList.add("reveal-stagger"); reveal(grid.parentNode);
-    $("#shopMore").hidden = l.length <= st.shown;
+    const limit = st.cat === "all" && !st.q.trim() ? st.shown : Infinity;
+    grid.innerHTML = l.slice(0, limit).map(cardHTML).join("");
+    // Apparition douce des cartes, sans jamais les laisser invisibles
+    $$(".pcard", grid).forEach((c, i) => { c.style.animation = `cardIn .6s cubic-bezier(.22,.61,.36,1) ${Math.min(i, 12) * 40}ms both`; });
+    $("#shopMore").hidden = l.length <= limit;
   }
 
   function sync() {
@@ -65,7 +69,7 @@
   function update() { st.shown = PAGE; renderNav(); render(); sync(); }
 
   document.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-cat]"); if (b && (b.closest("#fCats") || b.closest("#chips"))) { st.cat = b.dataset.cat; update(); if (b.closest("#fCats") && innerWidth > 1020) scrollTo({ top: 0, behavior: "smooth" }); }
+    const b = e.target.closest("[data-cat]"); if (b && (b.closest("#fCats") || b.closest("#chips"))) { st.cat = b.dataset.cat; st.q = ""; st.types.clear(); update(); if (b.closest("#fCats") && innerWidth > 1020) scrollTo({ top: 0, behavior: "smooth" }); }
     if (e.target.closest("#openFilters")) { $("#filters").classList.add("is-open"); $("#filtersBackdrop").classList.add("is-on"); }
     if (e.target.closest("[data-close-filters]") || e.target.id === "filtersBackdrop") { $("#filters").classList.remove("is-open"); $("#filtersBackdrop").classList.remove("is-on"); }
   });

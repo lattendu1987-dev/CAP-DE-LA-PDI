@@ -239,7 +239,7 @@
   }
 
   /* ---------------- Animations au défilement ---------------- */
-  const io = "IntersectionObserver" in window ? new IntersectionObserver((ents) => ents.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px", threshold: .08 }) : null;
+  const io = "IntersectionObserver" in window ? new IntersectionObserver((ents) => ents.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -6% 0px", threshold: 0 }) : null;
   function reveal(scope) { $$(".reveal, .reveal-stagger", scope || document).forEach((el) => io ? io.observe(el) : el.classList.add("is-in")); }
 
   /* ---------------- Rails (carrousels produits) ---------------- */

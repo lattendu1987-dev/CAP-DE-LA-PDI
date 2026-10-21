@@ -203,7 +203,7 @@ def header(root, overlay):
 def footer(root):
     cats = "".join(f'<li><a href="{root}boutique.html?cat={c["id"]}">{E(c["label"])}</a></li>' for c in C.CATEGORIES[:8])
     depots = "".join(f'<li><strong>{E(d["name"])}</strong><br>{E(d["addr"])}' + (f'<br><a href="tel:{d["tel"][0]}">{d["tel"][1]}</a>' if d["tel"] else "") + "</li>" for d in C.DEPOTS)
-    hours = "".join(f"<li><span>{a}</span><span>{b}</span></li>" for a, b in C.HOURS) + f"<li><span>Dépôts d'aliment</span><span>{C.DEPOT_HOURS}</span></li>"
+    hours = "".join(f"<li><span>{a}</span><span>" + " · ".join(f'<span class="nw">{x}</span>' for x in b.split(" · ")) + "</span></li>" for a, b in C.HOURS) + f"<li><span>Dépôts d'aliment</span><span>{C.DEPOT_HOURS}</span></li>"
     pays = "".join(f'<span class="paybadge">{E(p["label"])}</span>' for p in C.PAYMENTS)
     phones = "".join(f'<a href="tel:{t}">{ICON["phone"]} {d}</a>' for t, d in C.SITE["phones"])
     return f'''
@@ -283,7 +283,7 @@ BASE = '''<!DOCTYPE html>
 <link rel="apple-touch-icon" href="{root}assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{root}assets/css/main.css?v={v}">
 {preload}{jsonld}{headextra}
 </head>
