@@ -45,6 +45,13 @@ npm run lint                  # vérification des types
 npx playwright test           # 10 parcours complets dans un navigateur (serveur lancé + base de démo)
 ```
 
+## Identité visuelle « Nocturne »
+
+- **Page d'accueil cinématographique** : apparition du logo (une fois par visite, passable avec un clic ou Échap), carrousel plein écran avec zoom lent et titres animés. Le rythme se règle dans `src/app/page.tsx` (`CAROUSEL_INTERVAL`, en millisecondes).
+- **Visuels** : images 3D originales d'un stade de nuit (aucun droit à payer), dans `public/visuals/`. Chaque scène existe en version horizontale (`hero.jpg`) et verticale pour téléphone (`hero-mobile.jpg`). Pour changer une image, remplacer le fichier en gardant le même nom.
+- **Couleurs** : nuit `#040907`, or `#c9a45a`, vert pelouse `#123d26`. Polices Archivo (titres) et Instrument Serif (accents), servies par le site lui-même.
+- **Confort** : les animations s'arrêtent si le téléphone demande de « réduire les animations », et une version allégée s'active sur les appareils modestes ou en économie de données.
+
 ## Mettre en ligne (pas à pas, sans être développeur)
 
 1. **Base de données** — compte gratuit sur [neon.tech](https://neon.tech), crée un projet, copie la « connection string » (`postgresql://…`).
