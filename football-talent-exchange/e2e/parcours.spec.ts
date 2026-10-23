@@ -38,25 +38,37 @@ test("joueur majeur : inscription, profil, vidéo, Premium démo", async ({ page
   await expect(page.getByText("Profil complété à 0 %")).toBeVisible();
 
   // Poste principal AG puis secondaire AD sur le terrain
-  await page.getByRole("button", { name: "AG", exact: true }).click();
-  await page.getByRole("button", { name: "AD", exact: true }).click();
+  await page.getByRole("button", { name: "Ailier gauche", exact: true }).click();
+  await page.getByRole("button", { name: "Ailier droit", exact: true }).click();
   await page.fill('input[name="heightCm"]', "180");
   await page.fill('input[name="weightKg"]', "74");
   await page.selectOption('select[name="foot"]', "LEFT");
-  await page.getByRole("button", { name: "Enregistrer" }).click();
+  await page.locator("form", { has: page.locator('input[name="heightCm"]') }).getByRole("button", { name: "Enregistrer" }).click();
   await expect(page.getByText("Profil enregistré.")).toBeVisible();
   await expect(page.getByText("Profil complété à 30 %")).toBeVisible();
 
-  await page.fill('input[name="url"]', "https://youtu.be/abc123XYZ");
-  await page.fill('input[name="title"]', "Mes buts");
-  await page.fill('textarea[name="moments"]', "00:45 Dribble\n01:12 But du gauche");
-  await page.getByRole("button", { name: "Ajouter la vidéo" }).click();
+  // Envoi direct d'une vidéo depuis le téléphone
+  const uploadForm = page.locator("form", { has: page.getByTestId("upload-video") });
+  await page.getByTestId("upload-video").setInputFiles({ name: "but.mp4", mimeType: "video/mp4", buffer: Buffer.alloc(200_000, 1) });
+  await expect(uploadForm.getByText("Envoyé ✓")).toBeVisible();
+  await uploadForm.locator('input[name="title"]').fill("Mes buts");
+  await uploadForm.locator('textarea[name="moments"]').fill("00:45 Dribble\n01:12 But du gauche");
+  await uploadForm.getByRole("button", { name: "Ajouter la vidéo" }).click();
   await expect(page.getByText("Vidéo ajoutée.")).toBeVisible();
 
-  // Limite gratuite : 1 vidéo
-  await page.fill('input[name="url"]', "https://youtu.be/second123");
-  await page.getByRole("button", { name: "Ajouter la vidéo" }).click();
+  // Limite gratuite : 1 vidéo (le lien est refusé)
+  await page.getByText("🔗 Lien YouTube / Vimeo").click();
+  const linkForm = page.locator("form", { has: page.locator('input[name="url"]') });
+  await linkForm.locator('input[name="url"]').fill("https://youtu.be/second123");
+  await linkForm.getByRole("button", { name: "Ajouter la vidéo" }).click();
   await expect(page.getByText(/Limite de 1 vidéo/)).toBeVisible();
+
+  // Photo de profil
+  const photoForm = page.locator("form", { has: page.getByTestId("upload-photo") });
+  await page.getByTestId("upload-photo").setInputFiles({ name: "moi.png", mimeType: "image/png", buffer: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64") });
+  await expect(photoForm.getByText("Envoyé ✓")).toBeVisible();
+  await photoForm.getByRole("button", { name: "Enregistrer" }).click();
+  await expect(page.getByText("Photo mise à jour.")).toBeVisible();
 
   // Abonnement Premium en mode démo
   await page.goto("/abonnement");
@@ -69,6 +81,11 @@ test("joueur majeur : inscription, profil, vidéo, Premium démo", async ({ page
   await expect(page.getByRole("heading", { name: `Samuel Test${uid}` })).toBeVisible();
   await expect(page.getByText("★ Premium")).toBeVisible();
   await expect(page.getByRole("button", { name: /01:12 But du gauche/ })).toBeVisible();
+  const src = await page.locator("video").first().getAttribute("src");
+  expect(src).toMatch(/^\/api\/media\/u\/.+\.mp4$/);
+  const ranged = await page.request.get(src!, { headers: { Range: "bytes=0-99" } });
+  expect(ranged.status()).toBe(206);
+  expect((await ranged.body()).length).toBe(100);
 });
 
 test("mineur : bloqué sans parent, invisible jusqu'au consentement", async ({ page }) => {

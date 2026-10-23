@@ -26,7 +26,7 @@ async function main() {
     create: {
       email: "scout@fte.local", passwordHash, name: "Sophie Martin", role: "RECRUITER", country: "FR",
       recruiter: { create: { type: "SCOUT", organization: "FC Démo", website: "https://fc-demo.example", country: "FR", verification: "VERIFIED" } },
-      subscription: { create: { plan: "RECRUITER_PRO", status: "TRIALING", currentPeriodEnd: new Date(Date.now() + 14 * 86400000) } },
+      subscription: { create: { plan: "RECRUITER_CLUB", status: "ACTIVE", currentPeriodEnd: new Date(Date.now() + 365 * 86400000) } },
     },
   });
 

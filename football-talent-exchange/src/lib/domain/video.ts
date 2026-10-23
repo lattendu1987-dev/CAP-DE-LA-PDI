@@ -4,6 +4,8 @@ export type VideoEmbed =
   | { provider: "file"; embedUrl: string };
 
 export function parseVideoUrl(raw: string): VideoEmbed | null {
+  // Fichier envoyé directement et stocké localement.
+  if (/^\/api\/media\/u\/[\w-]+\/video\/[\w-]+\.(mp4|mov|webm|3gp)$/.test(raw)) return { provider: "file", embedUrl: raw };
   let url: URL;
   try {
     url = new URL(raw.trim());
@@ -24,7 +26,7 @@ export function parseVideoUrl(raw: string): VideoEmbed | null {
     const id = url.pathname.match(/^\/(\d+)/)?.[1];
     return id ? { provider: "vimeo", embedUrl: `https://player.vimeo.com/video/${id}` } : null;
   }
-  if (/\.(mp4|webm|mov)$/i.test(url.pathname)) return { provider: "file", embedUrl: url.toString() };
+  if (/\.(mp4|webm|mov|3gp)$/i.test(url.pathname)) return { provider: "file", embedUrl: url.toString() };
   return null;
 }
 

@@ -14,6 +14,11 @@ export async function GET() {
       subscription: { select: { plan: true, interval: true, status: true, currentPeriodEnd: true, amountCents: true } },
       messages: { select: { conversationId: true, body: true, createdAt: true } },
       reportsMade: { select: { reason: true, createdAt: true } },
+      referralCode: true,
+      payments: { select: { provider: true, plan: true, interval: true, usdCents: true, currency: true, amountMinor: true, status: true, createdAt: true } },
+      commissionsEarned: { select: { amountCents: true, status: true, createdAt: true } },
+      payouts: { select: { amountCents: true, method: true, status: true, createdAt: true } },
+      trialApplications: { select: { trialId: true, status: true, message: true, createdAt: true } },
     },
   });
   return new Response(JSON.stringify(data, null, 2), {

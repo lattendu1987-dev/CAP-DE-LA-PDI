@@ -3,22 +3,29 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { destroySession, hashPassword, requireUser, verifyPassword } from "@/lib/auth";
 import { stripe, stripeEnabled } from "@/lib/stripe";
+import { deleteStored } from "@/lib/storage";
+import { getMessages } from "@/i18n/server";
 import { audit } from "@/lib/audit";
+
+const go = (path: string, key: "ok" | "erreur", msg: string): never => redirect(`${path}?${key}=${encodeURIComponent(msg)}`);
 
 export async function changePasswordAction(fd: FormData) {
   const user = await requireUser();
+  const t = (await getMessages()).account.flash;
   const current = String(fd.get("current") ?? "");
   const next = String(fd.get("next") ?? "");
-  if (!(await verifyPassword(current, user.passwordHash))) redirect("/compte?erreur=" + encodeURIComponent("Mot de passe actuel incorrect."));
-  if (next.length < 8) redirect("/compte?erreur=" + encodeURIComponent("Le nouveau mot de passe doit contenir au moins 8 caractères."));
+  if (!(await verifyPassword(current, user.passwordHash))) go("/compte", "erreur", t.wrongPassword);
+  if (next.length < 8) go("/compte", "erreur", t.passwordShort);
   await db.user.update({ where: { id: user.id }, data: { passwordHash: await hashPassword(next) } });
-  redirect("/compte?ok=" + encodeURIComponent("Mot de passe modifié."));
+  go("/compte", "ok", t.passwordChanged);
 }
 
 export async function deleteAccountAction(fd: FormData) {
   const user = await requireUser();
-  if (fd.get("confirm") !== "SUPPRIMER") redirect("/compte?erreur=" + encodeURIComponent("Écris SUPPRIMER pour confirmer."));
-  if (user.role === "ADMIN") redirect("/compte?erreur=" + encodeURIComponent("Un administrateur ne peut pas supprimer son compte ici."));
+  const m = await getMessages();
+  const t = m.account.flash;
+  if (String(fd.get("confirm") ?? "").trim().toUpperCase() !== m.account.deleteWord.toUpperCase()) go("/compte", "erreur", t.confirmDelete);
+  if (user.role === "ADMIN") go("/compte", "erreur", t.adminNoDelete);
   const subId = user.subscription?.stripeSubscriptionId;
   if (subId && stripeEnabled()) {
     try {
@@ -27,8 +34,14 @@ export async function deleteAccountAction(fd: FormData) {
       console.error("Annulation Stripe impossible", e);
     }
   }
+  // Suppression des fichiers envoyés (vidéos, photo).
+  if (user.player) {
+    const videos = await db.video.findMany({ where: { playerId: user.player.id, storageKey: { not: null } }, select: { storageKey: true } });
+    for (const v of videos) await deleteStored(v.storageKey);
+    await deleteStored(user.player.photoKey);
+  }
   await audit(null, "account.delete", { role: user.role });
   await destroySession();
   await db.user.delete({ where: { id: user.id } });
-  redirect("/?ok=" + encodeURIComponent("Ton compte et tes données ont été supprimés."));
+  go("/", "ok", t.deleted);
 }

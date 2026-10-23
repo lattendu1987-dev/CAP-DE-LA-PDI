@@ -1,23 +1,28 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getLocale, getMessages } from "@/i18n/server";
 import { buildPlayerWhere, filtersToQueryString, parseFilters } from "@/lib/domain/search";
 import { isPremiumPlayer, isSubscriptionActive } from "@/lib/domain/rules";
-import { AVAILABILITY_LABELS, LEVELS, POSITIONS } from "@/lib/domain/reference";
+import { AVAILABILITY_CODES, LEVEL_CODES, POSITION_CODES } from "@/lib/domain/reference";
 import { PlayerCard } from "@/components/player-card";
 import { CountrySelect } from "@/components/country-select";
 import { Badge, Empty, Field, Flash } from "@/components/ui";
 import { saveSearchAction } from "@/app/actions/recruiter";
 
-export const metadata = { title: "Recherche de joueurs" };
+export async function generateMetadata() {
+  return { title: (await getMessages()).search.metaTitle };
+}
 const PAGE_SIZE = 20;
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const user = await requireUser(["RECRUITER", "ADMIN"]);
-  const sp = await searchParams;
+  const [sp, m, locale] = await Promise.all([searchParams, getMessages(), getLocale()]);
+  const t = m.search;
   const filters = parseFilters(sp);
   const page = Math.max(1, Number(sp.page) || 1);
-  const where = buildPlayerWhere(filters, new Date(), { includeMinors: user.role === "ADMIN" || user.recruiter?.verification === "VERIFIED" });
+  const verified = user.role === "ADMIN" || user.recruiter?.verification === "VERIFIED";
+  const where = buildPlayerWhere(filters, new Date(), { includeMinors: verified });
   const [total, players] = await Promise.all([
     db.playerProfile.count({ where }),
     db.playerProfile.findMany({
@@ -36,88 +41,92 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="h1">Trouver un joueur</h1>
-          <p className="muted">{total} profil{total > 1 ? "s" : ""} correspond{total > 1 ? "ent" : ""} à ta recherche.</p>
+          <h1 className="h1">{t.title}</h1>
+          <p className="muted">{t.results(total)}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {user.recruiter && (user.recruiter.verification === "VERIFIED" ? <Badge tone="blue">✓ Recruteur vérifié</Badge> : <Badge tone="gold">Vérification en cours</Badge>)}
-          {trialEnds !== null && trialEnds > 0 && <Badge tone="green">Essai : {trialEnds} j restants</Badge>}
-          {user.role === "RECRUITER" && !isSubscriptionActive(sub) && <Link href="/abonnement" className="btn-primary btn-sm">S&apos;abonner pour contacter</Link>}
+          {user.recruiter && (user.recruiter.verification === "VERIFIED" ? <Badge tone="blue">{m.labels.recruiterVerified}</Badge> : <Badge tone="gold">{m.labels.pendingVerification}</Badge>)}
+          {trialEnds !== null && trialEnds > 0 && <Badge tone="green">{t.trialDays(trialEnds)}</Badge>}
+          {user.role === "RECRUITER" && !isSubscriptionActive(sub) && <Link href="/abonnement" className="btn-primary btn-sm">{t.subscribeToContact}</Link>}
         </div>
       </div>
       <Flash sp={sp} />
+      {!verified && <p className="text-xs text-gray-500">{t.minorsHidden}</p>}
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         <form className="card h-fit space-y-3" method="get">
-          <Field label="Nom, ville ou club"><input className="input" name="q" defaultValue={filters.q} /></Field>
-          <Field label="Poste">
+          <Field label={t.q}><input className="input" name="q" defaultValue={filters.q} /></Field>
+          <Field label={t.position}>
             <select className="input" name="position" defaultValue={filters.position ?? ""}>
-              <option value="">Tous</option>
-              {POSITIONS.map((p) => <option key={p.code} value={p.code}>{p.label}</option>)}
+              <option value="">{m.common.all}</option>
+              {POSITION_CODES.map((c) => <option key={c} value={c}>{m.labels.positions[c]}</option>)}
             </select>
           </Field>
           <div className="grid grid-cols-2 gap-2">
-            <Field label="Âge min"><input className="input" type="number" name="minAge" min={13} max={45} defaultValue={filters.minAge} /></Field>
-            <Field label="Âge max"><input className="input" type="number" name="maxAge" min={13} max={45} defaultValue={filters.maxAge} /></Field>
+            <Field label={t.minAge}><input className="input" type="number" name="minAge" min={13} max={45} defaultValue={filters.minAge} /></Field>
+            <Field label={t.maxAge}><input className="input" type="number" name="maxAge" min={13} max={45} defaultValue={filters.maxAge} /></Field>
           </div>
-          <Field label="Pied fort">
+          <Field label={t.foot}>
             <select className="input" name="foot" defaultValue={filters.foot ?? ""}>
-              <option value="">Peu importe</option><option value="RIGHT">Droit</option><option value="LEFT">Gauche</option><option value="BOTH">Ambidextre</option>
+              <option value="">{m.common.any}</option>
+              {(["RIGHT", "LEFT", "BOTH"] as const).map((f) => <option key={f} value={f}>{m.labels.foot[f]}</option>)}
             </select>
           </Field>
-          <Field label="Taille min (cm)"><input className="input" type="number" name="minHeight" defaultValue={filters.minHeight} /></Field>
-          <Field label="Pays de résidence"><CountrySelect name="country" defaultValue={filters.country ?? ""} includeAny /></Field>
-          <Field label="Nationalité"><CountrySelect name="nationality" defaultValue={filters.nationality ?? ""} includeAny /></Field>
-          <Field label="Niveau">
+          <Field label={t.minHeight}><input className="input" type="number" name="minHeight" defaultValue={filters.minHeight} /></Field>
+          <Field label={t.country}><CountrySelect name="country" locale={locale} defaultValue={filters.country ?? ""} anyLabel={t.allCountries} /></Field>
+          <Field label={t.nationality}><CountrySelect name="nationality" locale={locale} defaultValue={filters.nationality ?? ""} anyLabel={t.allCountries} /></Field>
+          <Field label={t.level}>
             <select className="input" name="level" defaultValue={filters.level ?? ""}>
-              <option value="">Tous</option>
-              {LEVELS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
+              <option value="">{m.common.all}</option>
+              {LEVEL_CODES.map((l) => <option key={l} value={l}>{m.labels.levels[l]}</option>)}
             </select>
           </Field>
-          <Field label="Contrat">
+          <Field label={t.contract}>
             <select className="input" name="contract" defaultValue={filters.contract ?? ""}>
-              <option value="">Peu importe</option><option value="FREE">Libre</option><option value="UNDER_CONTRACT">Sous contrat</option>
+              <option value="">{m.common.any}</option><option value="FREE">{m.labels.free}</option><option value="UNDER_CONTRACT">{m.labels.underContract}</option>
             </select>
           </Field>
-          <Field label="Disponibilité">
+          <Field label={t.availability}>
             <select className="input" name="availability" defaultValue={filters.availability ?? ""}>
-              <option value="">Peu importe</option>
-              {Object.entries(AVAILABILITY_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              <option value="">{m.common.any}</option>
+              {AVAILABILITY_CODES.map((k) => <option key={k} value={k}>{m.labels.availability[k]}</option>)}
             </select>
           </Field>
-          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="withVideo" value="1" defaultChecked={filters.withVideo} /> Avec vidéo</label>
-          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="verifiedStats" value="1" defaultChecked={filters.verifiedStats} /> Stats vérifiées</label>
-          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="relocate" value="1" defaultChecked={filters.relocate} /> Prêt à déménager</label>
-          <button className="btn-primary w-full">Rechercher</button>
-          <Link href="/recruteur/recherche" className="btn-secondary w-full">Réinitialiser</Link>
+          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="withVideo" value="1" defaultChecked={filters.withVideo} /> {t.withVideo}</label>
+          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="verifiedStats" value="1" defaultChecked={filters.verifiedStats} /> {t.verifiedStats}</label>
+          <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="relocate" value="1" defaultChecked={filters.relocate} /> {t.relocate}</label>
+          <button className="btn-primary w-full">{m.common.search}</button>
+          <Link href="/recruteur/recherche" className="btn-secondary w-full">{m.common.reset}</Link>
         </form>
 
         <div className="space-y-3">
           {user.role === "RECRUITER" && qs && (
             <form action={saveSearchAction} className="card flex flex-wrap items-end gap-2">
               <input type="hidden" name="query" value={qs} />
-              <div className="flex-1"><Field label="Sauvegarder cette recherche + alertes courriel"><input className="input" name="name" placeholder="Ex. Ailiers gauches U21 libres" /></Field></div>
-              <button className="btn-secondary">Sauvegarder</button>
+              <div className="flex-1"><Field label={t.saveTitle}><input className="input" name="name" placeholder={t.savePlaceholder} /></Field></div>
+              <button className="btn-secondary">{t.saveButton}</button>
             </form>
           )}
           {players.length === 0 ? (
-            <Empty>Aucun joueur ne correspond. Essaie d&apos;élargir tes critères.</Empty>
+            <Empty>{t.empty}</Empty>
           ) : (
             players.map((p) => (
               <PlayerCard
                 key={p.id}
+                m={m}
+                locale={locale}
                 p={{ ...p, featured: isPremiumPlayer(p.user.subscription), videoCount: p._count.videos, verifiedStats: p.stats.length > 0 }}
-                action={<label className="flex items-center gap-1 text-xs text-gray-600"><input type="checkbox" form="compare" name="ids" value={p.slug} /> Comparer</label>}
+                action={<label className="flex items-center gap-1 text-xs text-gray-600"><input type="checkbox" form="compare" name="ids" value={p.slug} /> {t.compare}</label>}
               />
             ))
           )}
           {players.length > 0 && (
             <form id="compare" action="/recruteur/comparer" method="get" className="flex justify-end">
-              <button className="btn-secondary btn-sm">Comparer la sélection (2 à 4)</button>
+              <button className="btn-secondary btn-sm">{t.compareSelected}</button>
             </form>
           )}
           <div className="flex justify-between">
-            {page > 1 ? <Link className="btn-secondary btn-sm" href={`?${qs}&page=${page - 1}`}>← Précédent</Link> : <span />}
-            {page * PAGE_SIZE < total && <Link className="btn-secondary btn-sm" href={`?${qs}&page=${page + 1}`}>Suivant →</Link>}
+            {page > 1 ? <Link className="btn-secondary btn-sm" href={`?${qs}&page=${page - 1}`}>{m.common.previous}</Link> : <span />}
+            {page * PAGE_SIZE < total && <Link className="btn-secondary btn-sm" href={`?${qs}&page=${page + 1}`}>{m.common.next}</Link>}
           </div>
         </div>
       </div>

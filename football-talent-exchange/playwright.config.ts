@@ -8,5 +8,6 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
     launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
     viewport: { width: 390, height: 844 }, // téléphone
+    locale: "fr-FR",
   },
 });

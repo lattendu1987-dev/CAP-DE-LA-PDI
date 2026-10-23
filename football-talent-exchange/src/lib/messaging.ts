@@ -2,6 +2,7 @@ import "server-only";
 import { db } from "./db";
 import { detectScam } from "./domain/scam";
 import { appUrl, sendEmail } from "./email";
+import { messagesFor } from "@/i18n/server";
 
 export async function postMessage(conversationId: string, senderId: string, body: string, extra?: { trialDate?: Date | null; trialPlace?: string | null }) {
   const scamFlags = detectScam(body);
@@ -13,12 +14,8 @@ export async function postMessage(conversationId: string, senderId: string, body
   const others = await db.participant.findMany({ where: { conversationId, userId: { not: senderId } }, include: { user: true } });
   const sender = await db.user.findUnique({ where: { id: senderId } });
   for (const o of others) {
-    await sendEmail(
-      o.user.email,
-      `Nouveau message de ${sender?.name ?? "un membre"}`,
-      `Vous avez reçu un nouveau message sur Football Talent Exchange.\n\nLire et répondre : ${appUrl()}/messages/${conversationId}\n\n` +
-        (scamFlags.length ? "⚠️ Ce message contient une demande d'argent ou de documents. Un vrai club ne demande jamais de frais.\n" : ""),
-    );
+    const m = messagesFor(o.user.locale);
+    await sendEmail(o.user.email, m.email.newMessageSubject(sender?.name ?? "…"), m.email.newMessageBody(`${appUrl()}/messages/${conversationId}`, scamFlags.length > 0));
   }
   return msg;
 }

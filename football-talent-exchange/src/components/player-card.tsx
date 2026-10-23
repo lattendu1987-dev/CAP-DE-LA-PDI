@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Avatar, Badge } from "./ui";
 import { ageOn } from "@/lib/domain/age";
-import { countryName, FOOT_LABELS, levelLabel, positionLabel } from "@/lib/domain/reference";
+import { footLabel, levelLabel, positionLabel } from "@/lib/domain/reference";
+import { countryName } from "@/i18n/format";
+import type { Messages } from "@/i18n/messages";
+import type { Locale } from "@/i18n/config";
 
 export interface PlayerCardData {
   slug: string;
@@ -10,7 +13,6 @@ export interface PlayerCardData {
   birthDate: Date;
   photoUrl: string | null;
   country: string;
-  nationalities: string[];
   mainPosition: string | null;
   foot: string | null;
   heightCm: number | null;
@@ -21,7 +23,7 @@ export interface PlayerCardData {
   verifiedStats?: boolean;
 }
 
-export function PlayerCard({ p, action }: { p: PlayerCardData; action?: React.ReactNode }) {
+export function PlayerCard({ p, m, locale, action }: { p: PlayerCardData; m: Messages; locale: Locale; action?: React.ReactNode }) {
   const name = `${p.firstName} ${p.lastName}`;
   return (
     <div className={`card flex gap-4 ${p.featured ? "ring-2 ring-amber-300" : ""}`}>
@@ -29,17 +31,18 @@ export function PlayerCard({ p, action }: { p: PlayerCardData; action?: React.Re
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <Link href={`/joueurs/${p.slug}`} className="truncate font-bold text-gray-900 hover:text-pitch-700">{name}</Link>
-          {p.featured && <Badge tone="gold">★ Premium</Badge>}
-          {p.contractStatus === "FREE" ? <Badge tone="green">Libre</Badge> : <Badge>Sous contrat</Badge>}
-          {p.verifiedStats && <Badge tone="blue">✓ Stats vérifiées</Badge>}
+          {p.featured && <Badge tone="gold">{m.labels.premium}</Badge>}
+          {p.contractStatus === "FREE" ? <Badge tone="green">{m.labels.free}</Badge> : <Badge>{m.labels.underContract}</Badge>}
+          {p.verifiedStats && <Badge tone="blue">{m.labels.verifiedStats}</Badge>}
         </div>
         <p className="mt-0.5 text-sm text-gray-700">
-          {positionLabel(p.mainPosition)} · {ageOn(p.birthDate)} ans · {p.foot ? `pied ${FOOT_LABELS[p.foot].toLowerCase()}` : "pied —"}
+          {positionLabel(m, p.mainPosition)} · {m.common.years(ageOn(p.birthDate))}
+          {p.foot ? ` · ${m.labels.footShort(footLabel(m, p.foot))}` : ""}
           {p.heightCm ? ` · ${p.heightCm} cm` : ""}
         </p>
         <p className="muted mt-0.5 truncate">
-          {countryName(p.country)} · {levelLabel(p.currentLevel)}
-          {p.videoCount ? ` · 🎥 ${p.videoCount} vidéo${p.videoCount > 1 ? "s" : ""}` : ""}
+          {countryName(p.country, locale)} · {levelLabel(m, p.currentLevel)}
+          {p.videoCount ? ` · ${m.labels.videoCount(p.videoCount)}` : ""}
         </p>
       </div>
       {action && <div className="shrink-0 self-center">{action}</div>}

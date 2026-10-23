@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { db } from "@/lib/db";
 import { mapStatus, periodEnd, stripe } from "@/lib/stripe";
 import { applySubscription } from "@/lib/subscriptions";
+import { rewardReferrer } from "@/lib/referral";
 import { audit } from "@/lib/audit";
 import type { PlanCode } from "@prisma/client";
 
@@ -50,6 +51,25 @@ export async function POST(req: Request) {
     case "customer.subscription.deleted":
       await syncSubscription(event.data.object);
       break;
+    case "invoice.paid": {
+      // Chaque facture payée (première et renouvellements) rapporte une commission au parrain.
+      const inv = event.data.object;
+      const customerId = typeof inv.customer === "string" ? inv.customer : inv.customer?.id;
+      const sub = customerId ? await db.subscription.findFirst({ where: { stripeCustomerId: customerId } }) : null;
+      // L'offre est lue dans la facture : elle peut arriver avant la mise à jour de l'abonnement.
+      const raw = inv as unknown as { parent?: { subscription_details?: { metadata?: Record<string, string> } }; subscription_details?: { metadata?: Record<string, string> } };
+      const meta = raw.parent?.subscription_details?.metadata ?? raw.subscription_details?.metadata ?? {};
+      const plan = (meta.plan as PlanCode | undefined) ?? sub?.plan;
+      if (sub && plan && inv.amount_paid > 0 && inv.id) {
+        if (!(await db.payment.findUnique({ where: { reference: inv.id } }))) {
+          await db.payment.create({
+            data: { userId: sub.userId, provider: "stripe", reference: inv.id, plan, interval: meta.interval === "YEAR" ? "YEAR" : sub.interval, amountMinor: inv.amount_paid, currency: inv.currency.toUpperCase(), usdCents: inv.amount_paid, status: "SUCCEEDED", paidAt: new Date() },
+          });
+        }
+        await rewardReferrer({ payerId: sub.userId, usdCents: inv.amount_paid, paidAt: new Date(), externalRef: inv.id });
+      }
+      break;
+    }
     case "invoice.payment_failed": {
       const customer = event.data.object.customer;
       const customerId = typeof customer === "string" ? customer : customer?.id;

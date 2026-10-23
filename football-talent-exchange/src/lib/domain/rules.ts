@@ -35,20 +35,21 @@ export interface ContactCheckInput {
   now?: Date;
 }
 
-export type ContactDecision = { ok: true } | { ok: false; reason: string };
+export type ContactReason = "suspended" | "blocked" | "subscription" | "rejected" | "minorVerified" | "minorGuardian" | "dailyLimit";
+export type ContactDecision = { ok: true } | { ok: false; reason: ContactReason };
 
 export function canRecruiterContact(i: ContactCheckInput): ContactDecision {
   const now = i.now ?? new Date();
-  if (i.recruiterSuspended) return { ok: false, reason: "Ton compte est suspendu." };
-  if (i.blocked) return { ok: false, reason: "Ce joueur ne souhaite pas être contacté par toi." };
-  if (!isSubscriptionActive(i.subscription, now)) return { ok: false, reason: "Un abonnement actif est nécessaire pour contacter les joueurs." };
-  if (i.recruiterVerification === "REJECTED") return { ok: false, reason: "Ton compte recruteur n'a pas été validé." };
+  if (i.recruiterSuspended) return { ok: false, reason: "suspended" };
+  if (i.blocked) return { ok: false, reason: "blocked" };
+  if (!isSubscriptionActive(i.subscription, now)) return { ok: false, reason: "subscription" };
+  if (i.recruiterVerification === "REJECTED") return { ok: false, reason: "rejected" };
   if (i.playerIsMinor) {
-    if (i.recruiterVerification !== "VERIFIED") return { ok: false, reason: "Seuls les recruteurs vérifiés peuvent contacter un joueur mineur." };
-    if (!i.guardianLinkedAndConsented) return { ok: false, reason: "Ce joueur mineur n'a pas encore de représentant légal confirmé." };
+    if (i.recruiterVerification !== "VERIFIED") return { ok: false, reason: "minorVerified" };
+    if (!i.guardianLinkedAndConsented) return { ok: false, reason: "minorGuardian" };
   }
   if (i.newConversationsToday >= dailyConversationLimit(i.subscription, now)) {
-    return { ok: false, reason: "Limite quotidienne de nouvelles conversations atteinte. Réessaie demain ou passe à l'offre Club." };
+    return { ok: false, reason: "dailyLimit" };
   }
   return { ok: true };
 }

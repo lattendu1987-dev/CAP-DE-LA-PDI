@@ -2,8 +2,9 @@ import { db } from "@/lib/db";
 import { cronAuthorized } from "@/lib/cron";
 import { buildPlayerWhere, parseFilters } from "@/lib/domain/search";
 import { isSubscriptionActive } from "@/lib/domain/rules";
-import { appUrl, sendEmail } from "@/lib/email";
 import { positionLabel } from "@/lib/domain/reference";
+import { appUrl, sendEmail } from "@/lib/email";
+import { messagesFor } from "@/i18n/server";
 
 export const runtime = "nodejs";
 
@@ -24,11 +25,11 @@ export async function GET(req: Request) {
     });
     await db.savedSearch.update({ where: { id: s.id }, data: { lastAlertAt: now } });
     if (matches.length === 0) continue;
+    const m = messagesFor(u.locale);
     await sendEmail(
       u.email,
-      `${matches.length} nouveau(x) joueur(s) pour « ${s.name} »`,
-      matches.map((m) => `• ${m.firstName} ${m.lastName} — ${positionLabel(m.mainPosition)} : ${appUrl()}/joueurs/${m.slug}`).join("\n") +
-        `\n\nVoir tous les résultats : ${appUrl()}/recruteur/recherche?${s.query}`,
+      m.email.alertSubject(matches.length, s.name),
+      matches.map((p) => `• ${p.firstName} ${p.lastName} — ${positionLabel(m, p.mainPosition)} : ${appUrl()}/joueurs/${p.slug}`).join("\n") + `\n\n${m.email.alertAll(`${appUrl()}/recruteur/recherche?${s.query}`)}`,
     );
     sent++;
   }
