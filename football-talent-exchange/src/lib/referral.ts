@@ -3,6 +3,7 @@ import { db } from "./db";
 import { availableAtFrom, commissionFor, newReferralCode } from "./domain/referral";
 import { messagesFor } from "@/i18n/server";
 import { sendEmail, appUrl } from "./email";
+import { notifyLater } from "./push";
 
 export async function uniqueReferralCode() {
   for (let i = 0; i < 10; i++) {
@@ -41,6 +42,7 @@ export async function rewardReferrer(input: { payerId: string; usdCents: number;
   });
   const m = messagesFor(referrer.locale);
   await sendEmail(referrer.email, m.email.commissionSubject, m.email.commissionBody((amount / 100).toFixed(2), `${appUrl()}/parrainage`));
+  notifyLater(referrer.id, (pm) => ({ title: pm.push.commissionTitle, body: pm.push.commissionBody(`${(amount / 100).toFixed(2)} $`), url: "/parrainage", tag: "commission" }));
   return c;
 }
 

@@ -11,6 +11,7 @@ import { POSITION_CODES } from "@/lib/domain/reference";
 import { detectScam } from "@/lib/domain/scam";
 import { appUrl, sendEmail } from "@/lib/email";
 import { audit } from "@/lib/audit";
+import { notifyLater } from "@/lib/push";
 
 const go = (path: string, msg: string, err = false): never => redirect(`${path}?${err ? "erreur" : "ok"}=${encodeURIComponent(msg)}`);
 
@@ -63,6 +64,7 @@ export async function applyTrialAction(fd: FormData) {
   await db.trialApplication.create({ data: { trialId: id, playerUserId: user.id, message: String(fd.get("message") ?? "").trim().slice(0, 1000) || null } });
   const rm = messagesFor(trial.recruiter.locale);
   await sendEmail(trial.recruiter.email, rm.email.applicationSubject(trial.title), rm.email.applicationBody(`${p.firstName} ${p.lastName}`, `${appUrl()}${path}`));
+  notifyLater(trial.recruiterId, (pm) => ({ title: pm.push.applicationTitle, body: pm.push.applicationBody(`${p.firstName} ${p.lastName}`, trial.title), url: path, tag: `trial-${id}` }));
   go(path, t.applied);
 }
 
@@ -76,6 +78,8 @@ export async function setApplicationStatusAction(fd: FormData) {
   const pm = messagesFor(app.playerUser.locale);
   const link = `${appUrl()}/detections/${app.trialId}`;
   await sendEmail(app.playerUser.email, pm.email.statusSubject(app.trial.title), pm.email.statusBody(pm.labels.appStatus[status], link));
+  const pushStatus = (x: typeof pm) => ({ title: x.push.statusTitle, body: x.push.statusBody(x.labels.appStatus[status], app.trial.title), url: `/detections/${app.trialId}`, tag: `app-${app.id}` });
+  notifyLater(app.playerUserId, pushStatus);
   // Le représentant légal d'un mineur est aussi prévenu.
   const guardianId = app.playerUser.player?.guardianId;
   if (guardianId) {
@@ -83,6 +87,7 @@ export async function setApplicationStatusAction(fd: FormData) {
     if (g) {
       const gm = messagesFor(g.locale);
       await sendEmail(g.email, gm.email.statusSubject(app.trial.title), gm.email.statusBody(gm.labels.appStatus[status], link));
+      notifyLater(g.id, pushStatus);
     }
   }
   go(`/detections/${app.trialId}`, m.trials.flash.statusUpdated);

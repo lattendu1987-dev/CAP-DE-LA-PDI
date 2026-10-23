@@ -128,3 +128,34 @@ describe("compression vidéo", () => {
     expect(parseVideoUrl("https://iframe.videodelivery.net/pas-un-id")).toBeNull();
   });
 });
+
+import { isAllowedPushEndpoint, isValidSubscription, safeInternalPath } from "@/lib/domain/push";
+
+describe("notifications sur le téléphone", () => {
+  it("n'accepte que les services de notification officiels", () => {
+    expect(isAllowedPushEndpoint("https://fcm.googleapis.com/fcm/send/abc")).toBe(true);
+    expect(isAllowedPushEndpoint("https://updates.push.services.mozilla.com/wpush/v2/x")).toBe(true);
+    expect(isAllowedPushEndpoint("https://web.push.apple.com/QAbc")).toBe(true);
+    expect(isAllowedPushEndpoint("https://wns2-par02p.notify.windows.com/w/?token=x")).toBe(true);
+    expect(isAllowedPushEndpoint("https://evil.com/fcm.googleapis.com")).toBe(false);
+    expect(isAllowedPushEndpoint("https://fcm.googleapis.com.evil.com/x")).toBe(false);
+    expect(isAllowedPushEndpoint("http://fcm.googleapis.com/x")).toBe(false);
+    expect(isAllowedPushEndpoint("https://user:pw@fcm.googleapis.com/x")).toBe(false);
+    expect(isAllowedPushEndpoint("http://169.254.169.254/latest")).toBe(false);
+    expect(isAllowedPushEndpoint("http://localhost:4599/x")).toBe(false);
+    expect(isAllowedPushEndpoint("https://localhost:4599/x", true)).toBe(true);
+    expect(isAllowedPushEndpoint("https://localhost:4599/x")).toBe(false);
+  });
+  it("valide la forme de l'abonnement", () => {
+    const ok = { endpoint: "https://fcm.googleapis.com/fcm/send/abc", keys: { p256dh: "BNcR_abc-123", auth: "tBHI_tw" } };
+    expect(isValidSubscription(ok)).toBe(true);
+    expect(isValidSubscription({ ...ok, keys: { p256dh: "<script>", auth: "x" } })).toBe(false);
+    expect(isValidSubscription({ endpoint: ok.endpoint })).toBe(false);
+    expect(isValidSubscription(null)).toBe(false);
+  });
+  it("n'ouvre que des pages du site", () => {
+    expect(safeInternalPath("/messages/1")).toBe("/messages/1");
+    expect(safeInternalPath("//evil.com")).toBe("/");
+    expect(safeInternalPath("https://evil.com")).toBe("/");
+  });
+});

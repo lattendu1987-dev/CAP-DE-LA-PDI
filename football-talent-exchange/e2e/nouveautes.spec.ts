@@ -156,3 +156,85 @@ test("vidéo lourde : compressée sur le téléphone avant l'envoi", async ({ pa
   await form.getByRole("button", { name: "Ajouter la vidéo" }).click();
   await expect(page.getByText("Vidéo ajoutée.")).toBeVisible();
 });
+
+test("notifications : un club regarde le profil puis écrit au joueur", async ({ page, browser }) => {
+  // Faux service de notification (comme ceux de Google ou d'Apple), sur la machine de test.
+  const https = await import("node:https");
+  const { execFileSync } = await import("node:child_process");
+  const { mkdirSync, readFileSync } = await import("node:fs");
+  mkdirSync("test-results", { recursive: true });
+  execFileSync("openssl", ["req", "-x509", "-newkey", "rsa:2048", "-nodes", "-keyout", "test-results/push.key", "-out", "test-results/push.crt", "-days", "1", "-subj", "/CN=localhost"], { stdio: "ignore" });
+  const crypto = await import("node:crypto");
+  const ece = (await import("http_ece")).default;
+  const received: { headers: Record<string, unknown>; body: Buffer }[] = [];
+  const server = https.createServer({ key: readFileSync("test-results/push.key"), cert: readFileSync("test-results/push.crt") }, (req, res) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (c) => chunks.push(c));
+    req.on("end", () => {
+      received.push({ headers: req.headers, body: Buffer.concat(chunks) });
+      res.writeHead(201).end();
+    });
+  });
+  await new Promise<void>((r) => server.listen(4599, r));
+
+  // Clés de l'« appareil » du joueur.
+  const device = crypto.createECDH("prime256v1");
+  device.generateKeys();
+  const authSecret = crypto.randomBytes(16);
+  const decrypt = (body: Buffer) =>
+    JSON.parse(ece.decrypt(body, { version: "aes128gcm", privateKey: device, authSecret: authSecret.toString("base64url") }).toString());
+
+  try {
+    // Un nouveau joueur s'inscrit et active les notifications.
+    const first = `Notif${uid}`;
+    await page.goto("/inscription?role=joueur");
+    await page.fill('input[name="firstName"]', first);
+    await page.fill('input[name="lastName"]', "Test");
+    await page.fill('input[name="birthDate"]', "2003-03-03");
+    await page.fill('input[name="name"]', first);
+    await page.fill('input[name="email"]', `notif-${uid}@test.local`);
+    await page.fill('input[name="password"]', PW);
+    await page.check('input[name="accept"]');
+    await page.click('button[type="submit"]');
+    await expect(page).toHaveURL(/\/joueur/);
+    await expect(page.getByTestId("push-toggle")).toBeVisible();
+    const origin = new URL(page.url()).origin;
+    const reg = await page.request.post("/api/push", {
+      headers: { Origin: origin },
+      data: { endpoint: `https://localhost:4599/push/${uid}`, keys: { p256dh: device.getPublicKey("base64url"), auth: authSecret.toString("base64url") } },
+    });
+    expect(reg.ok()).toBe(true);
+    // Un autre site ne peut pas enregistrer d'appareil à la place du joueur.
+    expect((await page.request.post("/api/push", { headers: { Origin: "https://evil.com" }, data: {} })).status()).toBe(403);
+    const slug = new URL((await page.getByRole("link", { name: "Voir mon profil public" }).getAttribute("href"))!, origin).pathname;
+
+    // Un recruteur vérifié regarde le profil, puis écrit au joueur.
+    const scout = await (await browser.newContext({ locale: "fr-FR" })).newPage();
+    await scout.goto("/connexion");
+    await scout.fill('input[name="email"]', "scout@fte.local");
+    await scout.fill('input[name="password"]', PW);
+    await scout.click('button[type="submit"]');
+    await scout.waitForURL(/recherche/);
+    await scout.goto(slug);
+    await expect.poll(() => received.length, { timeout: 15_000 }).toBe(1);
+    expect(received[0].headers["content-encoding"]).toBe("aes128gcm");
+    expect(String(received[0].headers.authorization)).toMatch(/^vapid t=/);
+    const view = decrypt(received[0].body);
+    expect(view.title).toBe("👀 Ton profil a été consulté");
+    expect(view.body).toContain("Passe Premium"); // joueur gratuit : le club reste anonyme
+    expect(view.url).toBe("/joueur");
+
+    // Revenir sur le profil le même jour ne renvoie pas de notification.
+    await scout.reload();
+    await scout.fill('textarea[name="body"]', "Bonjour, nous aimerions te voir lors de notre prochaine détection à Dakar.");
+    await scout.getByRole("button", { name: "Envoyer" }).click();
+    await expect(scout).toHaveURL(/\/messages\//);
+    await expect.poll(() => received.length, { timeout: 15_000 }).toBe(2);
+    const msg = decrypt(received[1].body);
+    expect(msg.title).toBe("💬 Message de Sophie Martin");
+    expect(msg.url).toMatch(/^\/messages\//);
+    await scout.context().close();
+  } finally {
+    server.close();
+  }
+});

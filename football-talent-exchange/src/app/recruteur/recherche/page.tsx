@@ -9,6 +9,7 @@ import { PlayerCard } from "@/components/player-card";
 import { CountrySelect } from "@/components/country-select";
 import { Badge, Empty, Field, Flash } from "@/components/ui";
 import { saveSearchAction } from "@/app/actions/recruiter";
+import { PushBanner } from "@/components/push-banner";
 
 export async function generateMetadata() {
   return { title: (await getMessages()).search.metaTitle };
@@ -51,6 +52,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         </div>
       </div>
       <Flash sp={sp} />
+      {user.role === "RECRUITER" && <PushBanner m={m} />}
       {!verified && <p className="text-xs text-gray-500">{t.minorsHidden}</p>}
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         <form className="card h-fit space-y-3" method="get">

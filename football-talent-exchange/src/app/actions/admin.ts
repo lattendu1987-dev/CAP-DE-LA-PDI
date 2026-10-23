@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { audit } from "@/lib/audit";
 import { sendEmail } from "@/lib/email";
 import { getMessages, messagesFor } from "@/i18n/server";
+import { notifyLater } from "@/lib/push";
 
 async function admin() {
   const user = await requireUser(["ADMIN"]);
@@ -20,6 +21,7 @@ export async function setVerificationAction(fd: FormData) {
   await audit(user.id, "admin.verification", { id, status });
   const m = messagesFor(r.user.locale);
   await sendEmail(r.user.email, status === "VERIFIED" ? m.email.verifiedSubject : m.email.rejectedSubject, status === "VERIFIED" ? m.email.verifiedBody : m.email.rejectedBody);
+  if (status === "VERIFIED") notifyLater(r.userId, (x) => ({ title: x.push.verifiedTitle, body: x.push.verifiedBody, url: "/recruteur/recherche", tag: "verified" }));
   go(t.verification);
 }
 

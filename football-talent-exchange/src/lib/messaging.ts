@@ -3,6 +3,7 @@ import { db } from "./db";
 import { detectScam } from "./domain/scam";
 import { appUrl, sendEmail } from "./email";
 import { messagesFor } from "@/i18n/server";
+import { notifyLater } from "./push";
 
 export async function postMessage(conversationId: string, senderId: string, body: string, extra?: { trialDate?: Date | null; trialPlace?: string | null }) {
   const scamFlags = detectScam(body);
@@ -16,6 +17,7 @@ export async function postMessage(conversationId: string, senderId: string, body
   for (const o of others) {
     const m = messagesFor(o.user.locale);
     await sendEmail(o.user.email, m.email.newMessageSubject(sender?.name ?? "…"), m.email.newMessageBody(`${appUrl()}/messages/${conversationId}`, scamFlags.length > 0));
+    notifyLater(o.userId, (pm) => ({ title: pm.push.messageTitle(sender?.name ?? "…"), body: pm.push.messageBody, url: `/messages/${conversationId}`, tag: `msg-${conversationId}` }));
   }
   return msg;
 }

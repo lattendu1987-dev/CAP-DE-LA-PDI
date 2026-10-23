@@ -115,6 +115,7 @@ model User {
   payouts           Payout[]
   trialsPosted      TrialEvent[]
   trialApplications TrialApplication[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Session {
@@ -480,4 +481,17 @@ model TrialApplication {
   createdAt    DateTime          @default(now())
 
   @@unique([trialId, playerUserId])
+}
+
+/// Abonnement aux notifications sur le téléphone (Web Push), un par appareil.
+model PushSubscription {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
 }

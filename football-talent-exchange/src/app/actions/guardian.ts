@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { audit } from "@/lib/audit";
 import { sendEmail, appUrl } from "@/lib/email";
 import { getMessages, messagesFor } from "@/i18n/server";
+import { notifyLater } from "@/lib/push";
 
 const go = (msg: string): never => redirect(`/tuteur?ok=${encodeURIComponent(msg)}`);
 
@@ -21,6 +22,7 @@ export async function giveConsentAction(fd: FormData) {
   await audit(user.id, "guardian.consent", { playerId: player.id });
   const pm = messagesFor(player.user.locale);
   await sendEmail(player.user.email, pm.email.consentSubject, pm.email.consentBody(`${appUrl()}/joueur`));
+  notifyLater(player.userId, (x) => ({ title: x.push.consentTitle, body: x.push.consentBody, url: "/joueur", tag: "consent" }));
   go(m.guardian.given);
 }
 

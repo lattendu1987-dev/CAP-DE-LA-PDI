@@ -14,6 +14,8 @@ import { Avatar, Badge, Field, Flash, Stat } from "@/components/ui";
 import { VideoPlayer } from "@/components/video-player";
 import { SubmitButton } from "@/components/submit-button";
 import { ShareButtons } from "@/components/share";
+import { notifyLater } from "@/lib/push";
+import { PROFILE_VIEW_COOLDOWN_MS } from "@/lib/domain/push";
 import { addToShortlistAction, saveEvaluationAction, startConversationAction } from "@/app/actions/recruiter";
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<Record<string, string>> };
@@ -36,7 +38,16 @@ export default async function PlayerPublicPage({ params, searchParams }: Props) 
 
   const isRecruiter = viewer?.role === "RECRUITER" && viewer.recruiter;
   if (viewer?.id !== p.userId) {
+    const recent = isRecruiter
+      ? await db.profileView.findFirst({ where: { playerId: p.id, viewerId: viewer!.id, createdAt: { gt: new Date(Date.now() - PROFILE_VIEW_COOLDOWN_MS) } } })
+      : null;
     await db.profileView.create({ data: { playerId: p.id, viewerId: isRecruiter ? viewer!.id : null } });
+    if (isRecruiter && !recent) {
+      // Premium : le nom du club ; gratuit : « un recruteur » (incite à passer Premium).
+      const named = isPremiumPlayer(p.user.subscription);
+      const org = viewer!.recruiter!.organization;
+      notifyLater(p.userId, (pm) => ({ title: pm.push.profileViewTitle, body: named ? pm.push.profileViewNamed(org) : pm.push.profileViewAnon, url: "/joueur", tag: "profile-view" }));
+    }
   }
   const [shortlists, evaluation] = isRecruiter
     ? await Promise.all([

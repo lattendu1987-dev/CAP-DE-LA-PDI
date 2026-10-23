@@ -4,6 +4,7 @@ import { formatDate } from "@/i18n/format";
 import { Badge, Field, Flash } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { PushBanner } from "@/components/push-banner";
 import { changePasswordAction, deleteAccountAction } from "@/app/actions/account";
 import { updateRecruiterAction } from "@/app/actions/recruiter";
 
@@ -27,6 +28,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         </div>
         <div><p className="label">{t.language}</p><LanguageSwitcher /></div>
       </div>
+
+      <div className="card empty:hidden"><PushBanner m={m} compact={false} /></div>
 
       {r && (
         <form action={updateRecruiterAction} className="card space-y-3">

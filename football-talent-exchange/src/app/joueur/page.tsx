@@ -17,6 +17,7 @@ import { CountrySelect } from "@/components/country-select";
 import { UploadField } from "@/components/upload-field";
 import { uploadText } from "@/lib/ui-text";
 import { ShareButtons } from "@/components/share";
+import { PushBanner } from "@/components/push-banner";
 import {
   addCareerAction, addStatAction, addVideoAction, deleteCareerAction, deleteStatAction, deleteVideoAction, setPhotoAction, togglePublishedAction, updateProfileAction,
 } from "@/app/actions/player";
@@ -83,6 +84,7 @@ export default async function PlayerHome({ searchParams }: { searchParams: Promi
         </div>
       </div>
       <Flash sp={sp} />
+      <PushBanner m={m} />
 
       {pendingConsent && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">

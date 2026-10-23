@@ -15,6 +15,7 @@ Plateforme internationale qui relie directement les footballeurs aux recruteurs 
 | **Parrainage** | Lien personnel `?ref=CODE`, **20 % de chaque paiement des filleuls crédités automatiquement pendant 12 mois**, disponible après 30 jours de garantie, solde utilisé automatiquement pour payer son propre abonnement ou retiré dès 20 $ (mobile money, PayPal, virement — réservé aux majeurs) |
 | **Langues** | **Français, anglais, espagnol, portugais, arabe** (affichage de droite à gauche), détection automatique de la langue du téléphone, courriels envoyés dans la langue de chaque personne |
 | **Vidéo et 3G** | **Compression automatique sur le téléphone avant l'envoi** (ex. 150 Mo → 30 Mo, en 720p), réglée selon la durée (un match de 90 min tient sous 300 Mo) ; lecture **adaptative** via Cloudflare Stream (optionnel) : le recruteur en 3G reçoit automatiquement une qualité plus légère ; en mode économie de données, rien n'est téléchargé avant d'appuyer sur lecture |
+| **Notifications** | Sur le téléphone (Web Push, Android et iPhone avec l'app installée) : profil consulté par un club (nom du club en Premium, « un recruteur » en gratuit — une fois par jour et par club), nouveau message, candidature reçue ou mise à jour, commission de parrainage, accord parental, compte vérifié, nouveaux joueurs pour une recherche sauvegardée ; dans la langue de chacun ; toucher la notification ouvre la bonne page |
 | **Application** | **Installable sur le téléphone** (icône sur l'écran d'accueil), page hors ligne |
 | **Automatisation** | Vérification automatique des recruteurs, fin des essais et abonnements, rappels (fin d'essai, renouvellement mobile money), alertes quotidiennes, déblocage des commissions, nettoyage |
 | **Administration** | Indicateurs (revenu mensuel, abonnés, commissions dues), vérification des recruteurs, signalements, messages suspects, validation des statistiques, **demandes de retrait**, derniers paiements, suspension de comptes (annule les commissions en attente) |
@@ -39,9 +40,9 @@ Sans clés, tout fonctionne en **mode démo** : paiements simulés (qui déclenc
 ## Tests
 
 ```bash
-npm test                      # 38 tests des règles métier (dont la cohérence des 5 langues)
+npm test                      # 41 tests des règles métier (dont la cohérence des 5 langues)
 npm run lint                  # vérification des types
-npx playwright test           # 9 parcours complets dans un navigateur (serveur lancé + base de démo)
+npx playwright test           # 10 parcours complets dans un navigateur (serveur lancé + base de démo)
 ```
 
 ## Mettre en ligne (pas à pas, sans être développeur)
@@ -54,6 +55,7 @@ npx playwright test           # 9 parcours complets dans un navigateur (serveur 
 5 bis. **Lecture adaptative (recommandé pour l'Afrique et la 3G)** — dans Cloudflare → Stream, active le service (environ 5 $ / 1 000 minutes stockées, 1 $ / 1 000 minutes regardées). Crée un jeton API « Stream: Edit » et renseigne `CF_ACCOUNT_ID` et `CF_STREAM_TOKEN`. Les vidéos passent alors par Stream au lieu de R2 ; les photos restent sur R2.
 6. **Carte bancaire** — sur [stripe.com](https://stripe.com) : clé secrète dans `STRIPE_SECRET_KEY` ; webhook vers `https://TON-SITE/api/stripe/webhook` avec les événements `checkout.session.completed`, `customer.subscription.*`, `invoice.paid`, `invoice.payment_failed` ; secret dans `STRIPE_WEBHOOK_SECRET`. Active le portail client et, si besoin, Stripe Tax.
 7. **Mobile money** — sur [flutterwave.com](https://flutterwave.com) : fais valider ton compte (pièces d'entreprise), copie la clé secrète dans `FLW_SECRET_KEY`. Dans Settings → Webhooks, mets `https://TON-SITE/api/flutterwave/webhook` et choisis une phrase secrète que tu recopies dans `FLW_WEBHOOK_HASH`. Ajuste les taux de change avec `FX_RATES` si besoin.
+7 bis. **Notifications sur le téléphone** — sur ton ordinateur, lance une seule fois `npx web-push generate-vapid-keys`, puis copie les deux clés dans `VAPID_PUBLIC_KEY` et `VAPID_PRIVATE_KEY` (et ton courriel dans `VAPID_SUBJECT`, ex. `mailto:toi@domaine.com`). Gratuit, aucun compte à créer. Ne change plus ces clés ensuite (sinon les téléphones devront réactiver les notifications).
 8. **Courriels** — sur [resend.com](https://resend.com), vérifie ton domaine, clé dans `RESEND_API_KEY`, règle `EMAIL_FROM`.
 9. Redéploie. Les tâches automatiques (`vercel.json`) tournent chaque jour.
 
@@ -78,7 +80,6 @@ Ne lance jamais le site public en mode démo : sans clés de paiement, les abonn
 
 - Virements automatiques des gains de parrainage (API Flutterwave Transfers).
 - Vérification d'identité (Stripe Identity) et attestations de statistiques signées par les clubs.
-- Notifications push sur le téléphone.
 
 ## Architecture
 
