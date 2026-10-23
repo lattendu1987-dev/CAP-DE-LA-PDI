@@ -130,14 +130,17 @@ test("langues : anglais, espagnol, portugais et arabe (de droite à gauche)", as
 });
 
 test("vidéo lourde : compressée sur le téléphone avant l'envoi", async ({ page }) => {
-  // Fabrique une vidéo 1080p très lourde avec ffmpeg (ignoré si ffmpeg est absent).
-  const { execSync } = await import("node:child_process");
+  test.setTimeout(180_000); // fabrication de la vidéo + compression
+  // Fabrique une vidéo 1080p très lourde avec ffmpeg (fourni par le paquet npm ffmpeg-static).
+  const { execFileSync } = await import("node:child_process");
+  const ffmpeg = (await import("ffmpeg-static")).default as unknown as string | null;
   const { existsSync, statSync, mkdirSync } = await import("node:fs");
   const fixture = "test-results/lourde-1080p.webm";
   try {
     mkdirSync("test-results", { recursive: true });
+    if (!ffmpeg) throw new Error("ffmpeg absent");
     if (!existsSync(fixture))
-      execSync(`ffmpeg -y -loglevel error -f lavfi -i testsrc2=size=1920x1080:rate=30 -f lavfi -i sine=frequency=440:sample_rate=48000 -t 12 -c:v libvpx-vp9 -b:v 12M -deadline realtime -cpu-used 8 -c:a libopus -b:a 128k ${fixture}`);
+      execFileSync(ffmpeg, ("-y -loglevel error -f lavfi -i testsrc2=size=1920x1080:rate=30 -f lavfi -i sine=frequency=440:sample_rate=48000 -t 12 -c:v libvpx-vp9 -b:v 12M -deadline realtime -cpu-used 8 -c:a libopus -b:a 128k " + fixture).split(" "));
   } catch {
     test.skip(true, "ffmpeg indisponible");
   }
