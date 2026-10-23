@@ -7,6 +7,8 @@ export interface UploadText {
   choose: string;
   hint: string;
   sending: string; // contient {pct}
+  compressing: string; // contient {pct}
+  compressed: string; // contient {from} et {to} (en Mo)
   done: string;
   failed: string;
   tooBig: string;
@@ -14,35 +16,57 @@ export interface UploadText {
   keepOpen: string;
 }
 
+const mb = (bytes: number) => (bytes / 1024 / 1024).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0);
+
 /**
- * Champ d'envoi direct (téléphone ou ordinateur) vers le stockage.
- * Une fois l'envoi terminé, la clé du fichier est placée dans un champ caché `storageKey`
- * et le bouton du formulaire devient actif.
+ * Champ d'envoi direct (téléphone ou ordinateur).
+ * Vidéo : compressée d'abord sur le téléphone quand c'est utile (envoi bien plus rapide en 3G),
+ * puis envoyée vers le stockage (S3/R2, local) ou Cloudflare Stream.
+ * Une fois l'envoi terminé, la clé du fichier est placée dans le champ caché `storageKey`.
  */
 export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText }) {
-  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "compressing" | "sending" | "done" | "error">("idle");
   const [pct, setPct] = useState(0);
   const [msg, setMsg] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [key, setKey] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const rule = MEDIA_RULES[kind];
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     setKey("");
     setMsg(null);
+    setInfo(null);
     if (!file) return;
     if (!rule.types[file.type]) return fail(text.badType);
-    if (file.size > rule.maxBytes) return fail(text.tooBig);
     setPreview(kind === "photo" ? URL.createObjectURL(file) : null);
+
+    if (kind === "video") {
+      setState("compressing");
+      setPct(0);
+      try {
+        const { compressVideo } = await import("@/lib/video-compress");
+        const original = file.size;
+        const r = await compressVideo(file, setPct);
+        if (r.compressed) {
+          file = r.file;
+          setInfo(text.compressed.replace("{from}", mb(original)).replace("{to}", mb(file.size)));
+        }
+      } catch (err) {
+        // Compression impossible sur cet appareil : on envoie le fichier d'origine.
+        console.warn("Compression ignorée", err);
+      }
+    }
+    if (file.size > rule.maxBytes) return fail(text.tooBig);
+
     setState("sending");
     setPct(0);
     const r = await requestUploadAction(kind, file.type, file.size).catch(() => null);
     if (!r || !r.ok) return fail(r && r.error === "size" ? text.tooBig : r && r.error === "type" ? text.badType : text.failed);
     const xhr = new XMLHttpRequest();
-    xhr.open("PUT", r.uploadUrl);
-    xhr.setRequestHeader("Content-Type", file.type);
+    xhr.open(r.method === "POST_FORM" ? "POST" : "PUT", r.uploadUrl);
     xhr.upload.onprogress = (ev) => ev.lengthComputable && setPct(Math.round((ev.loaded / ev.total) * 100));
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
@@ -52,7 +76,14 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
       } else fail(text.failed);
     };
     xhr.onerror = () => fail(text.failed);
-    xhr.send(file);
+    if (r.method === "POST_FORM") {
+      const form = new FormData();
+      form.append("file", file);
+      xhr.send(form);
+    } else {
+      xhr.setRequestHeader("Content-Type", file.type);
+      xhr.send(file);
+    }
   }
 
   function fail(message: string) {
@@ -61,9 +92,10 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
     if (input.current) input.current.value = "";
   }
 
+  const busy = state === "compressing" || state === "sending";
   return (
     <div className="space-y-2">
-      <label className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-pitch-500/40 bg-pitch-50 p-5 text-center hover:bg-pitch-100">
+      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-pitch-500/40 bg-pitch-50 p-5 text-center hover:bg-pitch-100 ${busy ? "pointer-events-none opacity-60" : ""}`}>
         <span className="text-3xl" aria-hidden>{kind === "video" ? "🎬" : "📷"}</span>
         <span className="font-semibold text-pitch-900">{text.choose}</span>
         <span className="text-xs text-gray-600">{text.hint}</span>
@@ -73,7 +105,7 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
           className="sr-only"
           accept={Object.keys(rule.types).join(",")}
           onChange={onPick}
-          disabled={state === "sending"}
+          disabled={busy}
           data-testid={`upload-${kind}`}
         />
       </label>
@@ -81,12 +113,17 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
         // eslint-disable-next-line @next/next/no-img-element
         <img src={preview} alt="" className="mx-auto h-24 w-24 rounded-full object-cover" />
       )}
-      {state === "sending" && (
+      {busy && (
         <div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-200"><div className="h-full bg-pitch-500 transition-all" style={{ width: `${pct}%` }} /></div>
-          <p className="mt-1 text-xs text-gray-600">{text.sending.replace("{pct}", String(pct))} · {text.keepOpen}</p>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+            <div className={`h-full transition-all ${state === "compressing" ? "bg-amber-400" : "bg-pitch-500"}`} style={{ width: `${pct}%` }} />
+          </div>
+          <p className="mt-1 text-xs text-gray-600">
+            {(state === "compressing" ? text.compressing : text.sending).replace("{pct}", String(pct))} · {text.keepOpen}
+          </p>
         </div>
       )}
+      {info && <p className="text-xs text-pitch-700">{info}</p>}
       {state === "done" && <p className="text-sm font-semibold text-pitch-700">{text.done}</p>}
       {msg && <p className="text-sm text-red-700">{msg}</p>}
       <input type="hidden" name="storageKey" value={key} />

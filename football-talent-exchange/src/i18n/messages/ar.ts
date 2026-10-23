@@ -299,6 +299,8 @@ const ar: Messages = {
     chooseVideo: "اختر أو صوّر فيديو",
     choosePhoto: "اختر صورة",
     sending: "جارٍ الرفع… {pct}%",
+    compressing: "جارٍ تخفيف الفيديو… {pct}%",
+    compressed: "تم تخفيف الفيديو: {from} ميغابايت ← {to} ميغابايت",
     done: "تم الرفع ✓",
     failed: "فشل الرفع. تحقق من اتصالك وحاول مرة أخرى.",
     tooBig: (mb: number) => `الملف كبير جدًا (الحد الأقصى ${mb} ميغابايت).`,

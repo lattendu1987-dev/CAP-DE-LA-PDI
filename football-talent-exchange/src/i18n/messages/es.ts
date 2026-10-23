@@ -299,6 +299,8 @@ const es: Messages = {
     chooseVideo: "Elegir o grabar un vídeo",
     choosePhoto: "Elegir una foto",
     sending: "Subiendo… {pct} %",
+    compressing: "Aligerando el vídeo… {pct} %",
+    compressed: "Vídeo aligerado: {from} MB → {to} MB",
     done: "Subido ✓",
     failed: "La subida ha fallado. Revisa tu conexión e inténtalo de nuevo.",
     tooBig: (mb: number) => `Archivo demasiado grande (máximo ${mb} MB).`,

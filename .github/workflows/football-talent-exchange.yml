@@ -42,6 +42,8 @@ jobs:
       - run: npm run db:seed
       - run: npm run build
       - run: npx playwright install --with-deps chromium
+      - name: ffmpeg (vidéo de test pour la compression)
+        run: sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Parcours de bout en bout
         run: |
           npx next start &

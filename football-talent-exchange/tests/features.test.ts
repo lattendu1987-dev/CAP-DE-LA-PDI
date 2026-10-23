@@ -100,3 +100,31 @@ describe("dictionnaires", () => {
     });
   }
 });
+
+import { compressionTarget, estimatedSize, outputSize, shouldCompress } from "@/lib/domain/compression";
+
+describe("compression vidéo", () => {
+  it("adapte la qualité à la durée", () => {
+    expect(compressionTarget(120).maxSide).toBe(1280);
+    expect(compressionTarget(20 * 60).maxSide).toBe(960);
+    expect(compressionTarget(90 * 60).maxSide).toBe(640);
+    // Un match complet de 90 min tient sous la limite de 300 Mo.
+    expect(estimatedSize(90 * 60)).toBeLessThan(300 * 1024 * 1024);
+  });
+  it("ne compresse que si le gain est réel", () => {
+    expect(shouldCompress(150 * 1024 * 1024, 180)).toBe(true); // 150 Mo pour 3 min
+    expect(shouldCompress(30 * 1024 * 1024, 180)).toBe(false); // déjà léger
+  });
+  it("réduit sans déformer ni agrandir", () => {
+    expect(outputSize(1920, 1080, 1280)).toEqual({ width: 1280, height: 720 });
+    expect(outputSize(1080, 1920, 1280)).toEqual({ width: 720, height: 1280 }); // vidéo verticale
+    expect(outputSize(640, 360, 1280)).toEqual({ width: 640, height: 360 });
+    expect(outputSize(1281, 721, 1280).width % 2).toBe(0);
+  });
+  it("lit les vidéos Cloudflare Stream", () => {
+    const uid = "a".repeat(32);
+    expect(parseVideoUrl(`https://iframe.videodelivery.net/${uid}`)?.provider).toBe("stream");
+    expect(parseVideoUrl(`https://customer-abc123.cloudflarestream.com/${uid}/iframe`)?.embedUrl).toBe(`https://iframe.videodelivery.net/${uid}`);
+    expect(parseVideoUrl("https://iframe.videodelivery.net/pas-un-id")).toBeNull();
+  });
+});

@@ -1,4 +1,5 @@
 export type VideoEmbed =
+  | { provider: "stream"; embedUrl: string }
   | { provider: "youtube"; embedUrl: string }
   | { provider: "vimeo"; embedUrl: string }
   | { provider: "file"; embedUrl: string };
@@ -14,6 +15,11 @@ export function parseVideoUrl(raw: string): VideoEmbed | null {
   }
   if (url.protocol !== "https:") return null;
   const host = url.hostname.replace(/^www\.|^m\./, "");
+  // Cloudflare Stream (lecture adaptative selon le réseau).
+  if (host === "iframe.videodelivery.net" || /^customer-[a-z0-9]+\.cloudflarestream\.com$/.test(host)) {
+    const id = url.pathname.match(/^\/([a-f0-9]{32})(?:\/iframe)?$/)?.[1];
+    return id ? { provider: "stream", embedUrl: `https://iframe.videodelivery.net/${id}` } : null;
+  }
   if (host === "youtube.com") {
     const id = url.searchParams.get("v") ?? url.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]{6,})/)?.[1];
     return id ? { provider: "youtube", embedUrl: `https://www.youtube-nocookie.com/embed/${id}` } : null;
@@ -33,6 +39,7 @@ export function parseVideoUrl(raw: string): VideoEmbed | null {
 /** Ajoute le point de départ à l'URL d'intégration. */
 export function embedAt(embed: VideoEmbed, seconds: number): string {
   if (embed.provider === "youtube") return `${embed.embedUrl}?start=${seconds}&autoplay=1`;
+  if (embed.provider === "stream") return `${embed.embedUrl}?startTime=${seconds}s&autoplay=true`;
   if (embed.provider === "vimeo") return `${embed.embedUrl}#t=${seconds}s`;
   return `${embed.embedUrl}#t=${seconds}`;
 }

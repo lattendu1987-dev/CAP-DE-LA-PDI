@@ -11,6 +11,7 @@ import { FREE_VIDEO_LIMIT } from "@/lib/domain/pricing";
 import { isPremiumPlayer } from "@/lib/domain/rules";
 import { MEDIA_RULES, ownsKey } from "@/lib/domain/media";
 import { deleteStored, publicUrl, storedSize } from "@/lib/storage";
+import { streamPlayerUrl, streamVideoOwnedBy } from "@/lib/cf-stream";
 
 const back = (msg: string, err = false, anchor = ""): never =>
   redirect(`/joueur?${err ? "erreur" : "ok"}=${encodeURIComponent(msg)}${anchor ? `#${anchor}` : ""}`);
@@ -162,7 +163,11 @@ export async function addVideoAction(fd: FormData) {
   const storageKey = String(fd.get("storageKey") ?? "");
   let url = String(fd.get("url") ?? "").trim();
   let sizeBytes: number | null = null;
-  if (storageKey) {
+  if (storageKey.startsWith("stream:")) {
+    // Vidéo hébergée par Cloudflare Stream : on vérifie qu'elle appartient bien au joueur.
+    if (!(await streamVideoOwnedBy(storageKey.slice(7), user.id))) back(m.player.flash.uploadMissing, true, "videos");
+    url = streamPlayerUrl(storageKey.slice(7));
+  } else if (storageKey) {
     if (!ownsKey(storageKey, user.id, "video")) back(m.player.flash.uploadMissing, true, "videos");
     sizeBytes = await storedSize(storageKey);
     if (!sizeBytes || sizeBytes > MEDIA_RULES.video.maxBytes) back(m.player.flash.uploadMissing, true, "videos");

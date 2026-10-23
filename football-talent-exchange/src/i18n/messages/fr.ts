@@ -298,6 +298,8 @@ const fr = {
     chooseVideo: "Choisir ou filmer une vidéo",
     choosePhoto: "Choisir une photo",
     sending: "Envoi… {pct} %",
+    compressing: "Allègement de la vidéo… {pct} %",
+    compressed: "Vidéo allégée : {from} Mo → {to} Mo",
     done: "Envoyé ✓",
     failed: "L'envoi a échoué. Vérifie ta connexion et réessaie.",
     tooBig: (mb: number) => `Fichier trop lourd (maximum ${mb} Mo).`,

@@ -299,6 +299,8 @@ const en: Messages = {
     chooseVideo: "Choose or record a video",
     choosePhoto: "Choose a photo",
     sending: "Uploading… {pct}%",
+    compressing: "Making the video lighter… {pct}%",
+    compressed: "Video made lighter: {from} MB → {to} MB",
     done: "Uploaded ✓",
     failed: "Upload failed. Check your connection and try again.",
     tooBig: (mb: number) => `File too large (maximum ${mb} MB).`,

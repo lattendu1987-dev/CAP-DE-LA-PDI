@@ -5,6 +5,7 @@ import path from "node:path";
 import { DeleteObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { MEDIA_RULES, type MediaKind } from "./domain/media";
+import { createStreamUpload, deleteStreamVideo, STREAM_MAX_BYTES, streamEnabled, streamPlayerUrl } from "./cf-stream";
 
 /**
  * Stockage des fichiers envoyés (vidéos, photos).
@@ -53,6 +54,12 @@ export async function createUpload(userId: string, kind: MediaKind, contentType:
   const ext = rule.types[contentType];
   if (!ext) return { ok: false as const, error: "type" as const };
   if (!Number.isInteger(size) || size <= 0 || size > rule.maxBytes) return { ok: false as const, error: "size" as const };
+  if (kind === "video" && streamEnabled()) {
+    // Vidéo envoyée à Cloudflare Stream (formulaire multipart, 200 Mo maximum).
+    if (size > STREAM_MAX_BYTES) return { ok: false as const, error: "size" as const };
+    const { uploadURL, uid } = await createStreamUpload(userId);
+    return { ok: true as const, key: `stream:${uid}`, uploadUrl: uploadURL, method: "POST_FORM" as const, publicUrl: streamPlayerUrl(uid) };
+  }
   const key = `u/${userId}/${kind}/${randomBytes(12).toString("base64url")}.${ext}`;
   if (s3Enabled()) {
     const uploadUrl = await getSignedUrl(
@@ -60,11 +67,11 @@ export async function createUpload(userId: string, kind: MediaKind, contentType:
       new PutObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key, ContentType: contentType, ContentLength: size }),
       { expiresIn: 3600 },
     );
-    return { ok: true as const, key, uploadUrl, publicUrl: publicUrl(key) };
+    return { ok: true as const, key, uploadUrl, method: "PUT" as const, publicUrl: publicUrl(key) };
   }
   const exp = Date.now() + 3600_000;
   const qs = new URLSearchParams({ key, exp: String(exp), type: contentType, size: String(size), sig: localSignature(key, exp, contentType, size) });
-  return { ok: true as const, key, uploadUrl: `/api/media/upload?${qs}`, publicUrl: publicUrl(key) };
+  return { ok: true as const, key, uploadUrl: `/api/media/upload?${qs}`, method: "PUT" as const, publicUrl: publicUrl(key) };
 }
 
 /** Taille réelle du fichier stocké, ou null s'il n'existe pas. */
@@ -83,6 +90,7 @@ export async function storedSize(key: string): Promise<number | null> {
 
 export async function deleteStored(key: string | null | undefined) {
   if (!key) return;
+  if (key.startsWith("stream:")) return deleteStreamVideo(key.slice(7));
   try {
     if (s3Enabled()) await s3().send(new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key }));
     else {

@@ -128,3 +128,28 @@ test("langues : anglais, espagnol, portugais et arabe (de droite à gauche)", as
   await expect(p2.getByRole("heading", { level: 1 })).toContainText("Seu talento merece ser visto.");
   await ctx.close();
 });
+
+test("vidéo lourde : compressée sur le téléphone avant l'envoi", async ({ page }) => {
+  // Fabrique une vidéo 1080p très lourde avec ffmpeg (ignoré si ffmpeg est absent).
+  const { execSync } = await import("node:child_process");
+  const { existsSync, statSync, mkdirSync } = await import("node:fs");
+  const fixture = "test-results/lourde-1080p.webm";
+  try {
+    mkdirSync("test-results", { recursive: true });
+    if (!existsSync(fixture))
+      execSync(`ffmpeg -y -loglevel error -f lavfi -i testsrc2=size=1920x1080:rate=30 -f lavfi -i sine=frequency=440:sample_rate=48000 -t 12 -c:v libvpx-vp9 -b:v 12M -deadline realtime -cpu-used 8 -c:a libopus -b:a 128k ${fixture}`);
+  } catch {
+    test.skip(true, "ffmpeg indisponible");
+  }
+  const original = statSync(fixture).size;
+  await login(page, "moussa@fte.local");
+  const form = page.locator("form", { has: page.getByTestId("upload-video") });
+  await page.getByTestId("upload-video").setInputFiles(fixture);
+  await expect(form.getByText("Envoyé ✓")).toBeVisible({ timeout: 120_000 });
+  const info = await form.getByText(/Vidéo allégée/).textContent();
+  const [, from, to] = info!.match(/([\d.]+) Mo → ([\d.]+) Mo/)!;
+  expect(Number(to)).toBeLessThan(Number(from) / 2);
+  expect(Number(from)).toBeCloseTo(original / 1024 / 1024, 0);
+  await form.getByRole("button", { name: "Ajouter la vidéo" }).click();
+  await expect(page.getByText("Vidéo ajoutée.")).toBeVisible();
+});

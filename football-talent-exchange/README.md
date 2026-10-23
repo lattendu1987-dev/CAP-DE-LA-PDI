@@ -14,6 +14,7 @@ Plateforme internationale qui relie directement les footballeurs aux recruteurs 
 | **Abonnements** | Joueur Premium, Recruteur Pro, Club ; mensuel ou annuel ; prix adaptés au pays (jusqu'à −65 %) ; **carte (Stripe, renouvellement automatique)** ou **mobile money (Flutterwave : Orange Money, Wave, MTN, M-Pesa…)**, en devise locale |
 | **Parrainage** | Lien personnel `?ref=CODE`, **20 % de chaque paiement des filleuls crédités automatiquement pendant 12 mois**, disponible après 30 jours de garantie, solde utilisé automatiquement pour payer son propre abonnement ou retiré dès 20 $ (mobile money, PayPal, virement — réservé aux majeurs) |
 | **Langues** | **Français, anglais, espagnol, portugais, arabe** (affichage de droite à gauche), détection automatique de la langue du téléphone, courriels envoyés dans la langue de chaque personne |
+| **Vidéo et 3G** | **Compression automatique sur le téléphone avant l'envoi** (ex. 150 Mo → 30 Mo, en 720p), réglée selon la durée (un match de 90 min tient sous 300 Mo) ; lecture **adaptative** via Cloudflare Stream (optionnel) : le recruteur en 3G reçoit automatiquement une qualité plus légère ; en mode économie de données, rien n'est téléchargé avant d'appuyer sur lecture |
 | **Application** | **Installable sur le téléphone** (icône sur l'écran d'accueil), page hors ligne |
 | **Automatisation** | Vérification automatique des recruteurs, fin des essais et abonnements, rappels (fin d'essai, renouvellement mobile money), alertes quotidiennes, déblocage des commissions, nettoyage |
 | **Administration** | Indicateurs (revenu mensuel, abonnés, commissions dues), vérification des recruteurs, signalements, messages suspects, validation des statistiques, **demandes de retrait**, derniers paiements, suspension de comptes (annule les commissions en attente) |
@@ -38,9 +39,9 @@ Sans clés, tout fonctionne en **mode démo** : paiements simulés (qui déclenc
 ## Tests
 
 ```bash
-npm test                      # 34 tests des règles métier (dont la cohérence des 5 langues)
+npm test                      # 38 tests des règles métier (dont la cohérence des 5 langues)
 npm run lint                  # vérification des types
-npx playwright test           # 8 parcours complets dans un navigateur (serveur lancé + base de démo)
+npx playwright test           # 9 parcours complets dans un navigateur (serveur lancé + base de démo)
 ```
 
 ## Mettre en ligne (pas à pas, sans être développeur)
@@ -50,6 +51,7 @@ npx playwright test           # 8 parcours complets dans un navigateur (serveur 
 3. **Variables** — dans Vercel → Settings → Environment Variables, ajoute au minimum `DATABASE_URL`, `AUTH_SECRET`, `CRON_SECRET` (deux longues phrases aléatoires différentes) et `APP_URL` (l'adresse de ton site).
 4. **Créer les tables** — sur ton ordinateur : `DATABASE_URL="…neon…" npx prisma db push`. Lance `npm run db:seed` pour créer le compte administrateur, puis **change immédiatement son mot de passe** (ou supprime les comptes de démo).
 5. **Vidéos et photos** (obligatoire en ligne : Vercel n'a pas de disque permanent) — sur [Cloudflare](https://dash.cloudflare.com) → R2 : crée un bucket, active l'accès public (domaine `r2.dev` ou ton domaine), crée un jeton API « Object Read & Write ». Renseigne `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PUBLIC_URL`. Dans le bucket → Settings → CORS, autorise la méthode `PUT` depuis l'adresse de ton site (en-tête `Content-Type`). R2 ne facture pas la bande passante : idéal pour la vidéo.
+5 bis. **Lecture adaptative (recommandé pour l'Afrique et la 3G)** — dans Cloudflare → Stream, active le service (environ 5 $ / 1 000 minutes stockées, 1 $ / 1 000 minutes regardées). Crée un jeton API « Stream: Edit » et renseigne `CF_ACCOUNT_ID` et `CF_STREAM_TOKEN`. Les vidéos passent alors par Stream au lieu de R2 ; les photos restent sur R2.
 6. **Carte bancaire** — sur [stripe.com](https://stripe.com) : clé secrète dans `STRIPE_SECRET_KEY` ; webhook vers `https://TON-SITE/api/stripe/webhook` avec les événements `checkout.session.completed`, `customer.subscription.*`, `invoice.paid`, `invoice.payment_failed` ; secret dans `STRIPE_WEBHOOK_SECRET`. Active le portail client et, si besoin, Stripe Tax.
 7. **Mobile money** — sur [flutterwave.com](https://flutterwave.com) : fais valider ton compte (pièces d'entreprise), copie la clé secrète dans `FLW_SECRET_KEY`. Dans Settings → Webhooks, mets `https://TON-SITE/api/flutterwave/webhook` et choisis une phrase secrète que tu recopies dans `FLW_WEBHOOK_HASH`. Ajuste les taux de change avec `FX_RATES` si besoin.
 8. **Courriels** — sur [resend.com](https://resend.com), vérifie ton domaine, clé dans `RESEND_API_KEY`, règle `EMAIL_FROM`.
@@ -74,7 +76,6 @@ Ne lance jamais le site public en mode démo : sans clés de paiement, les abonn
 
 ## Prochaines étapes possibles
 
-- Compression automatique des vidéos et lecture adaptative (Mux ou Cloudflare Stream).
 - Virements automatiques des gains de parrainage (API Flutterwave Transfers).
 - Vérification d'identité (Stripe Identity) et attestations de statistiques signées par les clubs.
 - Notifications push sur le téléphone.
