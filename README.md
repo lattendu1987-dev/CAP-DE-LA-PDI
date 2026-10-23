@@ -19,3 +19,7 @@ python -m unittest discover -s tests -t .
 ```
 
 Pour ajouter ou modifier un produit : éditer `config/products.toml`, puis relancer `python -m pdi rapport`.
+
+## ⚽ Football Talent Exchange
+
+La plateforme qui relie footballeurs et recruteurs se trouve dans le dossier [`football-talent-exchange/`](football-talent-exchange/README.md) (application complète, guide de mise en ligne inclus).
