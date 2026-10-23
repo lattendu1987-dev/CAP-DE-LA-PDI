@@ -12,7 +12,13 @@ async function login(page: Page, email: string) {
   await page.waitForURL((u) => !u.pathname.startsWith("/connexion"));
 }
 
+async function openMenu(page: Page) {
+  const menu = page.locator(".nav-menu > summary");
+  if (await menu.isVisible()) await menu.click();
+}
+
 async function logout(page: Page) {
+  await openMenu(page);
   await page.getByRole("button", { name: "Déconnexion" }).click();
   await page.waitForURL("/");
 }

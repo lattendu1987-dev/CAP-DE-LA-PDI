@@ -15,6 +15,9 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.1156.0",
     "@aws-sdk/s3-request-presigner": "3.1156.0",
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource-variable/noto-kufi-arabic": "5.3.0",
+    "@fontsource/instrument-serif": "5.3.0",
     "@prisma/client": "6.19.3",
     "bcryptjs": "3.0.3",
     "mediabunny": "1.61.1",

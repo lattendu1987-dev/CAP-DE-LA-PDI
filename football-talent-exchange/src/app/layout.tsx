@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource-variable/noto-kufi-arabic/index.css";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { InstallPrompt } from "@/components/install-prompt";
@@ -26,14 +29,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen font-sans antialiased">
         <Nav />
         <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-10">{children}</main>
-        <footer className="no-print border-t border-gray-200 bg-white">
-          <div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 py-6 text-sm text-gray-500">
+        <footer className="site-footer no-print border-t">
+          <div className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 py-8 text-sm">
             <span>© {new Date().getFullYear()} {m.meta.title}</span>
-            <Link className="hover:text-gray-800" href="/detections">{m.nav.trials}</Link>
-            <Link className="hover:text-gray-800" href="/tarifs">{m.footer.pricing}</Link>
-            <Link className="hover:text-gray-800" href="/securite">{m.footer.safety}</Link>
-            <Link className="hover:text-gray-800" href="/legal/cgu">{m.footer.terms}</Link>
-            <Link className="hover:text-gray-800" href="/legal/confidentialite">{m.footer.privacy}</Link>
+            <Link href="/detections">{m.nav.trials}</Link>
+            <Link href="/tarifs">{m.footer.pricing}</Link>
+            <Link href="/securite">{m.footer.safety}</Link>
+            <Link href="/legal/cgu">{m.footer.terms}</Link>
+            <Link href="/legal/confidentialite">{m.footer.privacy}</Link>
           </div>
         </footer>
         <InstallPrompt text={m.install} />

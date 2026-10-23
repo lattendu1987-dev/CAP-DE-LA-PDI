@@ -30,6 +30,26 @@ async function main() {
     },
   });
 
+  // Détections de démonstration publiées par le recruteur vérifié.
+  const scout = await db.user.findUniqueOrThrow({ where: { email: "scout@fte.local" } });
+  const inDays = (d: number, h = 10) => { const x = new Date(); x.setUTCDate(x.getUTCDate() + d); x.setUTCHours(h, 0, 0, 0); return x; };
+  const TRIALS = [
+    { title: "Détection U19 — FC Démo", city: "Dakar", country: "SN", days: 18, minAge: 16, maxAge: 19, positions: ["AG", "AD", "BU"] },
+    { title: "Journée spéciale gardiens de but", city: "Montréal", country: "CA", days: 25, minAge: 17, maxAge: 23, positions: ["GB"] },
+    { title: "Essais seniors — saison 2027", city: "Abidjan", country: "CI", days: 32, minAge: 18, maxAge: 27, positions: [] },
+    { title: "Détection milieux de terrain U21", city: "Casablanca", country: "MA", days: 41, minAge: 18, maxAge: 21, positions: ["MDC", "MC", "MOC"] },
+  ];
+  for (const t of TRIALS) {
+    if (await db.trialEvent.findFirst({ where: { title: t.title } })) continue;
+    await db.trialEvent.create({
+      data: {
+        recruiterId: scout.id, title: t.title, city: t.city, country: t.country, startsAt: inDays(t.days), deadline: inDays(t.days - 7, 23),
+        minAge: t.minAge, maxAge: t.maxAge, positions: t.positions, free: true,
+        description: "Détection gratuite encadrée par notre staff technique : échauffement, ateliers techniques, puis matchs à effectif réduit. Venir en tenue avec protège-tibias et une pièce d'identité.",
+      },
+    });
+  }
+
   for (const [i, p] of PLAYERS.entries()) {
     const email = `${p.first.toLowerCase().normalize("NFD").replace(/[^a-z]/g, "")}@fte.local`;
     const slug = `${p.first}-${p.last}`.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-");

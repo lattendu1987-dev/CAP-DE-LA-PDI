@@ -4,6 +4,16 @@ import { getMessages } from "@/i18n/server";
 import { logoutAction } from "@/app/actions/auth";
 import { LanguageSwitcher } from "./language-switcher";
 
+function Logo() {
+  return (
+    <svg aria-hidden viewBox="0 0 120 120" className="brand-mark">
+      <circle cx="60" cy="60" r="52" />
+      <path d="M60 30 88 50 77 83H43L32 50z" />
+      <path d="M60 30V8M88 50l21-7M77 83l13 18M43 83l-13 18M32 50l-21-7" />
+    </svg>
+  );
+}
+
 export async function Nav() {
   const [user, m] = await Promise.all([getCurrentUser(), getMessages()]);
   const n = m.nav;
@@ -21,33 +31,51 @@ export async function Nav() {
       { href: "/abonnement", label: n.subscription },
     );
   if (user?.role === "ADMIN") links.push({ href: "/admin", label: n.admin }, { href: "/recruteur/recherche", label: n.search }, { href: "/detections", label: n.trials });
-  if (!user) links.push({ href: "/detections", label: n.trials });
+  if (!user) links.push({ href: "/detections", label: n.trials }, { href: "/tarifs", label: m.footer.pricing });
+
+  const account = user ? (
+    <>
+      <Link href="/compte" className="account-link text-sm">{user.name}</Link>
+      <form action={logoutAction}><button className="btn-secondary btn-sm">{n.logout}</button></form>
+    </>
+  ) : (
+    <>
+      <Link href="/connexion" className="btn-secondary btn-sm">{n.login}</Link>
+      <Link href="/inscription" className="btn-primary btn-sm">{n.signup}</Link>
+    </>
+  );
 
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-gray-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3">
-        <Link href={user ? "/tableau-de-bord" : "/"} className="flex items-center gap-2 font-extrabold tracking-tight text-pitch-900">
-          <span aria-hidden className="grid h-8 w-8 place-items-center rounded-lg bg-pitch-600 text-white">⚽</span>
-          <span dir="ltr">Talent<span className="text-pitch-600">Exchange</span></span>
+    <header className="site-header no-print sticky top-0 z-30 border-b backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-x-6 px-4 py-3">
+        <Link href={user ? "/tableau-de-bord" : "/"} className="flex shrink-0 items-center gap-2.5" aria-label={m.meta.title}>
+          <Logo />
+          <span dir="ltr" className="brand-word">Talent<span className="brand-accent">Exchange</span></span>
         </Link>
-        <nav className="flex flex-1 flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-gray-600">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:text-pitch-700">{l.label}</Link>
-          ))}
+        <nav className="hidden flex-1 items-center gap-x-5 text-sm font-medium lg:flex">
+          {links.map((l) => <Link key={l.href} href={l.href}>{l.label}</Link>)}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 lg:flex">
           <LanguageSwitcher />
-          {user ? (
-            <>
-              <Link href="/compte" className="hidden text-sm text-gray-600 hover:text-gray-900 sm:inline">{user.name}</Link>
-              <form action={logoutAction}><button className="btn-secondary btn-sm">{n.logout}</button></form>
-            </>
-          ) : (
-            <>
-              <Link href="/connexion" className="btn-secondary btn-sm">{n.login}</Link>
-              <Link href="/inscription" className="btn-primary btn-sm">{n.signup}</Link>
-            </>
-          )}
+          {account}
+        </div>
+        {/* Téléphone et tablette : menu déroulant */}
+        <div className="ms-auto flex items-center gap-2 lg:hidden">
+          {!user && <Link href="/inscription" className="btn-primary btn-sm whitespace-nowrap">{n.signup}</Link>}
+          <details className="nav-menu">
+            <summary aria-label={m.common.menu}>
+              <span className="nav-burger" aria-hidden><i /><i /></span>
+            </summary>
+            <div className="nav-panel">
+              <nav className="flex flex-col">
+                {links.map((l) => <Link key={l.href} href={l.href} className="nav-panel-link">{l.label}</Link>)}
+              </nav>
+              <div className="nav-panel-foot">
+                <LanguageSwitcher />
+                <div className="flex flex-wrap items-center gap-2">{account}</div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </header>

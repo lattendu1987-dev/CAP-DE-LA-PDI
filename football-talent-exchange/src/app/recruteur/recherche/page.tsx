@@ -10,6 +10,7 @@ import { CountrySelect } from "@/components/country-select";
 import { Badge, Empty, Field, Flash } from "@/components/ui";
 import { saveSearchAction } from "@/app/actions/recruiter";
 import { PushBanner } from "@/components/push-banner";
+import { AutoOpenDetails } from "@/components/auto-open-details";
 
 export async function generateMetadata() {
   return { title: (await getMessages()).search.metaTitle };
@@ -35,6 +36,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     }),
   ]);
   const qs = filtersToQueryString(filters);
+  const activeFilters = Object.values(filters).filter((v) => v !== undefined && v !== false).length;
   const sub = user.subscription;
   const trialEnds = sub?.status === "TRIALING" ? Math.ceil((sub.currentPeriodEnd.getTime() - Date.now()) / 86400000) : null;
 
@@ -55,7 +57,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       {user.role === "RECRUITER" && <PushBanner m={m} />}
       {!verified && <p className="text-xs text-gray-500">{t.minorsHidden}</p>}
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-        <form className="card h-fit space-y-3" method="get">
+        <AutoOpenDetails className="filters h-fit" summary={<span className="flex items-center justify-between gap-2"><span>{t.filters}{activeFilters > 0 && <span className="ms-2 rounded-full bg-pitch-700 px-2 py-0.5 text-xs text-white">{activeFilters}</span>}</span><span aria-hidden className="filters-chevron">⌄</span></span>}>
+        <form className="card space-y-3" method="get">
           <Field label={t.q}><input className="input" name="q" defaultValue={filters.q} /></Field>
           <Field label={t.position}>
             <select className="input" name="position" defaultValue={filters.position ?? ""}>
@@ -99,6 +102,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <button className="btn-primary w-full">{m.common.search}</button>
           <Link href="/recruteur/recherche" className="btn-secondary w-full">{m.common.reset}</Link>
         </form>
+        </AutoOpenDetails>
 
         <div className="space-y-3">
           {user.role === "RECRUITER" && qs && (

@@ -9,7 +9,7 @@ export async function LanguageSwitcher() {
     <form action={setLocaleAction} className="flex items-center gap-1">
       <label className="sr-only" htmlFor="lang">{m.common.language}</label>
       <span aria-hidden>🌐</span>
-      <AutoSubmitSelect id="lang" name="locale" defaultValue={locale} className="rounded-lg border border-gray-200 bg-white px-1.5 py-1 text-xs">
+      <AutoSubmitSelect id="lang" name="locale" defaultValue={locale} className="rounded-full border px-2 py-1 text-xs">
         {LOCALES.map((l) => <option key={l} value={l}>{LOCALE_NAMES[l]}</option>)}
       </AutoSubmitSelect>
       <noscript><button className="btn-secondary btn-sm">OK</button></noscript>

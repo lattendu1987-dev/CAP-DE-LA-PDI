@@ -12,7 +12,13 @@ async function login(page: Page, email: string) {
   await page.waitForURL((u) => !u.pathname.startsWith("/connexion"));
 }
 
+async function openMenu(page: Page) {
+  const menu = page.locator(".nav-menu > summary");
+  if (await menu.isVisible()) await menu.click();
+}
+
 async function logout(page: Page) {
+  await openMenu(page);
   await page.getByRole("button", { name: "Déconnexion" }).click();
   await page.waitForURL("/");
 }
@@ -116,7 +122,8 @@ test("langues : anglais, espagnol, portugais et arabe (de droite à gauche)", as
     ["ar", "موهبتك تستحق أن تُرى.", "rtl"],
   ];
   for (const [lang, title, dir] of cases) {
-    await page.locator('select[name="locale"]').first().selectOption(lang);
+    await openMenu(page);
+    await page.locator('select[name="locale"]:visible').first().selectOption(lang);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(title);
     await expect(page.locator("html")).toHaveAttribute("dir", dir);
     await expect(page.locator("html")).toHaveAttribute("lang", lang);
@@ -237,4 +244,50 @@ test("notifications : un club regarde le profil puis écrit au joueur", async ({
   } finally {
     server.close();
   }
+});
+
+test("accueil : introduction, carrousel cinématographique et préférences d'animation", async ({ browser }) => {
+  test.setTimeout(60_000);
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, locale: "fr-FR" });
+  const page = await ctx.newPage();
+  await page.goto("/");
+  // Introduction : le logo se dessine puis le rideau se lève
+  await expect(page.locator("html")).toHaveAttribute("data-lx-intro", "on");
+  await expect(page.locator("html")).not.toHaveAttribute("data-lx-intro", "on", { timeout: 5000 });
+  const counter = page.locator("[data-lx-current]");
+  await expect(counter).toHaveText("01");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Partout.");
+  // Défilement automatique (7 s par scène)
+  await expect(counter).toHaveText("02", { timeout: 10_000 });
+  // Boutons et clavier
+  await page.getByRole("button", { name: "Scène suivante" }).click();
+  await expect(counter).toHaveText("03");
+  await page.getByRole("button", { name: "Scène précédente" }).click();
+  await expect(counter).toHaveText("02");
+  await page.getByRole("button", { name: "Scène 5 sur 5" }).click();
+  await expect(counter).toHaveText("05");
+  await expect(page.locator(".lx-slide.is-active")).toHaveAttribute("data-slide", "4");
+  // Pause
+  await page.getByRole("button", { name: "Mettre en pause" }).click();
+  await expect(page.locator(".lx-hero")).toHaveClass(/is-user-paused/);
+  await expect(page.getByRole("button", { name: "Reprendre" })).toBeVisible();
+  await page.waitForTimeout(8000);
+  await expect(counter).toHaveText("05");
+  // Pas de deuxième introduction dans la même session
+  await page.reload();
+  await expect(page.locator("html")).not.toHaveAttribute("data-lx-intro", "on");
+  await ctx.close();
+
+  // « Réduire les animations » : ni introduction, ni défilement automatique
+  const calm = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: "fr-FR", reducedMotion: "reduce" });
+  const p2 = await calm.newPage();
+  await p2.goto("/");
+  await expect(p2.locator("html")).not.toHaveAttribute("data-lx-intro", "on");
+  await expect(p2.locator(".lx-hero")).toHaveClass(/is-paused/);
+  await p2.waitForTimeout(8000);
+  await expect(p2.locator("[data-lx-current]")).toHaveText("01");
+  // Les sections restent visibles sans animation
+  await p2.locator(".lx-manifesto").scrollIntoViewIfNeeded();
+  await expect(p2.locator(".lx-big")).toBeVisible();
+  await calm.close();
 });
