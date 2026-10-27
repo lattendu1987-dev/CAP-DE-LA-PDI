@@ -41,6 +41,7 @@ const pt: Messages = {
     myLists: "Minhas listas",
     admin: "Administração",
     trials: "Peneiras",
+    news: "Notícias",
     referral: "Indicações",
     logout: "Sair",
     login: "Entrar",
@@ -878,6 +879,20 @@ const pt: Messages = {
     applicationBody: (name: string, link: string) => `${name} se inscreveu na sua peneira.\n\nVer os inscritos: ${link}`,
     statusSubject: (title: string) => `Sua inscrição: ${title}`,
     statusBody: (status: string, link: string) => `Nova situação da sua inscrição: ${status}.\n\n${link}`,
+  },
+  news: {
+    metaTitle: "Notícias e oportunidades",
+    title: "Notícias e oportunidades",
+    intro: "Peneiras, testes em clubes e notícias do futebol, encontrados automaticamente todos os dias em fontes públicas.",
+    tabs: { OPPORTUNITY: "Peneiras e testes", NEWS: "Notícias" },
+    warning: "Artigos de outros sites, não verificados pelo Football Talent Exchange. Um clube de verdade nunca pede dinheiro por um teste.",
+    allLanguages: "Todos os idiomas",
+    myLanguage: "Meu idioma",
+    empty: "Nada novo por enquanto. A seção é atualizada todos os dias.",
+    read: "Ler no site original",
+    refresh: "Atualizar agora",
+    refreshed: (n: number) => `${n} novo(s) artigo(s) adicionado(s).`,
+    hide: "Ocultar",
   },
 };
 

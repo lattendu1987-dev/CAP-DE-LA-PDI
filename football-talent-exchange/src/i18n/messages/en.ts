@@ -41,6 +41,7 @@ const en: Messages = {
     myLists: "My lists",
     admin: "Admin",
     trials: "Trials",
+    news: "News",
     referral: "Referrals",
     logout: "Log out",
     login: "Log in",
@@ -878,6 +879,20 @@ const en: Messages = {
     applicationBody: (name: string, link: string) => `${name} applied to your trial.\n\nSee applicants: ${link}`,
     statusSubject: (title: string) => `Your application: ${title}`,
     statusBody: (status: string, link: string) => `New status for your application: ${status}.\n\n${link}`,
+  },
+  news: {
+    metaTitle: "News and opportunities",
+    title: "News and opportunities",
+    intro: "Trials, club tryouts and football news, picked up automatically every day from public sources.",
+    tabs: { OPPORTUNITY: "Trials and tryouts", NEWS: "News" },
+    warning: "Articles from other websites, not checked by Football Talent Exchange. A real club never asks for money for a trial.",
+    allLanguages: "All languages",
+    myLanguage: "My language",
+    empty: "Nothing new yet. The feed updates every day.",
+    read: "Read on the original site",
+    refresh: "Update now",
+    refreshed: (n: number) => `${n} new article(s) added.`,
+    hide: "Hide",
   },
 };
 

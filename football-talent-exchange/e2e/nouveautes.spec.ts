@@ -354,3 +354,12 @@ test("carte des détections : autour de moi, dans un rayon de 100 km", async ({ 
   await expect(page.getByRole("link", { name: /Itinéraire/ })).toHaveAttribute("href", /google\.com\/maps\/dir\/\?api=1&destination=14\.7467,-17\.4511/);
   await ctx.close();
 });
+
+test("actualités : opportunités repérées automatiquement, avertissement anti-arnaque", async ({ page }) => {
+  await page.goto("/actualites");
+  await expect(page.getByText("Un vrai club ne demande jamais d'argent pour un essai.", { exact: false })).toBeVisible();
+  await expect(page.getByTestId("news-list")).toContainText("Journée de détection U17");
+  await expect(page.getByRole("link", { name: /Lire sur le site d'origine/ }).first()).toHaveAttribute("rel", /nofollow/);
+  await page.getByRole("link", { name: "Actualités", exact: true }).last().click();
+  await expect(page.getByTestId("news-list")).toContainText("nouvelle académie");
+});

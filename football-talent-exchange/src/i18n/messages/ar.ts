@@ -41,6 +41,7 @@ const ar: Messages = {
     myLists: "قوائمي",
     admin: "الإدارة",
     trials: "الاختبارات",
+    news: "الأخبار",
     referral: "الإحالة",
     logout: "تسجيل الخروج",
     login: "تسجيل الدخول",
@@ -878,6 +879,20 @@ const ar: Messages = {
     applicationBody: (name: string, link: string) => `تقدّم ${name} إلى اختبارك.\n\nعرض المتقدمين: ${link}`,
     statusSubject: (title: string) => `طلبك: ${title}`,
     statusBody: (status: string, link: string) => `الحالة الجديدة لطلبك: ${status}.\n\n${link}`,
+  },
+  news: {
+    metaTitle: "الأخبار والفرص",
+    title: "الأخبار والفرص",
+    intro: "اختبارات وتجارب في الأندية وأخبار كرة القدم، تُجمع تلقائيًا كل يوم من مصادر عامة.",
+    tabs: { OPPORTUNITY: "الاختبارات والتجارب", NEWS: "الأخبار" },
+    warning: "مقالات من مواقع أخرى لم تتحقق منها Football Talent Exchange. النادي الحقيقي لا يطلب المال أبدًا مقابل اختبار.",
+    allLanguages: "كل اللغات",
+    myLanguage: "لغتي",
+    empty: "لا جديد حاليًا. يتم التحديث كل يوم.",
+    read: "اقرأ في الموقع الأصلي",
+    refresh: "حدّث الآن",
+    refreshed: (n: number) => `تمت إضافة ${n} مقال(ات) جديد(ة).`,
+    hide: "إخفاء",
   },
 };
 

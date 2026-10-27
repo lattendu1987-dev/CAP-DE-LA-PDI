@@ -99,6 +99,23 @@ async function main() {
       },
     });
   }
+  // Articles de démonstration pour la page Actualités (la vraie veille tourne chaque jour en production).
+  const ago = (d: number) => new Date(Date.now() - d * 86400000);
+  const NEWS = [
+    { url: "https://example.org/demo/detection-u17-dakar", title: "Journée de détection U17 ouverte aux joueurs de la région de Dakar", summary: "Un centre de formation organise une journée de détection gratuite pour les joueurs nés en 2009 et 2010.", language: "fr", kind: "OPPORTUNITY" as const, days: 1 },
+    { url: "https://example.org/demo/essais-club-abidjan", title: "Essais de recrutement en club à Abidjan pour les gardiens de but", summary: "Le club recrute des gardiens de 18 à 23 ans pour sa réserve. Inscription gratuite sur place.", language: "fr", kind: "OPPORTUNITY" as const, days: 3 },
+    { url: "https://example.org/demo/open-trials-u21", title: "Academy announces open trials for U21 players", summary: "Free tryouts this month for strikers and wingers aged 18 to 21.", language: "en", kind: "OPPORTUNITY" as const, days: 2 },
+    { url: "https://example.org/demo/can-qualifs", title: "Éliminatoires : les sélections africaines connaissent leurs adversaires", summary: "Le tirage au sort a livré des groupes relevés pour la prochaine phase.", language: "fr", kind: "NEWS" as const, days: 1 },
+    { url: "https://example.org/demo/academie-ouvre", title: "Une nouvelle académie de football ouvre ses portes à Casablanca", summary: "Le centre accueillera 120 jeunes dès la rentrée, avec un internat et un suivi scolaire.", language: "fr", kind: "NEWS" as const, days: 4 },
+  ];
+  for (const n of NEWS) {
+    await db.newsItem.upsert({
+      where: { url: n.url },
+      create: { url: n.url, title: n.title, summary: n.summary, source: "Exemple (démo)", language: n.language, kind: n.kind, publishedAt: ago(n.days) },
+      update: {},
+    });
+  }
+
   console.log("Données de démo prêtes. Comptes : admin@, scout@, moussa@, parent@, awa@fte.local — mot de passe demo1234");
 }
 

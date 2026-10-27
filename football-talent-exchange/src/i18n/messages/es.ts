@@ -41,6 +41,7 @@ const es: Messages = {
     myLists: "Mis listas",
     admin: "Administración",
     trials: "Pruebas",
+    news: "Noticias",
     referral: "Referidos",
     logout: "Cerrar sesión",
     login: "Iniciar sesión",
@@ -878,6 +879,20 @@ const es: Messages = {
     applicationBody: (name: string, link: string) => `${name} se ha inscrito en tu prueba.\n\nVer los candidatos: ${link}`,
     statusSubject: (title: string) => `Tu candidatura: ${title}`,
     statusBody: (status: string, link: string) => `Nuevo estado de tu candidatura: ${status}.\n\n${link}`,
+  },
+  news: {
+    metaTitle: "Noticias y oportunidades",
+    title: "Noticias y oportunidades",
+    intro: "Pruebas, captaciones en clubes y noticias del fútbol, detectadas automáticamente cada día en fuentes públicas.",
+    tabs: { OPPORTUNITY: "Pruebas y captaciones", NEWS: "Noticias" },
+    warning: "Artículos de otros sitios, no verificados por Football Talent Exchange. Un club de verdad nunca pide dinero por una prueba.",
+    allLanguages: "Todos los idiomas",
+    myLanguage: "Mi idioma",
+    empty: "Nada nuevo por ahora. La sección se actualiza cada día.",
+    read: "Leer en el sitio original",
+    refresh: "Actualizar ahora",
+    refreshed: (n: number) => `${n} artículo(s) nuevo(s) añadido(s).`,
+    hide: "Ocultar",
   },
 };
 

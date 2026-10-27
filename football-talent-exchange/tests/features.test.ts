@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { classify, parseFeed } from "@/lib/domain/feeds";
 import { commissionFor, availableAtFrom, normalizeReferralCode, newReferralCode, REFERRAL_RATE } from "@/lib/domain/referral";
 import { localAmount, fxRates, MOBILE_MONEY } from "@/lib/domain/mobile-money";
 import { eligibleAge, isOpen, validTrialDates } from "@/lib/domain/trials";
@@ -157,5 +158,35 @@ describe("notifications sur le téléphone", () => {
     expect(safeInternalPath("/messages/1")).toBe("/messages/1");
     expect(safeInternalPath("//evil.com")).toBe("/");
     expect(safeInternalPath("https://evil.com")).toBe("/");
+  });
+});
+
+describe("veille d'actualités : lecture des flux et tri", () => {
+  const rss = `<?xml version="1.0"?><rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>T</title>
+    <item><title><![CDATA[Journée de détection U17 à Dakar &amp; Thiès]]></title><link>https://exemple.sn/detection-u17</link>
+      <description>&lt;p&gt;Le club organise une &lt;b&gt;détection&lt;/b&gt; gratuite.&lt;/p&gt;</description><pubDate>Mon, 26 Oct 2026 09:00:00 GMT</pubDate>
+      <media:content url="https://exemple.sn/photo.jpg" medium="image"/></item>
+    <item><title>Résultats du week-end</title><link>javascript:alert(1)</link></item>
+    <item><title>Le derby se termine sur un nul</title><link>https://exemple.com/derby</link></item>
+  </channel></rss>`;
+  const atom = `<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>Open trials for U21 players</title>
+    <link rel="alternate" href="https://example.com/trials"/><summary>Academy tryouts this Saturday.</summary><published>2026-10-25T10:00:00Z</published></entry></feed>`;
+
+  it("lit le RSS : titre nettoyé, lien sûr, résumé sans HTML, image, date", () => {
+    const items = parseFeed(rss);
+    expect(items).toHaveLength(2); // le lien « javascript: » est rejeté
+    expect(items[0]).toMatchObject({ title: "Journée de détection U17 à Dakar & Thiès", url: "https://exemple.sn/detection-u17", summary: "Le club organise une détection gratuite.", imageUrl: "https://exemple.sn/photo.jpg" });
+    expect(items[0].publishedAt?.toISOString()).toBe("2026-10-26T09:00:00.000Z");
+  });
+  it("lit l'Atom", () => {
+    expect(parseFeed(atom)[0]).toMatchObject({ title: "Open trials for U21 players", url: "https://example.com/trials" });
+  });
+  it("distingue les opportunités des actualités, dans plusieurs langues", () => {
+    expect(classify({ title: "Journée de détection U17 à Dakar", summary: "" })).toBe("OPPORTUNITY");
+    expect(classify({ title: "Open trials for U21 players", summary: "" })).toBe("OPPORTUNITY");
+    expect(classify({ title: "Peneira do clube neste sábado", summary: "" })).toBe("OPPORTUNITY");
+    expect(classify({ title: "Pruebas de fútbol para juveniles", summary: "" })).toBe("OPPORTUNITY");
+    expect(classify({ title: "اختبارات لاعبين في الدار البيضاء", summary: "" })).toBe("OPPORTUNITY");
+    expect(classify({ title: "Le derby se termine sur un nul", summary: "" })).toBe("NEWS");
   });
 });

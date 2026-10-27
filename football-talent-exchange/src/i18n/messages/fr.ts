@@ -40,6 +40,7 @@ const fr = {
     myLists: "Mes listes",
     admin: "Administration",
     trials: "Détections",
+    news: "Actualités",
     referral: "Parrainage",
     logout: "Déconnexion",
     login: "Connexion",
@@ -877,6 +878,20 @@ const fr = {
     applicationBody: (name: string, link: string) => `${name} a postulé à ta détection.\n\nVoir les candidats : ${link}`,
     statusSubject: (title: string) => `Ta candidature : ${title}`,
     statusBody: (status: string, link: string) => `Nouveau statut de ta candidature : ${status}.\n\n${link}`,
+  },
+  news: {
+    metaTitle: "Actualités et opportunités",
+    title: "Actualités et opportunités",
+    intro: "Détections, essais en club et actualités du football, repérés automatiquement chaque jour dans des sources publiques.",
+    tabs: { OPPORTUNITY: "Détections et essais", NEWS: "Actualités" },
+    warning: "Articles de sites extérieurs, non vérifiés par Football Talent Exchange. Un vrai club ne demande jamais d'argent pour un essai.",
+    allLanguages: "Toutes les langues",
+    myLanguage: "Ma langue",
+    empty: "Rien de nouveau pour l'instant. La veille se met à jour chaque jour.",
+    read: "Lire sur le site d'origine",
+    refresh: "Mettre à jour maintenant",
+    refreshed: (n: number) => `${n} nouvel(s) article(s) ajouté(s).`,
+    hide: "Masquer",
   },
 };
 

@@ -513,3 +513,25 @@ model PushSubscription {
   createdAt  DateTime  @default(now())
   lastUsedAt DateTime?
 }
+
+enum NewsKind {
+  OPPORTUNITY
+  NEWS
+}
+
+/// Actualités et opportunités repérées automatiquement dans des flux publics (titre, résumé court, lien vers la source).
+model NewsItem {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  summary     String
+  imageUrl    String?
+  source      String
+  language    String
+  kind        NewsKind
+  publishedAt DateTime
+  hidden      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([kind, language, publishedAt])
+}
