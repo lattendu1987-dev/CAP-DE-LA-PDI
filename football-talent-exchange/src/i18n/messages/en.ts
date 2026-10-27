@@ -13,6 +13,8 @@ const en: Messages = {
     any: "Any",
     all: "All",
     none: "—",
+    draftRestored: "Draft restored: what you typed earlier is back.",
+    draftClear: "Clear",
     yes: "Yes",
     no: "No",
     years: (n: number) => `${n} years old`,

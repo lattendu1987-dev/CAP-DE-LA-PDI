@@ -49,7 +49,7 @@ export function Avatar({ name, url, size = 56 }: { name: string; url?: string | 
   const initials = name.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase();
   return url ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={url} alt={name} width={size} height={size} className="rounded-full object-cover" style={{ width: size, height: size }} />
+    <img src={url} alt={name} loading="lazy" decoding="async" width={size} height={size} className="rounded-full object-cover" style={{ width: size, height: size }} />
   ) : (
     <div className="grid shrink-0 place-items-center rounded-full bg-pitch-100 font-bold text-pitch-700" style={{ width: size, height: size }}>{initials}</div>
   );

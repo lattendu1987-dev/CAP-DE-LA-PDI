@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/tableau-de-bord",
     scope: "/",
     display: "standalone",
-    background_color: "#f6f7f5",
-    theme_color: "#15803d",
+    background_color: "#040907",
+    theme_color: "#040907",
     orientation: "portrait",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },

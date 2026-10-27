@@ -12,6 +12,8 @@ const fr = {
     any: "Peu importe",
     all: "Tous",
     none: "—",
+    draftRestored: "Brouillon restauré : tes saisies précédentes ont été remises en place.",
+    draftClear: "Effacer",
     yes: "Oui",
     no: "Non",
     years: (n: number) => `${n} ans`,

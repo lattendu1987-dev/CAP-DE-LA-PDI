@@ -1,6 +1,6 @@
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
-import Script from "next/script";
+import { LandingScript } from "./landing-script";
 import type { Messages } from "@/i18n/messages";
 import type { Locale } from "@/i18n/config";
 import { countryName, formatDate } from "@/i18n/format";
@@ -62,13 +62,6 @@ export function Landing({ m, locale, data, interval = 7000 }: { m: Messages; loc
   const total = SCENES.length;
   return (
     <div className="lx" data-lx>
-      {/* Décide avant l'affichage s'il faut jouer l'introduction (1re visite de la session, sans « réduire les animations »). */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html:
-            "try{var d=document.documentElement;if(!sessionStorage.getItem('lx-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.setAttribute('data-lx-intro','on');sessionStorage.setItem('lx-intro','1')}d.classList.add('lx-js')}catch(e){}",
-        }}
-      />
       <div className="lx-intro" aria-hidden="true">
         <svg className="lx-intro-mark" viewBox="0 0 120 120" role="presentation">
           <circle cx="60" cy="60" r="52" />
@@ -162,9 +155,11 @@ export function Landing({ m, locale, data, interval = 7000 }: { m: Messages; loc
             <div key={k} className="lx-side" data-reveal>
               <div className="lx-phones">
                 {PHONES[col].map(([src, cap], j) => (
-                  <figure key={src} className={`lx-phone lx-phone--${j === 0 ? "front" : "back"}`} data-tilt>
-                    <div className="lx-phone-screen">
-                      <Image src={src} alt={t.appCaptions[cap]} fill sizes="(max-width: 768px) 60vw, 260px" quality={85} style={{ objectFit: "cover", objectPosition: "top" }} />
+                  <figure key={src} className={`lx-phone lx-phone--${j === 0 ? "front" : "back"}`}>
+                    <div className="lx-phone-body" data-tilt>
+                      <div className="lx-phone-screen">
+                        <Image src={src} alt="" fill sizes="(max-width: 768px) 45vw, 240px" quality={85} style={{ objectFit: "cover", objectPosition: "top" }} />
+                      </div>
                     </div>
                     <figcaption>{t.appCaptions[cap]}</figcaption>
                   </figure>
@@ -247,7 +242,7 @@ export function Landing({ m, locale, data, interval = 7000 }: { m: Messages; loc
           </div>
         </div>
       </section>
-      <Script src="/landing.js" strategy="afterInteractive" />
+      <LandingScript />
     </div>
   );
 }

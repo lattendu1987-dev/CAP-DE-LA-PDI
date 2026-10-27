@@ -13,6 +13,8 @@ const es: Messages = {
     any: "Indiferente",
     all: "Todos",
     none: "—",
+    draftRestored: "Borrador restaurado: lo que escribiste antes está de vuelta.",
+    draftClear: "Borrar",
     yes: "Sí",
     no: "No",
     years: (n: number) => `${n} años`,

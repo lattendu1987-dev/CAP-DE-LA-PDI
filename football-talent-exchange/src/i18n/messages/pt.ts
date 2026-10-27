@@ -13,6 +13,8 @@ const pt: Messages = {
     any: "Tanto faz",
     all: "Todos",
     none: "—",
+    draftRestored: "Rascunho restaurado: o que você digitou antes voltou.",
+    draftClear: "Apagar",
     yes: "Sim",
     no: "Não",
     years: (n: number) => `${n} anos`,

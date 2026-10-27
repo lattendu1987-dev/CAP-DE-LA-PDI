@@ -1,3 +1,5 @@
+import { FormAutosave } from "@/components/form-autosave";
+import { autosaveText } from "@/lib/ui-text";
 import { requireUser } from "@/lib/auth";
 import { getLocale, getMessages } from "@/i18n/server";
 import { isSubscriptionActive } from "@/lib/domain/rules";
@@ -22,6 +24,7 @@ export default async function NewTrialPage({ searchParams }: { searchParams: Pro
       <h1 className="h1 mb-6">{t.newTitle}</h1>
       <Flash sp={sp} />
       <form action={createTrialAction} className="card grid gap-4 sm:grid-cols-2">
+        <div className="sm:col-span-2"><FormAutosave id="new-trial" text={autosaveText(m)} /></div>
         <div className="sm:col-span-2"><Field label={f.title}><input className="input" name="title" required minLength={5} maxLength={120} /></Field></div>
         <div className="sm:col-span-2"><Field label={f.description}><textarea className="input min-h-32" name="description" required minLength={20} maxLength={3000} /></Field></div>
         <Field label={f.city}><input className="input" name="city" required /></Field>

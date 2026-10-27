@@ -2,6 +2,10 @@
    Sans bibliothèque. Respecte « réduire les animations » et allège tout sur les appareils modestes. */
 (function () {
   "use strict";
+  // Relancé à chaque affichage de l'accueil, y compris après une navigation interne (voir LandingScript).
+  window.lxInit = init;
+  init();
+  function init() {
   var root = document.querySelector("[data-lx]");
   if (!root || root.__lx) return;
   root.__lx = true;
@@ -63,9 +67,17 @@
       [].forEach.call(slide.querySelectorAll("a, button"), function (el) { if (on) el.removeAttribute("tabindex"); else el.setAttribute("tabindex", "-1"); });
       if (on) slide.removeAttribute("aria-hidden"); else slide.setAttribute("aria-hidden", "true");
     }
+    // Prépare l'image de la scène suivante à l'avance : pas d'image vide ni de flash au changement.
+    function warm(i) {
+      var img = slides[(i + slides.length) % slides.length].querySelector("img");
+      if (!img) return;
+      img.loading = "eager";
+      if (img.decode) img.decode().catch(function () {});
+    }
     function go(i) {
       i = (i + slides.length) % slides.length;
       if (i === current) return;
+      warm(i + 1);
       var prev = slides[current];
       slides.forEach(function (s) { s.classList.remove("is-leaving"); });
       prev.classList.remove("is-active");
@@ -108,6 +120,7 @@
       hero.classList.toggle("is-user-paused", userPaused);
     }
     sync();
+    if (document.readyState === "complete") warm(1); else window.addEventListener("load", function () { warm(1); });
     if (toggle) toggle.addEventListener("click", function () { userPaused = !userPaused; sync(); });
     hero.addEventListener("focusin", function () { setTimeout(sync, 0); });
     hero.addEventListener("focusout", function () { setTimeout(sync, 0); });
@@ -196,5 +209,6 @@
       });
       el.addEventListener("pointerleave", function () { el.style.setProperty("--tx", "0"); el.style.setProperty("--ty", "0"); });
     });
+  }
   }
 })();

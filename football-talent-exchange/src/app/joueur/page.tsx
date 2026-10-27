@@ -15,7 +15,8 @@ import { SubmitButton } from "@/components/submit-button";
 import { PositionPicker } from "@/components/position-picker";
 import { CountrySelect } from "@/components/country-select";
 import { UploadField } from "@/components/upload-field";
-import { uploadText } from "@/lib/ui-text";
+import { autosaveText, uploadText } from "@/lib/ui-text";
+import { FormAutosave } from "@/components/form-autosave";
 import { ShareButtons } from "@/components/share";
 import { PushBanner } from "@/components/push-banner";
 import {
@@ -138,6 +139,7 @@ export default async function PlayerHome({ searchParams }: { searchParams: Promi
           </form>
         </div>
         <form action={updateProfileAction} className="grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="lg:col-span-2"><FormAutosave id={`profile-${p.id}`} text={autosaveText(m)} /></div>
           <div className="grid content-start gap-4 sm:grid-cols-2">
             <Field label={m.auth.firstName}><input className="input" name="firstName" defaultValue={p.firstName} required /></Field>
             <Field label={m.auth.lastName}><input className="input" name="lastName" defaultValue={p.lastName} required /></Field>

@@ -291,3 +291,21 @@ test("accueil : introduction, carrousel cinématographique et préférences d'an
   await expect(p2.locator(".lx-big")).toBeVisible();
   await calm.close();
 });
+
+test("inscription : les saisies sont sauvegardées et restaurées, jamais le mot de passe", async ({ page }) => {
+  await page.goto("/inscription?role=joueur");
+  await page.fill('input[name="firstName"]', "Brouillon");
+  await page.fill('input[name="lastName"]', "Test");
+  await page.fill('input[name="password"]', "secret-123");
+  await page.waitForTimeout(600); // la sauvegarde attend une courte pause dans la frappe
+  await page.reload();
+  await expect(page.locator('input[name="firstName"]')).toHaveValue("Brouillon");
+  await expect(page.locator('input[name="lastName"]')).toHaveValue("Test");
+  await expect(page.locator('input[name="password"]')).toHaveValue("");
+  await expect(page.getByTestId("autosave-signup-joueur")).toContainText("Brouillon restauré");
+  // « Effacer » remet le formulaire à zéro et oublie le brouillon.
+  await page.getByTestId("autosave-signup-joueur").getByRole("button").click();
+  await expect(page.locator('input[name="firstName"]')).toHaveValue("");
+  await page.reload();
+  await expect(page.locator('input[name="firstName"]')).toHaveValue("");
+});

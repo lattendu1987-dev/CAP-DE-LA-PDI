@@ -1,5 +1,6 @@
 import type { Messages } from "@/i18n/messages";
 import type { PushText } from "@/components/push-toggle";
+import type { AutosaveText } from "@/components/form-autosave";
 import type { UploadText } from "@/components/upload-field";
 import { MEDIA_RULES } from "@/lib/domain/media";
 
@@ -22,4 +23,8 @@ export function uploadText(m: Messages, kind: "video" | "photo"): UploadText {
 export function pushText(m: Messages): PushText {
   const p = m.push;
   return { title: p.title, text: p.text, enable: p.enable, disable: p.disable, enabled: p.enabled, denied: p.denied, unsupported: p.unsupported, iosInstall: p.iosInstall };
+}
+
+export function autosaveText(m: Messages): AutosaveText {
+  return { restored: m.common.draftRestored, clear: m.common.draftClear };
 }

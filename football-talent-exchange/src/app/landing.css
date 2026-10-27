@@ -12,8 +12,8 @@
   --lx-hair: rgba(238, 243, 238, 0.14); /* filets */
   --lx-gold: #c9a45a;       /* or champagne (accent unique) */
   --lx-gold-hi: #e7c987;
-  --lx-display: "Archivo Variable", "Noto Kufi Arabic Variable", "Arial Narrow", system-ui, sans-serif;
-  --lx-serif: "Instrument Serif", "Noto Kufi Arabic Variable", Georgia, serif;
+  --lx-display: var(--font-archivo), var(--font-kufi), "Arial Narrow", system-ui, sans-serif;
+  --lx-serif: var(--font-instrument), var(--font-kufi), Georgia, serif;
   --lx-ease: cubic-bezier(0.77, 0, 0.18, 1);
   --lx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --lx-gutter: max(20px, env(safe-area-inset-left, 0px), 4vw);
@@ -73,21 +73,20 @@ body:has(.lx) footer, body:has(.lx) footer a { color: var(--lx-mist); }
 
 .lx-media { position: absolute; inset: -1.5%; transform: translate3d(calc(var(--mx, 0) * -14px), calc(var(--my, 0) * -10px), 0); transition: transform 1.2s var(--lx-ease-out); will-change: transform; }
 .lx-media picture, .lx-media .lx-img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.lx-media .lx-img { object-fit: cover; transform: scale(1.07); transform-origin: var(--kb-origin, 60% 55%); }
+.lx-media .lx-img { object-fit: cover; transform: scale(1.07) translateZ(0); transform-origin: var(--kb-origin, 60% 55%); will-change: transform; backface-visibility: hidden; }
 .lx-slide.is-active .lx-media img { animation: lx-kenburns calc(var(--lx-interval) + 2.5s) linear forwards; }
 .lx-slide:nth-child(2) { --kb-origin: 70% 70%; }
 .lx-slide:nth-child(3) { --kb-origin: 50% 50%; }
 .lx-slide:nth-child(4) { --kb-origin: 40% 45%; }
 .lx-slide:nth-child(5) { --kb-origin: 30% 65%; }
-@keyframes lx-kenburns { from { transform: scale(1.07); } to { transform: scale(1); } }
+@keyframes lx-kenburns { from { transform: scale(1.07) translateZ(0); } to { transform: scale(1) translateZ(0); } }
 
-/* Révélation : un volet diagonal ouvre la nouvelle scène, l'ancienne recule dans l'ombre. */
-.lx-js .lx-slide.is-active .lx-media { animation: lx-wipe 1.5s var(--lx-ease) both; }
-.lx-slide.is-leaving .lx-media { filter: brightness(0.45); transition: filter 1.2s var(--lx-ease), transform 1.2s; }
-@keyframes lx-wipe {
-  from { clip-path: polygon(100% 0, 130% 0, 100% 100%, 70% 100%); }
-  to { clip-path: polygon(-30% 0, 130% 0, 100% 100%, -60% 100%); }
-}
+/* Changement de scène : fondu enchaîné, l'ancienne scène s'assombrit. Uniquement opacité et transformations,
+   calculées par la carte graphique : aucune saccade, même sur un téléphone modeste. */
+.lx-js .lx-slide.is-active .lx-media { animation: lx-fade-in 1.4s var(--lx-ease-out) both; }
+.lx-media::after { content: ""; position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity 1.2s var(--lx-ease); pointer-events: none; }
+.lx-slide.is-leaving .lx-media::after { opacity: 0.55; }
+@keyframes lx-fade-in { from { opacity: 0; } to { opacity: 1; } }
 .lx-hero:not(.is-ready) .lx-slide:first-child .lx-media { animation: none; }
 
 .lx-shade { position: absolute; inset: 0; pointer-events: none;
@@ -103,12 +102,14 @@ body:has(.lx) footer, body:has(.lx) footer a { color: var(--lx-mist); }
 }
 .lx-eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--lx-gold-hi); font-weight: 600; font-stretch: 112%; }
 .lx-eyebrow-rule { width: 44px; height: 1px; background: currentColor; transform-origin: left; }
-.lx-title { margin: 0; font-weight: 800; font-stretch: 116%; text-transform: uppercase; line-height: 0.92; letter-spacing: -0.012em; font-size: clamp(36px, 5.2vw, 88px); text-wrap: balance; }
-.lx-line { display: block; overflow: hidden; padding-bottom: 0.04em; }
+.lx-title { margin: 0; font-weight: 800; font-stretch: 116%; text-transform: uppercase; line-height: 0.98; letter-spacing: -0.012em; font-size: clamp(36px, 5.2vw, 88px); text-wrap: balance; }
+/* La ligne masque le texte pendant son entrée ; sa zone déborde un peu pour ne jamais rogner accents (É, Ê) ni jambages. */
+.lx-line { display: block; overflow: hidden; padding: 0.16em 0.14em 0.1em; margin: -0.16em -0.14em -0.1em; }
 .lx-line > span { display: inline-block; }
 .lx-accent { font-family: var(--lx-serif); font-style: italic; font-weight: 400; text-transform: none; font-stretch: 100%; letter-spacing: -0.01em; font-size: 1.08em; line-height: 1.02; color: var(--lx-gold-hi); padding-right: 0.12em; }
-/* Le dégradé or est porté par le texte lui-même (compatible avec son animation d'entrée). */
-.lx-accent > span { background: linear-gradient(100deg, var(--lx-gold) 20%, #fff3d6 45%, var(--lx-gold-hi) 60%, var(--lx-gold) 80%); background-size: 250% 100%; background-position: 0 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-right: 0.08em; }
+/* Or plein (et non un dégradé découpé dans le texte) : Safari efface ce type de texte pendant les animations
+   et rogne les lettres italiques qui dépassent de leur boîte. */
+.lx-accent > span { color: var(--lx-gold-hi); text-shadow: 0 0 28px rgba(201, 164, 90, 0.35); padding-inline-end: 0.12em; }
 .lx-text { margin: 22px 0 0; max-width: 52ch; font-size: clamp(15px, 1.2vw, 18px); line-height: 1.6; color: var(--lx-mist); font-weight: 400; }
 .lx-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
@@ -118,13 +119,12 @@ body:has(.lx) footer, body:has(.lx) footer a { color: var(--lx-mist); }
 .lx-slide.is-active .lx-line > span { animation: lx-line-up 1.1s var(--lx-ease) both; }
 .lx-slide.is-active .lx-line:nth-child(1) > span { animation-delay: 0.45s; }
 .lx-slide.is-active .lx-line:nth-child(2) > span { animation-delay: 0.6s; }
-.lx-slide.is-active .lx-accent > span { animation: lx-line-up 1.1s var(--lx-ease) 0.6s both, lx-sheen 3.2s var(--lx-ease) 1.1s both; }
+.lx-slide.is-active .lx-accent > span { animation: lx-line-up 1.1s var(--lx-ease) 0.6s both; }
 .lx-slide.is-active .lx-text { animation: lx-fade-up 1s var(--lx-ease-out) 0.85s both; }
 .lx-slide.is-active .lx-actions { animation: lx-fade-up 1s var(--lx-ease-out) 1s both; }
 @keyframes lx-line-up { from { transform: translateY(105%) skewY(4deg); } to { transform: none; } }
 @keyframes lx-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes lx-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes lx-sheen { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 /* Sans script, la première scène reste parfaitement lisible. */
 html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 
@@ -146,7 +146,7 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 .lx-btn--gold::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%); transform: translateX(-120%); transition: transform 0.9s var(--lx-ease); }
 .lx-btn--gold:hover { transform: translateY(-2px); box-shadow: 0 16px 50px -12px rgba(231, 201, 135, 0.85); }
 .lx-btn--gold:hover::before { transform: translateX(120%); }
-.lx-btn--ghost { color: var(--lx-light); border: 1px solid rgba(238, 243, 238, 0.35); background: rgba(4, 9, 7, 0.2); backdrop-filter: blur(8px); }
+.lx-btn--ghost { color: var(--lx-light); border: 1px solid rgba(238, 243, 238, 0.35); background: rgba(4, 9, 7, 0.45); }
 .lx-btn--ghost:hover { border-color: var(--lx-light); transform: translateY(-2px); }
 .lx-btn--line { color: var(--lx-light); border: 1px solid var(--lx-hair); }
 .lx-btn--line::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--lx-light); transform: scaleY(0); transform-origin: bottom; transition: transform 0.5s var(--lx-ease); }
@@ -169,7 +169,7 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 .lx-dot:focus-visible { outline: 2px solid var(--lx-gold-hi); outline-offset: 2px; }
 @keyframes lx-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .lx-controls { display: flex; gap: 8px; }
-.lx-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(4, 9, 7, 0.35); border: 1px solid var(--lx-hair); color: var(--lx-light); cursor: pointer; backdrop-filter: blur(8px); transition: border-color 0.3s, background 0.3s, transform 0.3s var(--lx-ease-out); }
+.lx-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(4, 9, 7, 0.55); border: 1px solid var(--lx-hair); color: var(--lx-light); cursor: pointer; transition: border-color 0.3s, background 0.3s, transform 0.3s var(--lx-ease-out); }
 .lx-icon:hover { border-color: var(--lx-light); transform: scale(1.06); }
 .lx-icon:focus-visible { outline: 2px solid var(--lx-gold-hi); outline-offset: 2px; }
 .lx-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -196,7 +196,7 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 
 /* ---------- Sections ---------- */
 .lx-section { padding-block: clamp(80px, 12vw, 160px); padding-left: var(--lx-gutter); padding-right: var(--lx-gutter); max-width: 1320px; margin-inline: auto; }
-.lx-h2 { margin: 0 0 clamp(36px, 5vw, 64px); font-size: clamp(30px, 4.4vw, 64px); line-height: 0.98; font-weight: 800; font-stretch: 118%; text-transform: uppercase; letter-spacing: -0.01em; text-wrap: balance; }
+.lx-h2 { margin: 0 0 clamp(36px, 5vw, 64px); font-size: clamp(30px, 4.4vw, 64px); line-height: 1.04; font-weight: 800; font-stretch: 118%; text-transform: uppercase; letter-spacing: -0.01em; text-wrap: balance; }
 .lx-h3 { margin: 32px 0 14px; font-size: clamp(22px, 2.2vw, 30px); font-weight: 700; font-stretch: 112%; text-transform: uppercase; letter-spacing: 0.02em; }
 .lx-lead { margin: 0; max-width: 58ch; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.65; color: var(--lx-mist); }
 .lx-link { color: var(--lx-gold-hi); text-decoration: none; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; }
@@ -205,21 +205,22 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 .lx-row .lx-h2 { margin-bottom: 36px; }
 
 .lx-manifesto { display: grid; gap: 40px; }
-.lx-big { margin: 0; font-size: clamp(34px, 6vw, 92px); line-height: 1.02; font-weight: 800; font-stretch: 115%; letter-spacing: -0.02em; text-wrap: balance; }
+.lx-big { margin: 0; font-size: clamp(34px, 6vw, 92px); line-height: 1.06; font-weight: 800; font-stretch: 115%; letter-spacing: -0.02em; text-wrap: balance; }
 .lx-big em { display: block; font-family: var(--lx-serif); font-weight: 400; font-style: italic; font-stretch: 100%; color: var(--lx-gold-hi); letter-spacing: -0.01em; }
 
 /* Joueurs / recruteurs avec téléphones en profondeur */
 .lx-sides-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); }
 .lx-side { padding: clamp(24px, 3vw, 40px); border: 1px solid var(--lx-hair); border-radius: 28px; background: linear-gradient(160deg, rgba(18, 61, 38, 0.35), rgba(4, 9, 7, 0) 55%), var(--lx-ink); }
-.lx-phones { position: relative; height: clamp(380px, 38vw, 520px); margin-bottom: 52px; perspective: 1400px; }
-.lx-phone { position: absolute; top: 0; margin: 0; width: min(52%, 250px); aspect-ratio: 9 / 19.2; border-radius: 34px; padding: 9px; background: linear-gradient(145deg, #2a2f2c, #070908 40%, #1d211f); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  transform: rotateY(calc(var(--ty, 0) * 1deg)) rotateX(calc(var(--tx, 0) * 1deg)) translateZ(0); transition: transform 0.8s var(--lx-ease-out); transform-style: preserve-3d; }
-.lx-phone--front { left: 6%; z-index: 2; }
-.lx-phone--back { right: 4%; top: 9%; transform: rotateY(calc(var(--ty, 0) * 1deg - 8deg)) rotateX(calc(var(--tx, 0) * 1deg)) scale(0.9); filter: brightness(0.75); }
-.lx-phone-screen { position: absolute; inset: 9px; border-radius: 26px; overflow: hidden; background: #f6f7f5; }
-.lx-phone-screen::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0.22) 0%, transparent 35%); pointer-events: none; }
-.lx-phone figcaption { position: absolute; left: 0; right: 0; bottom: -34px; text-align: center; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lx-mist); }
-.lx-phone--back figcaption { display: none; }
+/* Deux téléphones côte à côte, décalés en hauteur : aucun ne recouvre l'autre ni sa légende. */
+.lx-phones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2.4vw, 28px); align-items: start; margin: 0 0 8px; perspective: 1400px; }
+.lx-phone { margin: 0; display: grid; justify-items: center; gap: 16px; min-width: 0; }
+.lx-phone--back { margin-top: clamp(28px, 4vw, 56px); }
+.lx-phone-body { position: relative; width: 100%; max-width: 240px; aspect-ratio: 9 / 19.2; border-radius: 30px; padding: 8px; background: linear-gradient(145deg, #2a2f2c, #070908 40%, #1d211f); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transform: rotateY(calc(var(--ty, 0) * 1deg)) rotateX(calc(var(--tx, 0) * 1deg)) translateZ(0); transition: transform 0.8s var(--lx-ease-out); will-change: transform; backface-visibility: hidden; }
+.lx-phone-screen { position: absolute; inset: 8px; border-radius: 23px; overflow: hidden; background: #f6f7f5; }
+.lx-phone-screen::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0%, transparent 35%); pointer-events: none; }
+/* Légende posée sur un fond plein, sous le téléphone, jamais par-dessus une image. */
+.lx-phone figcaption { position: relative; z-index: 1; max-width: 100%; padding: 8px 14px; border-radius: 999px; background: var(--lx-night); border: 1px solid var(--lx-hair); color: var(--lx-light); text-align: center; font-size: 11px; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
 .lx-list { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 12px; }
 .lx-list li { display: grid; grid-template-columns: 18px 1fr; gap: 12px; color: var(--lx-mist); line-height: 1.5; }
 .lx-list li::before { content: ""; width: 10px; height: 10px; margin-top: 7px; border: 1px solid var(--lx-gold); transform: rotate(45deg); }
@@ -263,8 +264,8 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
 .lx-title--final { font-size: clamp(38px, 6vw, 96px); }
 
 /* ---------- Apparition au défilement (seulement si le script tourne) ---------- */
-.lx-js [data-reveal] { opacity: 0; transform: translateY(36px); filter: blur(6px); transition: opacity 1.1s var(--lx-ease-out), transform 1.1s var(--lx-ease-out), filter 1.1s var(--lx-ease-out); transition-delay: var(--rd, 0s); }
-.lx-js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
+.lx-js [data-reveal] { opacity: 0; transform: translate3d(0, 36px, 0); transition: opacity 1.1s var(--lx-ease-out), transform 1.1s var(--lx-ease-out); transition-delay: var(--rd, 0s); }
+.lx-js [data-reveal].is-in { opacity: 1; transform: none; }
 .lx-js .lx-card[data-reveal].is-in { transform: perspective(900px) rotateX(calc(var(--tx, 0) * 1deg)) rotateY(calc(var(--ty, 0) * 1deg)); }
 
 /* ---------- Mobile ---------- */
@@ -283,9 +284,7 @@ html:not(.lx-js) .lx-slide.is-active * { animation: none !important; }
   .lx-hud { grid-template-columns: auto 1fr; gap: 14px; }
   .lx-controls { display: none; }
   .lx-actions .lx-btn { flex: 1 1 100%; }
-  .lx-phones { height: 430px; }
-  .lx-phone { width: 50%; }
-  .lx-phone figcaption { font-size: 10px; letter-spacing: 0.16em; white-space: nowrap; }
+  .lx-phone figcaption { font-size: 10px; letter-spacing: 0.06em; padding: 7px 10px; border-radius: 14px; }
 }
 
 /* ---------- Respect des préférences et appareils modestes ---------- */

@@ -1,3 +1,5 @@
+import { FormAutosave } from "@/components/form-autosave";
+import { autosaveText } from "@/lib/ui-text";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
@@ -74,6 +76,7 @@ export default async function ConversationPage({ params, searchParams }: { param
 
       <form action={sendMessageAction} className="card space-y-3">
         <input type="hidden" name="conversationId" value={conv.id} />
+        <FormAutosave id={`message-${conv.id}`} text={autosaveText(m)} />
         <textarea name="body" required maxLength={3000} className="input min-h-24" placeholder={t.placeholder} dir="auto" />
         {user.role === "RECRUITER" && (
           <details className="text-sm">

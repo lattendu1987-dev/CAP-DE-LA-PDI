@@ -1,3 +1,5 @@
+import { FormAutosave } from "@/components/form-autosave";
+import { autosaveText } from "@/lib/ui-text";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { signupAction } from "@/app/actions/auth";
@@ -55,6 +57,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
       <Flash sp={sp} />
       <form action={signupAction} className="card space-y-4">
         <input type="hidden" name="role" value={role} />
+        <FormAutosave id={`signup-${role}`} text={autosaveText(m)} />
         {refCode && <input type="hidden" name="ref" value={refCode} />}
         {role === "joueur" && (
           <div className="grid gap-4 sm:grid-cols-2">

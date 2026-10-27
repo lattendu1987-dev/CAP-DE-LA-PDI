@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import "@fontsource-variable/archivo/wdth.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/noto-kufi-arabic/index.css";
+import { archivo, instrumentSerif, notoKufi } from "./fonts";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { InstallPrompt } from "@/components/install-prompt";
@@ -20,12 +18,22 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = { themeColor: "#15803d", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#040907", width: "device-width", initialScale: 1 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [locale, m] = await Promise.all([getLocale(), getMessages()]);
   return (
-    <html lang={locale} dir={RTL.includes(locale) ? "rtl" : "ltr"}>
+    <html lang={locale} dir={RTL.includes(locale) ? "rtl" : "ltr"} className={`${archivo.variable} ${instrumentSerif.variable} ${notoKufi.variable}`}>
+      <head>
+        {/* Avant le premier affichage : décide si l'introduction de l'accueil doit jouer (1re visite de la
+            session, sans « réduire les animations »), pour éviter tout flash de contenu. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(location.pathname==='/'){var d=document.documentElement;d.classList.add('lx-js');if(!sessionStorage.getItem('lx-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.setAttribute('data-lx-intro','on');sessionStorage.setItem('lx-intro','1')}setTimeout(function(){var r=document.querySelector('[data-lx]');if(r&&!r.__lx){d.classList.remove('lx-js');d.removeAttribute('data-lx-intro')}},4000)}}catch(e){}",
+          }}
+        />
+      </head>
       <body className="min-h-screen font-sans antialiased">
         <Nav />
         <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-10">{children}</main>

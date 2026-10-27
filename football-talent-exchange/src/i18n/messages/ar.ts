@@ -13,6 +13,8 @@ const ar: Messages = {
     any: "لا يهم",
     all: "الكل",
     none: "—",
+    draftRestored: "تمت استعادة المسودة: عادت البيانات التي أدخلتها سابقًا.",
+    draftClear: "مسح",
     yes: "نعم",
     no: "لا",
     years: (n: number) => `${n} سنة`,

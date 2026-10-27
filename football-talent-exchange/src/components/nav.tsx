@@ -47,7 +47,7 @@ export async function Nav() {
 
   return (
     <header className="site-header no-print sticky top-0 z-30 border-b backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-x-6 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center gap-x-3 px-4 py-3 lg:gap-x-6">
         <Link href={user ? "/tableau-de-bord" : "/"} className="flex shrink-0 items-center gap-2.5" aria-label={m.meta.title}>
           <Logo />
           <span dir="ltr" className="brand-word">Talent<span className="brand-accent">Exchange</span></span>
@@ -61,7 +61,7 @@ export async function Nav() {
         </div>
         {/* Téléphone et tablette : menu déroulant */}
         <div className="ms-auto flex items-center gap-2 lg:hidden">
-          {!user && <Link href="/inscription" className="btn-primary btn-sm whitespace-nowrap">{n.signup}</Link>}
+          {!user && <Link href="/inscription" className="btn-primary btn-sm whitespace-nowrap max-[359px]:hidden">{n.signup}</Link>}
           <details className="nav-menu">
             <summary aria-label={m.common.menu}>
               <span className="nav-burger" aria-hidden><i /><i /></span>
