@@ -34,17 +34,25 @@ async function main() {
   const scout = await db.user.findUniqueOrThrow({ where: { email: "scout@fte.local" } });
   const inDays = (d: number, h = 10) => { const x = new Date(); x.setUTCDate(x.getUTCDate() + d); x.setUTCHours(h, 0, 0, 0); return x; };
   const TRIALS = [
-    { title: "Détection U19 — FC Démo", city: "Dakar", country: "SN", days: 18, minAge: 16, maxAge: 19, positions: ["AG", "AD", "BU"] },
-    { title: "Journée spéciale gardiens de but", city: "Montréal", country: "CA", days: 25, minAge: 17, maxAge: 23, positions: ["GB"] },
-    { title: "Essais seniors — saison 2027", city: "Abidjan", country: "CI", days: 32, minAge: 18, maxAge: 27, positions: [] },
-    { title: "Détection milieux de terrain U21", city: "Casablanca", country: "MA", days: 41, minAge: 18, maxAge: 21, positions: ["MDC", "MC", "MOC"] },
+    { title: "Détection U19 — FC Démo", city: "Dakar", country: "SN", days: 18, minAge: 16, maxAge: 19, positions: ["AG", "AD", "BU"], address: "Stade Léopold-Sédar-Senghor, route de l'Aéroport", lat: 14.7467, lng: -17.4511 },
+    { title: "Détection régionale — Thiès", city: "Thiès", country: "SN", days: 21, minAge: 15, maxAge: 18, positions: [], address: "Stade Lat-Dior", lat: 14.791, lng: -16.9359 },
+    { title: "Journée spéciale gardiens de but", city: "Montréal", country: "CA", days: 25, minAge: 17, maxAge: 23, positions: ["GB"], address: "Stade Saputo, 4750 rue Sherbrooke Est", lat: 45.5627, lng: -73.5528 },
+    { title: "Essais seniors — saison 2027", city: "Abidjan", country: "CI", days: 32, minAge: 18, maxAge: 27, positions: [], address: "Stade Félix-Houphouët-Boigny, Plateau", lat: 5.326, lng: -4.021 },
+    { title: "Détection milieux de terrain U21", city: "Casablanca", country: "MA", days: 41, minAge: 18, maxAge: 21, positions: ["MDC", "MC", "MOC"], address: "Complexe Mohammed-V, Maârif", lat: 33.5828, lng: -7.647 },
   ];
+  const CONDITIONS = "Tenue de sport, crampons et protège-tibias obligatoires. Pièce d'identité. Mineurs : autorisation parentale signée. Arrivée 30 minutes avant le début.";
   for (const t of TRIALS) {
-    if (await db.trialEvent.findFirst({ where: { title: t.title } })) continue;
+    const place = { address: t.address, latitude: t.lat, longitude: t.lng, conditions: CONDITIONS };
+    const existing = await db.trialEvent.findFirst({ where: { title: t.title } });
+    if (existing) {
+      // Bases créées avant la carte : on ajoute le lieu exact.
+      if (existing.latitude == null) await db.trialEvent.update({ where: { id: existing.id }, data: place });
+      continue;
+    }
     await db.trialEvent.create({
       data: {
         recruiterId: scout.id, title: t.title, city: t.city, country: t.country, startsAt: inDays(t.days), deadline: inDays(t.days - 7, 23),
-        minAge: t.minAge, maxAge: t.maxAge, positions: t.positions, free: true,
+        minAge: t.minAge, maxAge: t.maxAge, positions: t.positions, free: true, ...place,
         description: "Détection gratuite encadrée par notre staff technique : échauffement, ateliers techniques, puis matchs à effectif réduit. Venir en tenue avec protège-tibias et une pièce d'identité.",
       },
     });

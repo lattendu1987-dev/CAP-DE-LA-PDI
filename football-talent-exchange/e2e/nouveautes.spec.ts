@@ -334,3 +334,23 @@ test("tarifs : prix adaptés au pays choisi, plancher africain en FCFA", async (
   await page.goto("/tarifs?pays=FR");
   await expect(page.getByTestId("price-RECRUITER_PRO")).toContainText("49");
 });
+
+test("carte des détections : autour de moi, dans un rayon de 100 km", async ({ browser }) => {
+  const ctx = await browser.newContext({ geolocation: { latitude: 14.7167, longitude: -17.4677 }, permissions: ["geolocation"], locale: "fr-FR", viewport: { width: 390, height: 844 } });
+  const page = await ctx.newPage();
+  await page.goto("/detections");
+  await expect(page.getByTestId("trials-map")).toBeVisible();
+  await expect(page.locator(".trial-pin").first()).toBeVisible();
+  await page.getByTestId("near-me").click();
+  await expect(page).toHaveURL(/lat=14\.7167.*lng=-17\.4677.*rayon=100/);
+  await expect(page.getByText(/Détections à moins de 100 km de toi/)).toBeVisible();
+  await expect(page.getByRole("link", { name: /Détection U19 — FC Démo/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Détection régionale — Thiès/ })).toContainText(/à \d+ km/);
+  await expect(page.getByRole("link", { name: /gardiens de but/ })).toHaveCount(0);
+  // Fiche : lieu exact, conditions, frais d'accès et itinéraire.
+  await page.getByRole("link", { name: /Détection U19 — FC Démo/ }).click();
+  await expect(page.getByText("Stade Léopold-Sédar-Senghor", { exact: false })).toBeVisible();
+  await expect(page.getByText("Gratuit (règle de la plateforme)")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Itinéraire/ })).toHaveAttribute("href", /google\.com\/maps\/dir\/\?api=1&destination=14\.7467,-17\.4511/);
+  await ctx.close();
+});

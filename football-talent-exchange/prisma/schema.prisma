@@ -465,6 +465,12 @@ model TrialEvent {
   description  String
   city         String
   country      String
+  /// Adresse exacte du lieu (stade, terrain) et coordonnées pour la carte.
+  address      String?
+  latitude     Float?
+  longitude    Float?
+  /// Conditions de participation (équipement, documents, niveau attendu).
+  conditions   String?
   startsAt     DateTime
   deadline     DateTime
   minAge       Int?

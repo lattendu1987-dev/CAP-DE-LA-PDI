@@ -97,3 +97,9 @@ body { background: #f4f6f3; color: #0d1712; }
   .brand-word { font-size: 13px; letter-spacing: 0.03em; }
   .brand-mark { width: 26px; height: 26px; }
 }
+
+/* Repère des détections sur la carte : goutte or cerclée de nuit */
+.trial-pin span { display: block; width: 28px; height: 28px; border-radius: 50% 50% 50% 0; background: #c9a45a; border: 3px solid #040907; transform: rotate(-45deg); box-shadow: 0 6px 14px -4px rgba(0, 0, 0, 0.5); }
+.trials-map { isolation: isolate; z-index: 0; }
+.trials-map .leaflet-popup-content { font: 13px/1.5 var(--font-sans); }
+.trials-map .leaflet-popup-content a { color: #15803d; font-weight: 600; }

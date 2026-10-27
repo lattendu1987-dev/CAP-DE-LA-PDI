@@ -27,12 +27,14 @@ export default async function NewTrialPage({ searchParams }: { searchParams: Pro
         <div className="sm:col-span-2"><FormAutosave id="new-trial" text={autosaveText(m)} /></div>
         <div className="sm:col-span-2"><Field label={f.title}><input className="input" name="title" required minLength={5} maxLength={120} /></Field></div>
         <div className="sm:col-span-2"><Field label={f.description}><textarea className="input min-h-32" name="description" required minLength={20} maxLength={3000} /></Field></div>
+        <div className="sm:col-span-2"><Field label={f.address} hint={f.addressHint}><input className="input" name="address" maxLength={160} autoComplete="street-address" /></Field></div>
         <Field label={f.city}><input className="input" name="city" required /></Field>
         <Field label={f.country}><CountrySelect name="country" locale={locale} defaultValue={user.country} /></Field>
         <Field label={f.startsAt}><input className="input" type="datetime-local" name="startsAt" required /></Field>
         <Field label={f.deadline}><input className="input" type="datetime-local" name="deadline" required /></Field>
         <Field label={f.minAge}><input className="input" type="number" name="minAge" min={10} max={45} /></Field>
         <Field label={f.maxAge}><input className="input" type="number" name="maxAge" min={10} max={45} /></Field>
+        <div className="sm:col-span-2"><Field label={f.conditions}><textarea className="input min-h-20" name="conditions" maxLength={1000} /></Field></div>
         <fieldset className="sm:col-span-2">
           <legend className="label">{f.positions}</legend>
           <div className="flex flex-wrap gap-2">

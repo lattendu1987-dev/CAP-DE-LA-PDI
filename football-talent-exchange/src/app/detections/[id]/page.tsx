@@ -1,3 +1,5 @@
+import { TrialsMap } from "@/components/trials-map";
+import { directionsUrl } from "@/lib/domain/distance";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
@@ -56,11 +58,33 @@ export default async function TrialPage({ params, searchParams }: { params: Prom
         </div>
         <h1 className="h1">{trial.title}</h1>
         <p>📅 {formatDate(trial.startsAt, locale, { dateStyle: "full", timeStyle: "short" })}</p>
-        <p>📍 {trial.city}, {countryName(trial.country, locale)}</p>
+        <p>📍 {trial.address ? `${trial.address}, ` : ""}{trial.city}, {countryName(trial.country, locale)}</p>
+        <dl className="grid gap-x-4 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
+          <dt className="font-semibold text-gray-600">{t.fee}</dt>
+          <dd className="font-semibold text-pitch-700">{t.feeFree}</dd>
+          {trial.conditions && (
+            <>
+              <dt className="font-semibold text-gray-600">{t.conditions}</dt>
+              <dd className="whitespace-pre-line" dir="auto">{trial.conditions}</dd>
+            </>
+          )}
+        </dl>
         <p className="muted">{t.deadline(formatDate(trial.deadline, locale))}</p>
         {trial.positions.length > 0 && <p className="text-sm">{trial.positions.map((c) => positionLabel(m, c)).join(" · ")}</p>}
         <p className="whitespace-pre-line text-gray-700" dir="auto">{trial.description}</p>
         <p className="text-sm text-gray-600">{t.organizer} : <b>{trial.recruiter.recruiter?.organization}</b> ({trial.recruiter.recruiter ? m.labels.recruiterTypes[trial.recruiter.recruiter.type] : ""})</p>
+        {trial.latitude != null && trial.longitude != null ? (
+          <div className="space-y-2">
+            <TrialsMap
+              height={260}
+              text={{ ...t.map }}
+              trials={[{ id: trial.id, title: trial.title, lat: trial.latitude, lng: trial.longitude, when: formatDate(trial.startsAt, locale, { dateStyle: "medium", timeStyle: "short" }), place: `${trial.city}, ${countryName(trial.country, locale)}`, org: trial.recruiter.recruiter?.organization ?? "" }]}
+            />
+            <a href={directionsUrl(trial.latitude, trial.longitude)} target="_blank" rel="noopener" className="btn-secondary btn-sm">🧭 {t.map.directions}</a>
+          </div>
+        ) : (
+          <p className="text-xs text-gray-500">{t.notOnMap}</p>
+        )}
       </div>
 
       {!owner && <div className="card">{applyBlock}</div>}

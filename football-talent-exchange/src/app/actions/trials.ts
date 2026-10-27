@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { geocode } from "@/lib/geocode";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { getMessages, messagesFor } from "@/i18n/server";
@@ -25,6 +26,8 @@ export async function createTrialAction(fd: FormData) {
       title: z.string().trim().min(5).max(120),
       description: z.string().trim().min(20).max(3000),
       city: z.string().trim().min(2).max(80),
+      address: z.string().trim().max(160).optional().transform((v) => v || undefined),
+      conditions: z.string().trim().max(1000).optional().transform((v) => v || undefined),
       country: z.string().length(2),
       startsAt: z.coerce.date(),
       deadline: z.coerce.date(),
@@ -38,11 +41,15 @@ export async function createTrialAction(fd: FormData) {
   if (!validTrialDates(d.startsAt, d.deadline)) go("/detections/nouvelle", t.dates, true);
   if (d.minAge && d.maxAge && d.minAge > d.maxAge) go("/detections/nouvelle", t.invalid, true);
   // Une annonce qui demande de l'argent est refusée d'office.
-  if (detectScam(`${d.title} ${d.description}`).length > 0) go("/detections/nouvelle", t.invalid, true);
+  if (detectScam(`${d.title} ${d.description} ${d.conditions ?? ""}`).length > 0) go("/detections/nouvelle", t.invalid, true);
   if ((await db.trialEvent.count({ where: { recruiterId: user.id, startsAt: { gt: new Date() } } })) >= 20) go("/detections/nouvelle", t.max, true);
   const positions = fd.getAll("positions").map(String).filter((p) => (POSITION_CODES as readonly string[]).includes(p));
+  // Coordonnées pour la carte (sans bloquer la publication si le lieu est introuvable).
+  const point = await geocode({ address: d.address, city: d.city, country: d.country });
   const trial = await db.trialEvent.create({
-    data: { recruiterId: user.id, title: d.title, description: d.description, city: d.city, country: d.country, startsAt: d.startsAt, deadline: d.deadline, minAge: d.minAge ?? null, maxAge: d.maxAge ?? null, positions, free: true },
+    data: {
+      recruiterId: user.id, title: d.title, description: d.description, city: d.city, country: d.country,
+      address: d.address ?? null, conditions: d.conditions ?? null, latitude: point?.lat ?? null, longitude: point?.lng ?? null, startsAt: d.startsAt, deadline: d.deadline, minAge: d.minAge ?? null, maxAge: d.maxAge ?? null, positions, free: true },
   });
   await audit(user.id, "trial.create", { id: trial.id });
   go(`/detections/${trial.id}`, t.created);

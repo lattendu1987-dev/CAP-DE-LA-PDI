@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { distanceKm, nearby, parseLatLng, parseRadius } from "@/lib/domain/distance";
 import { ageOn, isMinor, birthDateRangeForAge } from "@/lib/domain/age";
 import { completeness } from "@/lib/domain/completeness";
 import { detectScam } from "@/lib/domain/scam";
@@ -153,5 +154,32 @@ describe("pays du visiteur", () => {
     expect(countryFromHeaders(h({ "cf-ipcountry": "CI" }))).toBe("CI");
     expect(countryFromHeaders(h({ "cf-ipcountry": "XX" }))).toBeNull();
     expect(countryFromHeaders(h({}))).toBeNull();
+  });
+});
+
+describe("distances et rayon autour du joueur", () => {
+  const dakar = { lat: 14.7467, lng: -17.4511 };
+  it("calcule une distance réaliste", () => {
+    const thies = distanceKm(dakar, { lat: 14.791, lng: -16.9359 });
+    expect(thies).toBeGreaterThan(50);
+    expect(thies).toBeLessThan(60);
+    expect(Math.round(distanceKm(dakar, dakar))).toBe(0);
+  });
+  it("garde les détections dans le rayon, de la plus proche à la plus lointaine", () => {
+    const items = [
+      { id: "montreal", latitude: 45.5627, longitude: -73.5528 },
+      { id: "thies", latitude: 14.791, longitude: -16.9359 },
+      { id: "sans-lieu", latitude: null, longitude: null },
+      { id: "dakar", latitude: 14.7467, longitude: -17.4511 },
+    ];
+    expect(nearby(items, dakar, 100).map((x) => x.item.id)).toEqual(["dakar", "thies"]);
+    expect(nearby(items, dakar, 25).map((x) => x.item.id)).toEqual(["dakar"]);
+  });
+  it("refuse les coordonnées et rayons invalides", () => {
+    expect(parseLatLng("14.7", "-17.4")).toEqual({ lat: 14.7, lng: -17.4 });
+    expect(parseLatLng("abc", "1")).toBeNull();
+    expect(parseLatLng("95", "1")).toBeNull();
+    expect(parseRadius("50")).toBe(50);
+    expect(parseRadius("9999")).toBe(100);
   });
 });
