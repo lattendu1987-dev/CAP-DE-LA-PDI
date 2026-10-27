@@ -16,7 +16,7 @@ export async function generateMetadata() {
   return { title: (await getMessages()).auth.signupTitle };
 }
 
-const ROLES = ["joueur", "recruteur", "tuteur"] as const;
+const ROLES = ["joueur", "recruteur", "tuteur", "annonceur"] as const;
 
 export default async function SignupPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const [sp, m, locale] = await Promise.all([searchParams, getMessages(), getLocale()]);
@@ -33,7 +33,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
         <p className="muted mb-6">{a.chooseProfile}</p>
         {referrer && <p className="mb-4 rounded-xl bg-pitch-50 px-4 py-3 text-sm text-pitch-900">{a.referredBy(referrer.name)}</p>}
         <Flash sp={sp} />
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {ROLES.map((r) => {
             const [icon, title, text] = a.choices[r];
             return (
@@ -67,7 +67,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
             <Field label={a.birthDate}><input className="input" type="date" name="birthDate" required /></Field>
           </div>
         )}
-        <Field label={role === "joueur" ? a.displayName : a.fullName}><input className="input" name="name" required maxLength={80} autoComplete="name" /></Field>
+        <Field label={role === "joueur" ? a.displayName : role === "annonceur" ? a.organization : a.fullName}><input className="input" name="name" required maxLength={80} autoComplete="name" /></Field>
         <Field label={a.email}><input className="input" type="email" name="email" required defaultValue={sp.email} autoComplete="email" dir="ltr" /></Field>
         <Field label={a.password} hint={a.passwordHint}><input className="input" type="password" name="password" required minLength={8} autoComplete="new-password" /></Field>
         <Field label={a.country}><CountrySelect name="country" locale={locale} defaultValue={(await visitorCountry()) ?? "CA"} /></Field>

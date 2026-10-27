@@ -1,4 +1,4 @@
-export type MediaKind = "video" | "photo";
+export type MediaKind = "video" | "photo" | "ad";
 
 export const MEDIA_RULES: Record<MediaKind, { maxBytes: number; types: Record<string, string> }> = {
   video: {
@@ -8,6 +8,11 @@ export const MEDIA_RULES: Record<MediaKind, { maxBytes: number; types: Record<st
   photo: {
     maxBytes: 8 * 1024 * 1024,
     types: { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" },
+  },
+  // Visuel publicitaire : image ou vidéo courte.
+  ad: {
+    maxBytes: 40 * 1024 * 1024,
+    types: { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "video/mp4": "mp4", "video/webm": "webm" },
   },
 };
 

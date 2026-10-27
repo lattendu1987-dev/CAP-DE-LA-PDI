@@ -12,6 +12,7 @@ enum Role {
   GUARDIAN
   RECRUITER
   ADMIN
+  ADVERTISER
 }
 
 enum RecruiterType {
@@ -114,6 +115,7 @@ model User {
   commissionsFrom   Commission[]       @relation("CommissionSource")
   payouts           Payout[]
   trialsPosted      TrialEvent[]
+  adCampaigns       AdCampaign[]
   trialApplications TrialApplication[]
   pushSubscriptions PushSubscription[]
 }
@@ -534,4 +536,48 @@ model NewsItem {
   createdAt   DateTime @default(now())
 
   @@index([kind, language, publishedAt])
+}
+
+enum AdFormat {
+  BANNER
+  INTERSTITIAL
+}
+
+enum AdAudience {
+  ALL
+  PLAYERS
+  RECRUITERS
+}
+
+enum AdStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  ENDED
+  REJECTED
+  STOPPED
+}
+
+/// Campagne publicitaire achetée en libre-service par un annonceur (sponsor, équipementier, académie…).
+model AdCampaign {
+  id           String     @id @default(cuid())
+  advertiserId String
+  advertiser   User       @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  headline     String
+  linkUrl      String
+  mediaKey     String
+  mediaType    String
+  format       AdFormat
+  audience     AdAudience @default(ALL)
+  countries    String[]
+  days         Int
+  priceCents   Int
+  status       AdStatus   @default(PENDING_PAYMENT)
+  rejectReason String?
+  startsAt     DateTime?
+  endsAt       DateTime?
+  impressions  Int        @default(0)
+  clicks       Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  @@index([status, format, endsAt])
 }

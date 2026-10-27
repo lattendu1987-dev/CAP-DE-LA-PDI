@@ -41,7 +41,7 @@ export function checkLocalSignature(key: string, exp: number, type: string, size
 
 /** Chemin local sûr (empêche toute sortie du dossier d'envoi). */
 export function localPath(key: string) {
-  if (!/^u\/[\w-]+\/(video|photo)\/[\w-]+\.\w{2,5}$/.test(key)) return null;
+  if (!/^u\/[\w-]+\/(video|photo|ad)\/[\w-]+\.\w{2,5}$/.test(key)) return null;
   return path.join(uploadDir(), key);
 }
 

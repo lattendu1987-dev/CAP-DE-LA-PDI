@@ -131,6 +131,14 @@ export async function signupAction(formData: FormData) {
     redirect("/tuteur");
   }
 
+  if (role === "annonceur") {
+    // Annonceur : marque, équipementier, académie… Le nom saisi est celui de l'entreprise.
+    const user = await db.user.create({ data: { ...common, role: "ADVERTISER" } });
+    await audit(user.id, "signup", { role: "ADVERTISER", referred: !!referrer });
+    await createSession(user.id);
+    redirect("/publicite/campagnes");
+  }
+
   fail("/inscription", e.chooseType);
 }
 

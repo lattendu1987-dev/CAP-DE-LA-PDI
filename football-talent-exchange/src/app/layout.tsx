@@ -42,6 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <span>© {new Date().getFullYear()} {m.meta.title}</span>
             <Link href="/detections">{m.nav.trials}</Link>
             <Link href="/tarifs">{m.footer.pricing}</Link>
+            <Link href="/actualites">{m.nav.news}</Link>
+            <Link href="/publicite">{m.nav.ads}</Link>
             <Link href="/securite">{m.footer.safety}</Link>
             <Link href="/legal/cgu">{m.footer.terms}</Link>
             <Link href="/legal/confidentialite">{m.footer.privacy}</Link>

@@ -10,6 +10,7 @@ import { Badge, Empty, Flash } from "@/components/ui";
 import { CountrySelect } from "@/components/country-select";
 import { TrialsMap, type MapTrial } from "@/components/trials-map";
 import { NearMeButton } from "@/components/near-me-button";
+import { SponsoredBanner, SponsoredInterstitial } from "@/components/sponsored";
 
 export async function generateMetadata() {
   const m = await getMessages();
@@ -94,6 +95,8 @@ export default async function TrialsPage({ searchParams }: { searchParams: Promi
         <TrialsMap trials={mapTrials} center={center} radiusKm={center ? radius : undefined} text={{ ...t.map }} />
       </div>
 
+      <SponsoredBanner />
+      <SponsoredInterstitial />
       {rows.length === 0 ? <Empty>{t.empty}</Empty> : (
         <div className="grid gap-4 md:grid-cols-2">
           {rows.map(({ tr, km }) => (

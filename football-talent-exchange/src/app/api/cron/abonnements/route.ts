@@ -5,6 +5,7 @@ import { appUrl, sendEmail } from "@/lib/email";
 import { messagesFor } from "@/i18n/server";
 import { formatDate } from "@/i18n/format";
 import { isLocale } from "@/i18n/config";
+import { endExpiredAds } from "@/lib/ads";
 
 export const runtime = "nodejs";
 
@@ -35,5 +36,8 @@ export async function GET(req: Request) {
   const released = await releaseCommissions(now);
   await db.payment.updateMany({ where: { status: "PENDING", createdAt: { lt: new Date(now.getTime() - 2 * 86400000) } }, data: { status: "FAILED" } });
   const { count: sessions } = await db.session.deleteMany({ where: { expiresAt: { lt: now } } });
-  return Response.json({ expired: expired.length, trialReminders: trials.length, renewReminders: prepaid.length, commissionsReleased: released, sessions });
+  // Fin des Boosts et des campagnes publicitaires arrivés à échéance.
+  const boostsEnded = (await db.playerProfile.updateMany({ where: { boostedUntil: { lt: now } }, data: { boostedUntil: null } })).count;
+  const adsEnded = await endExpiredAds(now);
+  return Response.json({ expired: expired.length, trialReminders: trials.length, renewReminders: prepaid.length, commissionsReleased: released, sessions, boostsEnded, adsEnded });
 }

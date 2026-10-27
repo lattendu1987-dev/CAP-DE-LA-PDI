@@ -30,10 +30,11 @@ export async function Nav() {
       { href: "/parrainage", label: n.referral },
       { href: "/abonnement", label: n.subscription },
     );
-  if (user?.role === "ADMIN") links.push({ href: "/admin", label: n.admin }, { href: "/recruteur/recherche", label: n.search }, { href: "/detections", label: n.trials });
+  if (user?.role === "ADVERTISER") links.push({ href: "/publicite/campagnes", label: m.ads.myCampaigns }, { href: "/actualites", label: n.news });
+  if (user?.role === "ADMIN") links.push({ href: "/admin", label: n.admin }, { href: "/recruteur/recherche", label: n.search }, { href: "/detections", label: n.trials }, { href: "/publicite/campagnes", label: n.ads });
   if (!user) links.push({ href: "/detections", label: n.trials }, { href: "/actualites", label: n.news }, { href: "/tarifs", label: m.footer.pricing });
-  else if (user.role !== "ADMIN") links.splice(links.findIndex((l) => l.href === "/detections") + 1 || links.length, 0, { href: "/actualites", label: n.news });
-  else links.push({ href: "/actualites", label: n.news });
+  else if (user.role !== "ADMIN" && user.role !== "ADVERTISER") links.splice(links.findIndex((l) => l.href === "/detections") + 1 || links.length, 0, { href: "/actualites", label: n.news });
+  else if (user.role === "ADMIN") links.push({ href: "/actualites", label: n.news });
 
   const account = user ? (
     <>

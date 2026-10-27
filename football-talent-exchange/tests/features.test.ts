@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { adMatches, adPriceCents, moderateAd } from "@/lib/domain/ads";
 import { classify, parseFeed } from "@/lib/domain/feeds";
 import { commissionFor, availableAtFrom, normalizeReferralCode, newReferralCode, REFERRAL_RATE } from "@/lib/domain/referral";
 import { localAmount, fxRates, MOBILE_MONEY } from "@/lib/domain/mobile-money";
@@ -188,5 +189,30 @@ describe("veille d'actualités : lecture des flux et tri", () => {
     expect(classify({ title: "Pruebas de fútbol para juveniles", summary: "" })).toBe("OPPORTUNITY");
     expect(classify({ title: "اختبارات لاعبين في الدار البيضاء", summary: "" })).toBe("OPPORTUNITY");
     expect(classify({ title: "Le derby se termine sur un nul", summary: "" })).toBe("NEWS");
+  });
+});
+
+describe("régie publicitaire : prix et validation automatique", () => {
+  it("calcule le prix selon le format, la durée et le ciblage", () => {
+    expect(adPriceCents("BANNER", 7, 2)).toBe(2100);
+    expect(adPriceCents("INTERSTITIAL", 14, 1)).toBe(8400);
+    expect(adPriceCents("BANNER", 30, 0)).toBe(13500); // monde entier : +50 %
+  });
+  it("accepte une annonce correcte", () => {
+    expect(moderateAd({ headline: "Crampons pro à -20 % pour la rentrée", linkUrl: "https://boutique-foot.sn/crampons", mediaType: "image" })).toEqual([]);
+  });
+  it("refuse les liens douteux, les secteurs interdits et les arnaques", () => {
+    expect(moderateAd({ headline: "Super offre", linkUrl: "http://site.com", mediaType: "image" })).toContain("link");
+    expect(moderateAd({ headline: "Super offre", linkUrl: "https://bit.ly/abc", mediaType: "image" })).toContain("shortener");
+    expect(moderateAd({ headline: "Paris sportifs : bonus de bienvenue", linkUrl: "https://exemple.com", mediaType: "image" })).toContain("forbidden");
+    expect(moderateAd({ headline: "Essai en Europe, envoie 300 € par Western Union", linkUrl: "https://exemple.com", mediaType: "image" })).toContain("scam");
+    expect(moderateAd({ headline: "OK", linkUrl: "https://exemple.com", mediaType: null })).toEqual(expect.arrayContaining(["headline", "media"]));
+  });
+  it("cible les bons visiteurs", () => {
+    const ad = { audience: "RECRUITERS" as const, countries: ["SN", "CI"] };
+    expect(adMatches(ad, { country: "SN", role: "RECRUITER" })).toBe(true);
+    expect(adMatches(ad, { country: "SN", role: "PLAYER" })).toBe(false);
+    expect(adMatches(ad, { country: "FR", role: "RECRUITER" })).toBe(false);
+    expect(adMatches({ audience: "ALL", countries: [] }, { country: null, role: null })).toBe(true);
   });
 });

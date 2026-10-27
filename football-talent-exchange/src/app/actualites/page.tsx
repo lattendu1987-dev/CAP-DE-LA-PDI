@@ -6,6 +6,7 @@ import { formatDate } from "@/i18n/format";
 import { Empty, Flash } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
 import { hideNewsAction, refreshNewsAction } from "@/app/actions/news";
+import { SponsoredBanner, SponsoredInterstitial } from "@/components/sponsored";
 
 export async function generateMetadata() {
   const m = await getMessages();
@@ -47,6 +48,8 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
         <Link href={qs({ langues: allLang ? undefined : "toutes" })} className="ms-auto text-sm underline">{allLang ? t.myLanguage : t.allLanguages}</Link>
       </nav>
       {kind === "OPPORTUNITY" && <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">⚠️ {t.warning}</p>}
+      <SponsoredBanner />
+      <SponsoredInterstitial />
       {items.length === 0 ? <Empty>{t.empty}</Empty> : (
         <ul className="grid gap-4 md:grid-cols-2" data-testid="news-list">
           {items.map((it) => (

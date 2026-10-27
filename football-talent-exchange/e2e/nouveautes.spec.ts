@@ -360,6 +360,56 @@ test("actualités : opportunités repérées automatiquement, avertissement anti
   await expect(page.getByText("Un vrai club ne demande jamais d'argent pour un essai.", { exact: false })).toBeVisible();
   await expect(page.getByTestId("news-list")).toContainText("Journée de détection U17");
   await expect(page.getByRole("link", { name: /Lire sur le site d'origine/ }).first()).toHaveAttribute("rel", /nofollow/);
-  await page.getByRole("link", { name: "Actualités", exact: true }).last().click();
+  await page.getByRole("navigation", { name: "Actualités et opportunités" }).getByRole("link", { name: "Actualités", exact: true }).click();
   await expect(page.getByTestId("news-list")).toContainText("nouvelle académie");
+});
+
+test("régie publicitaire : refus automatique, paiement, diffusion et statistiques", async ({ page, browser }) => {
+  // Un équipementier crée son compte annonceur.
+  await page.goto("/inscription?role=annonceur");
+  await page.fill('input[name="name"]', `Crampons Pro ${uid}`);
+  await page.fill('input[name="email"]', `pub-${uid}@test.local`);
+  await page.fill('input[name="password"]', PW);
+  await page.selectOption('select[name="country"]', "SN");
+  await page.check('input[name="accept"]');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL(/\/publicite\/campagnes/);
+
+  // Petite image PNG (1 × 1 pixel) comme visuel.
+  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
+  const fillAd = async (headline: string, link: string) => {
+    await page.getByTestId("upload-ad").setInputFiles({ name: "visuel.png", mimeType: "image/png", buffer: png });
+    await expect(page.locator('input[name="storageKey"]')).not.toHaveValue("");
+    await page.fill('input[name="headline"]', headline);
+    await page.fill('input[name="linkUrl"]', link);
+    await page.getByTestId("new-campaign").getByRole("button", { name: "Payer et diffuser" }).click();
+  };
+
+  // Lien raccourci : refusé automatiquement, rien n'est facturé.
+  await fillAd("Crampons pro pour la rentrée", "https://bit.ly/promo");
+  await expect(page.getByText("Les liens raccourcis sont refusés")).toBeVisible();
+
+  // Annonce correcte : payée (mode démo) et en ligne aussitôt.
+  await fillAd(`Crampons pro -20 % ${uid}`, "https://crampons-pro.example.com/promo");
+  await expect(page.getByText("Campagne en ligne")).toBeVisible();
+  const card = page.getByTestId("campaigns").locator(".card", { hasText: `Crampons pro -20 % ${uid}` });
+  await expect(card).toContainText("En ligne");
+
+  // Un visiteur au Sénégal voit la bannière sponsorisée.
+  const ctx = await browser.newContext({ locale: "fr-FR", extraHTTPHeaders: { "x-country-code": "SN" } });
+  const visitor = await ctx.newPage();
+  let seen = false;
+  for (let i = 0; i < 10 && !seen; i++) {
+    await visitor.goto("/detections");
+    seen = (await visitor.getByTestId("ad-banner").filter({ hasText: uid }).count()) > 0;
+  }
+  expect(seen).toBe(true);
+  await expect(visitor.getByTestId("ad-banner").filter({ hasText: uid })).toContainText("Sponsorisé");
+  await ctx.close();
+
+  // L'annonceur voit ses affichages, puis arrête la campagne.
+  await page.reload();
+  expect(Number(await card.getByTestId("ad-impressions").textContent())).toBeGreaterThan(0);
+  await card.getByRole("button", { name: "Arrêter la campagne" }).click();
+  await expect(page.getByTestId("campaigns").locator(".card", { hasText: `Crampons pro -20 % ${uid}` })).toContainText("Arrêtée");
 });

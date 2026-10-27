@@ -1,3 +1,4 @@
+import { SponsoredBanner } from "@/components/sponsored";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -58,6 +59,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       </div>
       <Flash sp={sp} />
       {user.role === "RECRUITER" && <PushBanner m={m} />}
+      <SponsoredBanner />
       {!verified && <p className="text-xs text-gray-500">{t.minorsHidden}</p>}
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         <AutoOpenDetails className="filters h-fit" summary={<span className="flex items-center justify-between gap-2"><span>{t.filters}{activeFilters > 0 && <span className="ms-2 rounded-full bg-pitch-700 px-2 py-0.5 text-xs text-white">{activeFilters}</span>}</span><span aria-hidden className="filters-chevron">⌄</span></span>}>

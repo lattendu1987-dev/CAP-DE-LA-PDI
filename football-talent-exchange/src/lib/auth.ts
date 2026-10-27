@@ -69,5 +69,7 @@ export function homeFor(role: Role): string {
       return "/recruteur/recherche";
     case "ADMIN":
       return "/admin";
+    case "ADVERTISER":
+      return "/publicite/campagnes";
   }
 }

@@ -4,6 +4,7 @@ import { db } from "./db";
 import { applySubscription } from "./subscriptions";
 import { referralBalance, rewardReferrer } from "./referral";
 import { audit } from "./audit";
+import { activateAd } from "./ads";
 
 /** Nouvelle fin de période : on prolonge la période en cours si elle est encore active. */
 export function extendPeriod(currentEnd: Date | null | undefined, interval: BillingInterval, now = new Date()) {
@@ -21,6 +22,8 @@ export async function completePayment(paymentId: string) {
   const p = await db.payment.findUniqueOrThrow({ where: { id: paymentId }, include: { user: { include: { subscription: true } } } });
   if (p.purpose === "BOOST") {
     await applyBoost(p.userId, p.boostDays ?? 7);
+  } else if (p.purpose === "AD" && p.adCampaignId) {
+    await activateAd(p.adCampaignId);
   } else if (p.purpose === "SUBSCRIPTION" && p.plan && p.interval) {
     const sub = p.user.subscription;
     const samePlan = sub && sub.plan === p.plan && sub.status !== "CANCELED";
