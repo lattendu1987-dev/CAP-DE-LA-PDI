@@ -2,15 +2,16 @@ import { requireUser } from "@/lib/auth";
 import { getLocale, getMessages } from "@/i18n/server";
 import { countryName, formatDate, formatUsd } from "@/i18n/format";
 import { INTL } from "@/i18n/config";
-import { PAID_PLANS, PLAN_INFO, priceCents, type PaidPlan } from "@/lib/domain/pricing";
-import { MOBILE_MONEY, formatLocal, localAmount } from "@/lib/domain/mobile-money";
+import { BOOST_OPTIONS, PAID_PLANS, PLAN_INFO, boostCents, priceCents, type PaidPlan } from "@/lib/domain/pricing";
+import { MOBILE_MONEY, formatLocal, localAmount, operatorList } from "@/lib/domain/mobile-money";
+import { db } from "@/lib/db";
 import { isSubscriptionActive } from "@/lib/domain/rules";
 import { stripeEnabled } from "@/lib/stripe";
 import { flutterwaveEnabled } from "@/lib/flutterwave";
 import { referralBalance } from "@/lib/referral";
 import { Badge, Flash } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
-import { checkoutAction, mobileMoneyAction, portalAction } from "@/app/actions/billing";
+import { boostAction, checkoutAction, mobileMoneyAction, portalAction } from "@/app/actions/billing";
 
 export async function generateMetadata() {
   return { title: (await getMessages()).billing.metaTitle };
@@ -26,6 +27,9 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
   const mm = MOBILE_MONEY[user.country];
   const { available } = await referralBalance(user.id);
   const demo = !stripeEnabled() || (!!mm && !flutterwaveEnabled());
+  const profile = user.role === "PLAYER" ? await db.playerProfile.findUnique({ where: { userId: user.id }, select: { boostedUntil: true } }) : null;
+  const boostedUntil = profile?.boostedUntil && profile.boostedUntil > new Date() ? profile.boostedUntil : null;
+  const local = (cents: number) => (mm ? formatLocal(localAmount(cents, mm.currency), mm.currency, INTL[locale]) : null);
 
   return (
     <div className="space-y-6">
@@ -76,6 +80,11 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
                 <div className="mt-4 rounded-xl bg-amber-50 p-3">
                   <p className="text-xs font-semibold uppercase text-amber-900">{t.payMobile}</p>
                   <p className="mb-2 text-xs text-amber-900">{t.mobileInfo(mm.operators)}</p>
+                  <ul className="mb-3 flex flex-wrap gap-1.5" aria-label={t.operators}>
+                    {operatorList(mm).map((o) => (
+                      <li key={o} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${o.startsWith("Airtel") ? "bg-red-600 text-white" : "bg-white text-amber-900 ring-1 ring-amber-200"}`}>{o}</li>
+                    ))}
+                  </ul>
                   <div className="grid grid-cols-2 gap-2">
                     {(["MONTH", "YEAR"] as const).map((interval) => (
                       <form key={interval} action={mobileMoneyAction}>
@@ -93,6 +102,39 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
           );
         })}
       </div>
+
+      {user.role === "PLAYER" && (
+        <section className="card border-amber-300" data-testid="boost">
+          <h2 className="h2">{t.boostTitle}</h2>
+          <p className="muted mt-1 max-w-2xl">{t.boostText}</p>
+          {boostedUntil && <p className="mt-2 text-sm font-semibold text-pitch-700">✅ {t.boostActive(formatDate(boostedUntil, locale))}</p>}
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {(Object.keys(BOOST_OPTIONS) as (keyof typeof BOOST_OPTIONS)[]).map((option) => {
+              const cents = boostCents(option, user.country);
+              return (
+                <div key={option} className="rounded-xl border border-gray-200 p-4">
+                  <p className="font-bold">{option === "WEEK" ? t.boostWeek : t.boostMonth}</p>
+                  <p className="text-2xl font-extrabold">{formatUsd(cents, locale)}{local(cents) && <span className="ms-2 text-sm font-medium text-gray-500">≈ {local(cents)}</span>}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <form action={boostAction}>
+                      <input type="hidden" name="option" value={option} />
+                      <input type="hidden" name="method" value="card" />
+                      <SubmitButton className="btn-primary btn-sm" pendingLabel={m.common.wait}>💳 {t.payCard.replace(/^\S+\s/, "")}</SubmitButton>
+                    </form>
+                    {mm && (
+                      <form action={boostAction}>
+                        <input type="hidden" name="option" value={option} />
+                        <input type="hidden" name="method" value="mobile" />
+                        <SubmitButton className="btn btn-sm bg-amber-400 text-gray-900 hover:bg-amber-500" pendingLabel={m.common.wait}>📱 {local(cents)}</SubmitButton>
+                      </form>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

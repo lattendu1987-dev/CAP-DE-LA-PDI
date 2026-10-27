@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import { ageOn, isMinor, birthDateRangeForAge } from "@/lib/domain/age";
 import { completeness } from "@/lib/domain/completeness";
 import { detectScam } from "@/lib/domain/scam";
-import { priceCents } from "@/lib/domain/pricing";
+import { boostCents, discountPercent, priceCents } from "@/lib/domain/pricing";
+import { localAmount, DEFAULT_FX } from "@/lib/domain/mobile-money";
+import { countryFromHeaders } from "@/lib/geo-headers";
 import { parseVideoUrl, parseTimestamp, formatTimestamp, embedAt } from "@/lib/domain/video";
 import { parseFilters, buildPlayerWhere, filtersToQueryString } from "@/lib/domain/search";
 import { canRecruiterContact, isSubscriptionActive, autoVerifyRecruiter, dailyConversationLimit } from "@/lib/domain/rules";
@@ -56,7 +58,15 @@ describe("détection d'arnaques", () => {
 describe("tarifs", () => {
   it("applique la parité de pouvoir d'achat", () => {
     expect(priceCents("RECRUITER_PRO", "MONTH", "CA")).toBe(4900);
-    expect(priceCents("PLAYER_PREMIUM", "MONTH", "SN")).toBe(300);
+    // Afrique : jamais moins de 2 500 FCFA par mois pour un joueur (25 000 FCFA par an).
+    expect(localAmount(priceCents("PLAYER_PREMIUM", "MONTH", "SN", DEFAULT_FX), "XOF", DEFAULT_FX)).toBe(2500);
+    expect(localAmount(priceCents("PLAYER_PREMIUM", "YEAR", "CM", DEFAULT_FX), "XAF", DEFAULT_FX)).toBe(25000);
+    // Hors Afrique, le groupe de prix s'applique seul (Bolivie : −65 %).
+    expect(priceCents("PLAYER_PREMIUM", "MONTH", "BO")).toBe(300);
+    expect(discountPercent("BO")).toBe(65);
+    expect(discountPercent("FR")).toBe(0);
+    expect(boostCents("WEEK", "FR")).toBe(400);
+    expect(boostCents("MONTH", "SN")).toBe(400);
     expect(priceCents("PLAYER_PREMIUM", "YEAR", "CA")).toBe(9000);
   });
 });
@@ -133,5 +143,15 @@ describe("règles de contact", () => {
 describe("slug", () => {
   it("normalise les accents", () => {
     expect(slugify("Kévin N'Diaye Élan")).toBe("kevin-n-diaye-elan");
+  });
+});
+
+describe("pays du visiteur", () => {
+  const h = (o: Record<string, string>) => ({ get: (k: string) => o[k] ?? null });
+  it("lit le pays fourni par l'hébergeur et ignore les valeurs inconnues", () => {
+    expect(countryFromHeaders(h({ "x-vercel-ip-country": "sn" }))).toBe("SN");
+    expect(countryFromHeaders(h({ "cf-ipcountry": "CI" }))).toBe("CI");
+    expect(countryFromHeaders(h({ "cf-ipcountry": "XX" }))).toBeNull();
+    expect(countryFromHeaders(h({}))).toBeNull();
   });
 });

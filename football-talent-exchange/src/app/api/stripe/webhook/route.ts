@@ -4,6 +4,7 @@ import { mapStatus, periodEnd, stripe } from "@/lib/stripe";
 import { applySubscription } from "@/lib/subscriptions";
 import { rewardReferrer } from "@/lib/referral";
 import { audit } from "@/lib/audit";
+import { completePayment } from "@/lib/payments";
 import type { PlanCode } from "@prisma/client";
 
 export const runtime = "nodejs";
@@ -40,6 +41,11 @@ export async function POST(req: Request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
+      // Achat unique (Boost, publicité) : la référence de notre paiement est dans les métadonnées.
+      const paymentId = session.metadata?.paymentId;
+      if (session.mode === "payment" && paymentId && session.payment_status === "paid") {
+        await completePayment(paymentId);
+      }
       if (session.subscription) {
         const id = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
         await syncSubscription(await stripe().subscriptions.retrieve(id));

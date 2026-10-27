@@ -7,25 +7,33 @@ export interface MobileMoneyCountry {
   operators: string;
 }
 
+// Airtel Money est cité en premier là où il existe : c'est le moyen de paiement le plus répandu dans ces pays.
+// La disponibilité exacte de chaque opérateur dépend du compte Flutterwave (à confirmer dans son tableau de bord).
 export const MOBILE_MONEY: Record<string, MobileMoneyCountry> = {
   SN: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, Wave, Free Money" },
-  CI: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, MTN, Moov, Wave" },
-  ML: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, Moov" },
-  BF: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, Moov" },
-  BJ: { currency: "XOF", option: "mobilemoneyfranco", operators: "MTN, Moov" },
+  CI: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, MTN Mobile Money, Moov Money, Wave" },
+  ML: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, Moov Money" },
+  BF: { currency: "XOF", option: "mobilemoneyfranco", operators: "Orange Money, Moov Money" },
+  BJ: { currency: "XOF", option: "mobilemoneyfranco", operators: "MTN Mobile Money, Moov Money" },
   TG: { currency: "XOF", option: "mobilemoneyfranco", operators: "Flooz, T-Money" },
-  NE: { currency: "XOF", option: "mobilemoneyfranco", operators: "Airtel, Orange" },
-  CM: { currency: "XAF", option: "mobilemoneyfranco", operators: "Orange Money, MTN MoMo" },
-  GA: { currency: "XAF", option: "mobilemoneyfranco", operators: "Airtel Money, Moov" },
-  CG: { currency: "XAF", option: "mobilemoneyfranco", operators: "MTN, Airtel" },
-  GH: { currency: "GHS", option: "mobilemoneyghana", operators: "MTN, Vodafone Cash, AirtelTigo" },
+  NE: { currency: "XOF", option: "mobilemoneyfranco", operators: "Airtel Money, Orange Money" },
+  CM: { currency: "XAF", option: "mobilemoneyfranco", operators: "Orange Money, MTN Mobile Money" },
+  GA: { currency: "XAF", option: "mobilemoneyfranco", operators: "Airtel Money, Moov Money" },
+  CG: { currency: "XAF", option: "mobilemoneyfranco", operators: "Airtel Money, MTN Mobile Money" },
+  TD: { currency: "XAF", option: "mobilemoneyfranco", operators: "Airtel Money, Moov Money" },
+  GH: { currency: "GHS", option: "mobilemoneyghana", operators: "MTN Mobile Money, AirtelTigo Money, Telecel Cash" },
   KE: { currency: "KES", option: "mpesa", operators: "M-Pesa" },
-  UG: { currency: "UGX", option: "mobilemoneyuganda", operators: "MTN, Airtel" },
-  TZ: { currency: "TZS", option: "mobilemoneytanzania", operators: "M-Pesa, Tigo Pesa, Airtel" },
-  RW: { currency: "RWF", option: "mobilemoneyrwanda", operators: "MTN, Airtel" },
-  ZM: { currency: "ZMW", option: "mobilemoneyzambia", operators: "MTN, Airtel" },
+  UG: { currency: "UGX", option: "mobilemoneyuganda", operators: "Airtel Money, MTN Mobile Money" },
+  TZ: { currency: "TZS", option: "mobilemoneytanzania", operators: "Airtel Money, M-Pesa, Tigo Pesa" },
+  RW: { currency: "RWF", option: "mobilemoneyrwanda", operators: "Airtel Money, MTN Mobile Money" },
+  ZM: { currency: "ZMW", option: "mobilemoneyzambia", operators: "Airtel Money, MTN Mobile Money" },
   NG: { currency: "NGN", option: "ussd,banktransfer,card", operators: "USSD, virement, carte" },
 };
+
+/** Liste des opérateurs, pour les afficher séparément. */
+export function operatorList(mm: MobileMoneyCountry): string[] {
+  return mm.operators.split(",").map((o) => o.trim()).filter(Boolean);
+}
 
 export const DEFAULT_FX: Record<string, number> = {
   XOF: 600, XAF: 600, GHS: 15, KES: 130, UGX: 3700, TZS: 2600, RWF: 1400, ZMW: 26, NGN: 1600,

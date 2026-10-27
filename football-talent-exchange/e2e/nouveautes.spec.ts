@@ -52,12 +52,12 @@ test("parrainage + mobile money : le parrain gagne 20 % automatiquement", async 
   await expect(page.getByText(/abonnement Joueur Premium activé/)).toBeVisible();
   await logout(page);
 
-  // Le parrain voit sa commission (20 % de 3 $ = 0,60 $)
+  // Le parrain voit sa commission (20 % de 4,17 $ = 2 500 FCFA, soit 0,83 $)
   await login(page, "moussa@fte.local");
   await page.goto("/parrainage");
   const row = page.locator("li", { hasText: `Commission — Ibou${uid}` });
   await expect(row).toBeVisible();
-  await expect(row.getByText(/\+0,60/)).toBeVisible();
+  await expect(row.getByText(/\+0,83/)).toBeVisible();
 });
 
 test("détections : publication, candidature, invitation", async ({ page }) => {
@@ -308,4 +308,29 @@ test("inscription : les saisies sont sauvegardées et restaurées, jamais le mot
   await expect(page.locator('input[name="firstName"]')).toHaveValue("");
   await page.reload();
   await expect(page.locator('input[name="firstName"]')).toHaveValue("");
+});
+
+test("Boost : le joueur paie une fois et passe en tête des recherches", async ({ page }) => {
+  await login(page, "moussa@fte.local");
+  await page.goto("/abonnement");
+  const boost = page.getByTestId("boost");
+  await boost.locator('form:has(input[name="option"][value="WEEK"]) button').first().click();
+  await expect(page.getByText("Boost activé")).toBeVisible();
+  await expect(page.getByTestId("boost")).toContainText("Boost actif jusqu'au");
+  await logout(page);
+
+  await login(page, "scout@fte.local");
+  await page.goto("/recruteur/recherche");
+  const first = page.locator(".card:has(a[href^='/joueurs/'])").first();
+  await expect(first).toContainText("Moussa Diallo");
+  await expect(first).toContainText("À la une");
+});
+
+test("tarifs : prix adaptés au pays choisi, plancher africain en FCFA", async ({ page }) => {
+  await page.goto("/tarifs?pays=SN");
+  await expect(page.getByTestId("pricing-country")).toContainText("Sénégal");
+  await expect(page.getByTestId("local-PLAYER_PREMIUM")).toContainText(/2\s?500/);
+  await expect(page.getByText("2 500 FCFA par mois")).toBeVisible();
+  await page.goto("/tarifs?pays=FR");
+  await expect(page.getByTestId("price-RECRUITER_PRO")).toContainText("49");
 });

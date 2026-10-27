@@ -11,10 +11,12 @@ export const runtime = "nodejs";
 export async function GET(req: Request) {
   const m = await getMessages();
   const u = new URL(req.url);
-  const go = (key: "ok" | "erreur", msg: string) => NextResponse.redirect(`${appUrl()}/abonnement?${key}=${encodeURIComponent(msg)}`);
   const txRef = u.searchParams.get("tx_ref") ?? "";
   const txId = u.searchParams.get("transaction_id");
   const payment = await db.payment.findUnique({ where: { reference: txRef } });
+  // Retour vers la page d'où vient l'achat (abonnement et Boost : /abonnement ; publicité : /publicite).
+  const path = payment?.purpose === "AD" ? "/publicite" : "/abonnement";
+  const go = (key: "ok" | "erreur", msg: string) => NextResponse.redirect(`${appUrl()}${path}?${key}=${encodeURIComponent(msg)}`);
   if (!payment) return go("erreur", m.billing.flash.paymentFailed);
   if (payment.status === "SUCCEEDED") return go("ok", m.billing.flash.paid);
   if (u.searchParams.get("status") === "cancelled" || !txId) {

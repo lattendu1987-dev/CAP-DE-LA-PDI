@@ -4,13 +4,14 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getMessages } from "@/i18n/server";
-import { PLAN_INFO, priceCents, type Interval, type PaidPlan } from "@/lib/domain/pricing";
+import { BOOST_OPTIONS, PLAN_INFO, boostCents, priceCents, type BoostOption, type Interval, type PaidPlan } from "@/lib/domain/pricing";
 import { MOBILE_MONEY, localAmount } from "@/lib/domain/mobile-money";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { createFlutterwavePayment, flutterwaveEnabled } from "@/lib/flutterwave";
 import { completePayment } from "@/lib/payments";
 import { referralBalance } from "@/lib/referral";
 import { appUrl } from "@/lib/email";
+import { startOneOffPayment } from "@/lib/checkout";
 
 const back = (msg: string, err = false): never => redirect(`/abonnement?${err ? "erreur" : "ok"}=${encodeURIComponent(msg)}`);
 
@@ -114,4 +115,19 @@ export async function portalAction() {
   if (!stripeEnabled() || !customer || !user.subscription?.stripeSubscriptionId) back(m.billing.flash.nothingToManage, true);
   const portal = await stripe().billingPortal.sessions.create({ customer: customer!, return_url: `${appUrl()}/abonnement` });
   redirect(portal.url);
+}
+
+/** Boost de visibilité d'un joueur : 7 ou 30 jours en tête des recherches. */
+export async function boostAction(fd: FormData) {
+  const user = await requireUser(["PLAYER"]);
+  const m = await getMessages();
+  const option: BoostOption = fd.get("option") === "MONTH" ? "MONTH" : "WEEK";
+  const method = fd.get("method") === "mobile" ? "mobile" : "card";
+  if (method === "mobile" && !MOBILE_MONEY[user.country]) back(m.billing.flash.mobileUnavailable, true);
+  const res = await startOneOffPayment({
+    user, purpose: "BOOST", usdCents: boostCents(option, user.country), method, boostDays: BOOST_OPTIONS[option].days,
+    title: `Football Talent Exchange — ${m.billing.boostTitle.replace(/^\S+\s/, "")}`, returnPath: "/abonnement",
+  });
+  if ("redirectTo" in res) redirect(res.redirectTo);
+  back(m.billing.boostDone);
 }

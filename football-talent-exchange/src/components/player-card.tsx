@@ -19,6 +19,8 @@ export interface PlayerCardData {
   currentLevel: string | null;
   contractStatus: string;
   featured?: boolean;
+  /** Boost acheté : affiché « À la une » en tête des résultats. */
+  boosted?: boolean;
   videoCount?: number;
   verifiedStats?: boolean;
 }
@@ -26,11 +28,12 @@ export interface PlayerCardData {
 export function PlayerCard({ p, m, locale, action }: { p: PlayerCardData; m: Messages; locale: Locale; action?: React.ReactNode }) {
   const name = `${p.firstName} ${p.lastName}`;
   return (
-    <div className={`card flex gap-4 ${p.featured ? "ring-2 ring-amber-300" : ""}`}>
+    <div className={`card flex gap-4 ${p.boosted ? "ring-2 ring-amber-400" : p.featured ? "ring-2 ring-amber-300" : ""}`}>
       <Avatar name={name} url={p.photoUrl} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <Link href={`/joueurs/${p.slug}`} className="truncate font-bold text-gray-900 hover:text-pitch-700">{name}</Link>
+          {p.boosted && <Badge tone="gold">🚀 {m.search.boosted}</Badge>}
           {p.featured && <Badge tone="gold">{m.labels.premium}</Badge>}
           {p.contractStatus === "FREE" ? <Badge tone="green">{m.labels.free}</Badge> : <Badge>{m.labels.underContract}</Badge>}
           {p.verifiedStats && <Badge tone="blue">{m.labels.verifiedStats}</Badge>}

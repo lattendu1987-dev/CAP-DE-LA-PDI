@@ -163,6 +163,8 @@ model PlayerProfile {
 
   published     Boolean   @default(true)
   featuredUntil DateTime?
+  /// Option « Boost » payée à l'unité : profil en tête des recherches jusqu'à cette date.
+  boostedUntil  DateTime?
   viewCount     Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -391,8 +393,12 @@ model Payment {
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   provider        String
   reference       String          @unique
-  plan            PlanCode
-  interval        BillingInterval
+  /// Ce qui est acheté : un abonnement, un Boost de visibilité ou une publicité.
+  purpose         PaymentPurpose  @default(SUBSCRIPTION)
+  plan            PlanCode?
+  interval        BillingInterval?
+  boostDays       Int?
+  adCampaignId    String?
   amountMinor     Int
   currency        String
   usdCents        Int
@@ -401,6 +407,12 @@ model Payment {
   createdAt       DateTime        @default(now())
   paidAt          DateTime?
   commission      Commission?
+}
+
+enum PaymentPurpose {
+  SUBSCRIPTION
+  BOOST
+  AD
 }
 
 enum CommissionStatus {

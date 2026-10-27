@@ -1,3 +1,4 @@
+import { visitorCountry } from "@/lib/geo";
 import { FormAutosave } from "@/components/form-autosave";
 import { autosaveText } from "@/lib/ui-text";
 import Link from "next/link";
@@ -69,7 +70,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
         <Field label={role === "joueur" ? a.displayName : a.fullName}><input className="input" name="name" required maxLength={80} autoComplete="name" /></Field>
         <Field label={a.email}><input className="input" type="email" name="email" required defaultValue={sp.email} autoComplete="email" dir="ltr" /></Field>
         <Field label={a.password} hint={a.passwordHint}><input className="input" type="password" name="password" required minLength={8} autoComplete="new-password" /></Field>
-        <Field label={a.country}><CountrySelect name="country" locale={locale} /></Field>
+        <Field label={a.country}><CountrySelect name="country" locale={locale} defaultValue={(await visitorCountry()) ?? "CA"} /></Field>
 
         {role === "joueur" && (
           <Field label={a.guardianEmail} hint={a.guardianHint}><input className="input" type="email" name="guardianEmail" dir="ltr" /></Field>

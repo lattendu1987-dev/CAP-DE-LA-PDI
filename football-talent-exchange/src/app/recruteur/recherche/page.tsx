@@ -25,12 +25,15 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const page = Math.max(1, Number(sp.page) || 1);
   const verified = user.role === "ADMIN" || user.recruiter?.verification === "VERIFIED";
   const where = buildPlayerWhere(filters, new Date(), { includeMinors: verified });
+  // Les Boosts terminés repassent dans l'ordre normal.
+  await db.playerProfile.updateMany({ where: { boostedUntil: { lt: new Date() } }, data: { boostedUntil: null } });
   const [total, players] = await Promise.all([
     db.playerProfile.count({ where }),
     db.playerProfile.findMany({
       where,
       include: { user: { select: { subscription: true } }, _count: { select: { videos: true } }, stats: { where: { verified: true }, select: { id: true }, take: 1 } },
-      orderBy: [{ featuredUntil: { sort: "desc", nulls: "last" } }, { updatedAt: "desc" }],
+      // Boost payé d'abord, puis joueurs Premium, puis profils récemment mis à jour.
+      orderBy: [{ boostedUntil: { sort: "desc", nulls: "last" } }, { featuredUntil: { sort: "desc", nulls: "last" } }, { updatedAt: "desc" }],
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
@@ -120,7 +123,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 key={p.id}
                 m={m}
                 locale={locale}
-                p={{ ...p, featured: isPremiumPlayer(p.user.subscription), videoCount: p._count.videos, verifiedStats: p.stats.length > 0 }}
+                p={{ ...p, featured: isPremiumPlayer(p.user.subscription), boosted: !!p.boostedUntil && p.boostedUntil > new Date(), videoCount: p._count.videos, verifiedStats: p.stats.length > 0 }}
                 action={<label className="flex items-center gap-1 text-xs text-gray-600"><input type="checkbox" form="compare" name="ids" value={p.slug} /> {t.compare}</label>}
               />
             ))
