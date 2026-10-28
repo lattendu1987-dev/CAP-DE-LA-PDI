@@ -12,6 +12,7 @@ import { completePayment } from "@/lib/payments";
 import { referralBalance } from "@/lib/referral";
 import { appUrl } from "@/lib/email";
 import { startOneOffPayment } from "@/lib/checkout";
+import { demoPaymentsAllowed } from "@/lib/payment-mode";
 
 const back = (msg: string, err = false): never => redirect(`/abonnement?${err ? "erreur" : "ok"}=${encodeURIComponent(msg)}`);
 
@@ -30,6 +31,7 @@ export async function checkoutAction(fd: FormData) {
   const planName = m.billing.plans[plan].name;
 
   if (!stripeEnabled()) {
+    if (!demoPaymentsAllowed()) back(m.billing.flash.soon, true);
     // Mode démo : paiement simulé, qui déclenche aussi le parrainage.
     const { available } = await referralBalance(user.id);
     const payment = await db.payment.create({
@@ -78,6 +80,7 @@ export async function mobileMoneyAction(fd: FormData) {
   const { user, m, plan, interval, usdCents } = await prepare(fd);
   const mm = MOBILE_MONEY[user.country];
   if (!mm) back(m.billing.flash.mobileUnavailable, true);
+  if (!flutterwaveEnabled() && !demoPaymentsAllowed()) back(m.billing.flash.soon, true);
   const { available } = await referralBalance(user.id);
   const credit = Math.min(available, usdCents);
   const due = usdCents - credit;
@@ -129,5 +132,6 @@ export async function boostAction(fd: FormData) {
     title: `Football Talent Exchange — ${m.billing.boostTitle.replace(/^\S+\s/, "")}`, returnPath: "/abonnement",
   });
   if ("redirectTo" in res) redirect(res.redirectTo);
+  if ("unavailable" in res) back(m.billing.flash.soon, true);
   back(m.billing.boostDone);
 }

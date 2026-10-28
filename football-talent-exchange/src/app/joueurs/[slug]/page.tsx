@@ -87,6 +87,9 @@ export default async function PlayerPublicPage({ params, searchParams }: Props) 
         </div>
         <div className="no-print flex flex-col gap-2">
           <Link href={`/joueurs/${p.slug}/cv`} className="btn-secondary btn-sm">{m.player.pdf}</Link>
+          {p.cvKey && viewer && (viewer.id === p.userId || viewer.role === "ADMIN" || (viewer.role === "RECRUITER" && viewer.recruiter?.verification === "VERIFIED")) && (
+            <a href={`/api/cv/${p.slug}`} className="btn-secondary btn-sm" data-testid="cv-download">📄 {m.cvImport.download}</a>
+          )}
           {!minor && <ShareButtons url={url} text={m.player.shareText(name, url)} labels={{ whatsapp: m.common.shareWhatsApp, copy: m.common.copy, copied: m.common.copied }} />}
         </div>
       </div>

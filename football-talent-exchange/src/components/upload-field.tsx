@@ -30,6 +30,7 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
   const [msg, setMsg] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [key, setKey] = useState("");
+  const [fileName, setFileName] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const rule = MEDIA_RULES[kind];
@@ -40,7 +41,14 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
     setMsg(null);
     setInfo(null);
     if (!file) return;
+    // Certains téléphones ne donnent pas le type des documents Word : on le déduit de l'extension.
+    if (!file.type) {
+      const ext = file.name.split(".").pop()?.toLowerCase();
+      const mime = Object.entries(rule.types).find(([, e]) => e === ext)?.[0];
+      if (mime) file = new File([file], file.name, { type: mime });
+    }
     if (!rule.types[file.type]) return fail(text.badType);
+    setFileName(file.name);
     setPreview(kind === "photo" ? URL.createObjectURL(file) : null);
 
     if (kind === "video") {
@@ -65,6 +73,25 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
     setPct(0);
     const r = await requestUploadAction(kind, file.type, file.size).catch(() => null);
     if (!r || !r.ok) return fail(r && r.error === "size" ? text.tooBig : r && r.error === "type" ? text.badType : text.failed);
+    if (r.method === "BLOB") {
+      // Vercel Blob : envoi direct, découpé en morceaux pour les gros fichiers (reprise en cas de coupure).
+      try {
+        const { upload } = await import("@vercel/blob/client");
+        await upload(r.key, file, {
+          access: "public",
+          handleUploadUrl: r.uploadUrl,
+          contentType: file.type,
+          multipart: file.size > 8 * 1024 * 1024,
+          onUploadProgress: (p) => setPct(Math.round(p.percentage)),
+        });
+        setKey(r.key);
+        setState("done");
+        setPct(100);
+      } catch {
+        fail(text.failed);
+      }
+      return;
+    }
     const xhr = new XMLHttpRequest();
     xhr.open(r.method === "POST_FORM" ? "POST" : "PUT", r.uploadUrl);
     xhr.upload.onprogress = (ev) => ev.lengthComputable && setPct(Math.round((ev.loaded / ev.total) * 100));
@@ -96,14 +123,14 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
   return (
     <div className="space-y-2">
       <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-pitch-500/40 bg-pitch-50 p-5 text-center hover:bg-pitch-100 ${busy ? "pointer-events-none opacity-60" : ""}`}>
-        <span className="text-3xl" aria-hidden>{kind === "video" ? "🎬" : "📷"}</span>
+        <span className="text-3xl" aria-hidden>{kind === "video" ? "🎬" : kind === "cv" ? "📄" : "📷"}</span>
         <span className="font-semibold text-pitch-900">{text.choose}</span>
         <span className="text-xs text-gray-600">{text.hint}</span>
         <input
           ref={input}
           type="file"
           className="sr-only"
-          accept={Object.keys(rule.types).join(",")}
+          accept={[...Object.keys(rule.types), ...Object.values(rule.types).map((e) => `.${e}`)].join(",")}
           onChange={onPick}
           disabled={busy}
           data-testid={`upload-${kind}`}
@@ -127,6 +154,7 @@ export function UploadField({ kind, text }: { kind: MediaKind; text: UploadText 
       {state === "done" && <p className="text-sm font-semibold text-pitch-700">{text.done}</p>}
       {msg && <p className="text-sm text-red-700">{msg}</p>}
       <input type="hidden" name="storageKey" value={key} />
+      <input type="hidden" name="fileName" value={fileName} />
       {/* Bloque l'envoi du formulaire tant que le fichier n'est pas arrivé. */}
       <input type="text" required value={key} onChange={() => {}} className="sr-only" tabIndex={-1} aria-hidden />
     </div>

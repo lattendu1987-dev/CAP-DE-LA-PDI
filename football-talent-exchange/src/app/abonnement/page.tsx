@@ -5,6 +5,7 @@ import { INTL } from "@/i18n/config";
 import { BOOST_OPTIONS, PAID_PLANS, PLAN_INFO, boostCents, priceCents, type PaidPlan } from "@/lib/domain/pricing";
 import { MOBILE_MONEY, formatLocal, localAmount, operatorList } from "@/lib/domain/mobile-money";
 import { db } from "@/lib/db";
+import { demoPaymentsAllowed } from "@/lib/payment-mode";
 import { isSubscriptionActive } from "@/lib/domain/rules";
 import { stripeEnabled } from "@/lib/stripe";
 import { flutterwaveEnabled } from "@/lib/flutterwave";
@@ -38,7 +39,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
         <p className="muted mt-1">{t.intro(countryName(user.country, locale))}</p>
       </div>
       <Flash sp={sp} />
-      {demo && <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{t.demo}</div>}
+      {demo && <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{demoPaymentsAllowed() ? t.demo : t.soon}</div>}
       {available > 0 && <div className="rounded-xl border border-pitch-100 bg-pitch-50 p-3 text-sm text-pitch-900">🎁 {t.creditInfo(formatUsd(available, locale))}</div>}
 
       <div className="card flex flex-wrap items-center justify-between gap-3">

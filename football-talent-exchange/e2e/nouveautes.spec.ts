@@ -413,3 +413,45 @@ test("régie publicitaire : refus automatique, paiement, diffusion et statistiqu
   await card.getByRole("button", { name: "Arrêter la campagne" }).click();
   await expect(page.getByTestId("campaigns").locator(".card", { hasText: `Crampons pro -20 % ${uid}` })).toContainText("Arrêtée");
 });
+
+test("CV : le joueur dépose son CV, l'IA remplit le profil, un recruteur vérifié le télécharge", async ({ page }) => {
+  // Nouveau joueur, profil vide.
+  await page.goto("/inscription?role=joueur");
+  await page.fill('input[name="firstName"]', "Lamine");
+  await page.fill('input[name="lastName"]', `Cv${uid}`);
+  await page.fill('input[name="birthDate"]', "2004-05-12");
+  await page.fill('input[name="name"]', `Lamine Cv${uid}`);
+  await page.fill('input[name="email"]', `cv-${uid}@test.local`);
+  await page.fill('input[name="password"]', PW);
+  await page.selectOption('select[name="country"]', "SN");
+  await page.check('input[name="accept"]');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL(/\/joueur/);
+
+  // Dépôt d'un CV en PDF (réponses d'IA fixes pendant les tests).
+  const pdf = Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n");
+  const box = page.getByTestId("cv-import");
+  await box.getByTestId("upload-cv").setInputFiles({ name: "Mon CV.pdf", mimeType: "application/pdf", buffer: pdf });
+  await expect(box.locator('input[name="storageKey"]')).not.toHaveValue("");
+  await box.getByRole("button", { name: "Importer et remplir mon profil" }).click();
+  await expect(page.getByText(/CV importé ✓/)).toBeVisible();
+  await expect(page.locator('input[name="heightCm"]')).toHaveValue("176");
+  await expect(page.locator('textarea[name="bio"]')).toHaveValue(/Génération Foot/);
+  await expect(page.locator("#parcours")).toContainText("AS Douanes");
+  await expect(page.getByTestId("cv-import")).toContainText("Mon CV.pdf");
+
+  // L'IA rédige une présentation, proposée dans le formulaire sans être enregistrée.
+  await page.getByRole("button", { name: /Rédiger ma présentation avec l'IA/ }).click();
+  await expect(page.locator('textarea[name="bio"]')).toHaveValue(/je privilégie la vitesse/);
+  const slug = (await page.locator('a[href^="/joueurs/"]').first().getAttribute("href"))!.split("/")[2];
+  await logout(page);
+
+  // Un visiteur ne peut pas télécharger le CV ; le recruteur vérifié, si.
+  expect((await page.request.get(`/api/cv/${slug}`)).status()).toBe(403);
+  await login(page, "scout@fte.local");
+  await page.goto(`/joueurs/${slug}`);
+  const res = await page.request.get(`/api/cv/${slug}`);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toBe("application/pdf");
+  await expect(page.getByTestId("cv-download")).toBeVisible();
+});

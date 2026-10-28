@@ -6,14 +6,25 @@ import { DeleteObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } fr
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { MEDIA_RULES, type MediaKind } from "./domain/media";
 import { createStreamUpload, deleteStreamVideo, STREAM_MAX_BYTES, streamEnabled, streamPlayerUrl } from "./cf-stream";
+import { readFile } from "node:fs/promises";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { del as blobDel, head as blobHead } from "@vercel/blob";
 
 /**
- * Stockage des fichiers envoyés (vidéos, photos).
- * - Production : tout service compatible S3 (Cloudflare R2 recommandé : pas de frais de bande passante).
+ * Stockage des fichiers envoyés (vidéos, photos, CV, visuels publicitaires).
+ * - Vercel Blob (le plus simple sur Vercel : activé en deux clics, variable BLOB_READ_WRITE_TOKEN).
+ * - Ou tout service compatible S3 (Cloudflare R2 : pas de frais de bande passante).
  * - Développement : dossier local ./uploads, servi par /api/media.
  */
 export const s3Enabled = () =>
   !!(process.env.S3_BUCKET && process.env.S3_ACCESS_KEY_ID && process.env.S3_SECRET_ACCESS_KEY && process.env.S3_PUBLIC_URL);
+export const blobEnabled = () => !s3Enabled() && !!process.env.BLOB_READ_WRITE_TOKEN;
+
+/** Adresse publique d'un fichier Vercel Blob (même construction que la bibliothèque officielle). */
+function blobUrl(key: string) {
+  const storeId = (process.env.BLOB_READ_WRITE_TOKEN ?? "").split("_")[3] ?? "";
+  return `https://${storeId.toLowerCase()}.public.blob.vercel-storage.com/${key}`;
+}
 
 let client: S3Client | null = null;
 function s3() {
@@ -41,12 +52,14 @@ export function checkLocalSignature(key: string, exp: number, type: string, size
 
 /** Chemin local sûr (empêche toute sortie du dossier d'envoi). */
 export function localPath(key: string) {
-  if (!/^u\/[\w-]+\/(video|photo|ad)\/[\w-]+\.\w{2,5}$/.test(key)) return null;
+  if (!/^u\/[\w-]+\/(video|photo|ad|cv)\/[\w-]+\.\w{2,5}$/.test(key)) return null;
   return path.join(uploadDir(), key);
 }
 
 export function publicUrl(key: string) {
-  return s3Enabled() ? `${process.env.S3_PUBLIC_URL!.replace(/\/$/, "")}/${key}` : `/api/media/${key}`;
+  if (s3Enabled()) return `${process.env.S3_PUBLIC_URL!.replace(/\/$/, "")}/${key}`;
+  if (blobEnabled()) return blobUrl(key);
+  return `/api/media/${key}`;
 }
 
 export async function createUpload(userId: string, kind: MediaKind, contentType: string, size: number) {
@@ -60,7 +73,11 @@ export async function createUpload(userId: string, kind: MediaKind, contentType:
     const { uploadURL, uid } = await createStreamUpload(userId);
     return { ok: true as const, key: `stream:${uid}`, uploadUrl: uploadURL, method: "POST_FORM" as const, publicUrl: streamPlayerUrl(uid) };
   }
-  const key = `u/${userId}/${kind}/${randomBytes(12).toString("base64url")}.${ext}`;
+  const key = `u/${userId}/${kind}/${randomBytes(16).toString("base64url")}.${ext}`;
+  if (blobEnabled()) {
+    // Envoi direct du téléphone vers Vercel Blob ; l'autorisation est donnée par /api/media/blob.
+    return { ok: true as const, key, uploadUrl: "/api/media/blob", method: "BLOB" as const, publicUrl: publicUrl(key) };
+  }
   if (s3Enabled()) {
     const uploadUrl = await getSignedUrl(
       s3(),
@@ -81,6 +98,7 @@ export async function storedSize(key: string): Promise<number | null> {
       const head = await s3().send(new HeadObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key }));
       return head.ContentLength ?? null;
     }
+    if (blobEnabled()) return (await blobHead(key)).size;
     const p = localPath(key);
     return p ? (await stat(p)).size : null;
   } catch {
@@ -93,6 +111,7 @@ export async function deleteStored(key: string | null | undefined) {
   if (key.startsWith("stream:")) return deleteStreamVideo(key.slice(7));
   try {
     if (s3Enabled()) await s3().send(new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key }));
+    else if (blobEnabled()) await blobDel(key);
     else {
       const p = localPath(key);
       if (p) await unlink(p);
@@ -106,4 +125,26 @@ export async function ensureLocalDir(key: string) {
   const p = localPath(key);
   if (p) await mkdir(path.dirname(p), { recursive: true });
   return p;
+}
+
+/** Contenu d'un fichier stocké (pour le lire côté serveur, ex. un CV analysé par l'IA). Taille limitée. */
+export async function readStored(key: string, maxBytes = 12 * 1024 * 1024): Promise<Buffer | null> {
+  try {
+    let buf: Buffer;
+    if (s3Enabled()) {
+      const obj = await s3().send(new GetObjectCommand({ Bucket: process.env.S3_BUCKET, Key: key }));
+      buf = Buffer.from(await obj.Body!.transformToByteArray());
+    } else if (blobEnabled()) {
+      const res = await fetch(blobUrl(key));
+      if (!res.ok) return null;
+      buf = Buffer.from(await res.arrayBuffer());
+    } else {
+      const p = localPath(key);
+      if (!p) return null;
+      buf = await readFile(p);
+    }
+    return buf.length <= maxBytes ? buf : null;
+  } catch {
+    return null;
+  }
 }

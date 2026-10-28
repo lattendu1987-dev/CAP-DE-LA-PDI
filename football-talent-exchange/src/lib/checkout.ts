@@ -6,6 +6,7 @@ import { stripe, stripeEnabled } from "./stripe";
 import { createFlutterwavePayment, flutterwaveEnabled } from "./flutterwave";
 import { completePayment } from "./payments";
 import { appUrl } from "./email";
+import { demoPaymentsAllowed } from "./payment-mode";
 
 /**
  * Achat unique (Boost de visibilité, publicité) par carte (Stripe) ou mobile money (Flutterwave).
@@ -20,11 +21,12 @@ export async function startOneOffPayment(opts: {
   returnPath: string;
   boostDays?: number;
   adCampaignId?: string;
-}): Promise<{ redirectTo: string } | { completed: true }> {
+}): Promise<{ redirectTo: string } | { completed: true } | { unavailable: true }> {
   const { user, purpose, usdCents, method, title, returnPath } = opts;
   const reference = `fte_${purpose.toLowerCase()}_${randomBytes(10).toString("hex")}`;
   const mm = method === "mobile" ? MOBILE_MONEY[user.country] : undefined;
   const live = method === "mobile" ? !!mm && flutterwaveEnabled() : stripeEnabled();
+  if (!live && !demoPaymentsAllowed()) return { unavailable: true };
   const payment = await db.payment.create({
     data: {
       userId: user.id, provider: live ? (method === "mobile" ? "flutterwave" : "stripe") : "demo", reference, purpose,

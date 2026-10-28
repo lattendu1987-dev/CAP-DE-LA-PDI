@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { mergeCv } from "@/lib/domain/cv-merge";
 import { adMatches, adPriceCents, moderateAd } from "@/lib/domain/ads";
 import { classify, parseFeed } from "@/lib/domain/feeds";
 import { commissionFor, availableAtFrom, normalizeReferralCode, newReferralCode, REFERRAL_RATE } from "@/lib/domain/referral";
@@ -214,5 +215,46 @@ describe("régie publicitaire : prix et validation automatique", () => {
     expect(adMatches(ad, { country: "SN", role: "PLAYER" })).toBe(false);
     expect(adMatches(ad, { country: "FR", role: "RECRUITER" })).toBe(false);
     expect(adMatches({ audience: "ALL", countries: [] }, { country: null, role: null })).toBe(true);
+  });
+});
+
+describe("import de CV : fusion prudente avec le profil", () => {
+  const empty = { heightCm: null, weightKg: null, foot: null, mainPosition: null, otherPositions: [], currentLevel: null, city: null, nationalities: [], languages: [], bio: null };
+  const cv = {
+    heightCm: 178, weightKg: 300, foot: "LEFT" as const, mainPosition: "AG", otherPositions: ["AG", "AD", "XX"], currentLevel: "SEMI_PRO", city: " Thiès ",
+    nationalities: ["sn", "ZZ"], languages: ["Français", "Wolof", "Français"],
+    career: [
+      { club: "AS Douanes", kind: "CLUB", country: "sn", startYear: 2021, endYear: null },
+      { club: "Académie Génération Foot", kind: "ACADEMY", country: "SN", startYear: 2016, endYear: 2021 },
+      { club: "Club du futur", kind: "CLUB", country: null, startYear: 2099, endYear: null },
+    ],
+    stats: [{ season: "2024-2025", club: "AS Douanes", matches: 24, goals: 9, assists: 5, minutes: null }, { season: "2023-2024", club: "AS Douanes", matches: 0, goals: 0, assists: 0, minutes: null }],
+    summary: "Ailier gauche rapide, formé à l'académie Génération Foot.",
+  };
+  it("remplit les champs vides et rejette les valeurs aberrantes", () => {
+    const r = mergeCv(empty, { career: [], stats: [] }, cv, 2026);
+    expect(r.data).toMatchObject({ heightCm: 178, foot: "LEFT", mainPosition: "AG", otherPositions: ["AD"], currentLevel: "SEMI_PRO", city: "Thiès", nationalities: ["SN"], languages: ["Français", "Wolof"] });
+    expect(r.data).not.toHaveProperty("weightKg"); // 300 kg : refusé
+    expect(r.career.map((c) => c.club)).toEqual(["AS Douanes", "Académie Génération Foot"]); // année future : refusée
+    expect(r.stats).toHaveLength(1); // saison sans match : ignorée
+  });
+  it("ne remplace jamais ce que le joueur a déjà saisi et ne crée pas de doublon", () => {
+    const r = mergeCv({ ...empty, heightCm: 181, bio: "Ma présentation." }, { career: [{ club: "AS DOUANES", startYear: 2021 }], stats: [{ season: "2024-2025", club: "AS Douanes" }] }, cv, 2026);
+    expect(r.data).not.toHaveProperty("heightCm");
+    expect(r.data).not.toHaveProperty("bio");
+    expect(r.career.map((c) => c.club)).toEqual(["Académie Génération Foot"]);
+    expect(r.stats).toHaveLength(0);
+  });
+});
+
+describe("import de CV : codes inattendus ignorés", () => {
+  it("garde le reste du CV quand l'IA renvoie un code inconnu", () => {
+    const empty = { heightCm: null, weightKg: null, foot: null, mainPosition: null, otherPositions: [], currentLevel: null, city: null, nationalities: [], languages: [], bio: null };
+    const r = mergeCv(empty, { career: [], stats: [] }, {
+      heightCm: 180, weightKg: null, foot: "GAUCHER", mainPosition: "STRIKER", otherPositions: [], currentLevel: "LIGUE1", city: null, nationalities: [], languages: [],
+      career: [{ club: "FC Test", kind: "EQUIPE", country: null, startYear: 2020, endYear: 2022 }], stats: [], summary: null,
+    }, 2026);
+    expect(r.data).toEqual({ heightCm: 180 });
+    expect(r.career[0]).toMatchObject({ club: "FC Test", kind: "CLUB" });
   });
 });

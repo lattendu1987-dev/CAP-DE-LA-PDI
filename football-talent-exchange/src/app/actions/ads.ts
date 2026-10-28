@@ -11,6 +11,9 @@ import { MOBILE_MONEY } from "@/lib/domain/mobile-money";
 import { storedSize } from "@/lib/storage";
 import { startOneOffPayment } from "@/lib/checkout";
 import { audit } from "@/lib/audit";
+import { demoPaymentsAllowed } from "@/lib/payment-mode";
+import { stripeEnabled } from "@/lib/stripe";
+import { flutterwaveEnabled } from "@/lib/flutterwave";
 
 const back = (path: string, key: "ok" | "erreur", msg: string): never => redirect(`${path}?${key}=${encodeURIComponent(msg)}`);
 
@@ -47,6 +50,8 @@ export async function createAdAction(fd: FormData) {
   }
   if (d.method === "mobile" && !MOBILE_MONEY[user.country]) back("/publicite/campagnes", "erreur", m.billing.flash.mobileUnavailable);
 
+  const live = d.method === "mobile" ? flutterwaveEnabled() : stripeEnabled();
+  if (!live && !demoPaymentsAllowed()) back("/publicite/campagnes", "erreur", m.billing.flash.soon);
   const priceCents = adPriceCents(d.format, d.days, countries.length);
   const campaign = await db.adCampaign.create({
     data: {
@@ -60,6 +65,7 @@ export async function createAdAction(fd: FormData) {
     title: `Football Talent Exchange — ${t.formats[d.format][0]} (${t.days(d.days)})`, returnPath: "/publicite/campagnes",
   });
   if ("redirectTo" in res) redirect(res.redirectTo);
+  if ("unavailable" in res) back("/publicite/campagnes", "erreur", m.billing.flash.soon);
   back("/publicite/campagnes", "ok", t.launched);
 }
 

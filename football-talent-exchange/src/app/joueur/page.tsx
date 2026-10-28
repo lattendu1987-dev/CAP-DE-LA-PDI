@@ -16,6 +16,7 @@ import { PositionPicker } from "@/components/position-picker";
 import { CountrySelect } from "@/components/country-select";
 import { UploadField } from "@/components/upload-field";
 import { autosaveText, uploadText } from "@/lib/ui-text";
+import { importCvAction, removeCvAction, writeBioAction } from "@/app/actions/cv";
 import { FormAutosave } from "@/components/form-autosave";
 import { ShareButtons } from "@/components/share";
 import { PushBanner } from "@/components/push-banner";
@@ -128,6 +129,22 @@ export default async function PlayerHome({ searchParams }: { searchParams: Promi
         </div>
       </div>
 
+      <section id="cv" className={`card ${!p.cvKey && c.score < 70 ? "border-2 border-amber-300" : ""}`} data-testid="cv-import">
+        <h2 className="h2">📄 {m.cvImport.title}</h2>
+        <p className="muted mt-1">{!p.cvKey && c.score < 70 ? m.cvImport.quick : ""} {m.cvImport.intro}</p>
+        {p.cvKey && p.cvUploadedAt && (
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+            <span>✅ {m.cvImport.current(p.cvName ?? "CV", formatDate(p.cvUploadedAt, locale))}</span>
+            <a className="link" href={`/api/cv/${p.slug}`}>{m.cvImport.download}</a>
+            <form action={removeCvAction}><button className="text-xs text-red-700 hover:underline">{m.cvImport.remove}</button></form>
+          </div>
+        )}
+        <form action={importCvAction} className="mt-4 space-y-3">
+          <UploadField kind="cv" text={{ ...uploadText(m, "photo"), choose: m.cvImport.choose, hint: m.cvImport.hint }} />
+          <SubmitButton className="btn-primary" pendingLabel={m.cvImport.reading}>{m.cvImport.submit}</SubmitButton>
+        </form>
+      </section>
+
       <section id="infos" className="card">
         <h2 className="h2 mb-4">{t.infoTitle}</h2>
         <div className="mb-6 grid items-center gap-4 sm:grid-cols-[auto_1fr]">
@@ -138,6 +155,9 @@ export default async function PlayerHome({ searchParams }: { searchParams: Promi
             <SubmitButton className="btn-secondary btn-sm">{m.common.save}</SubmitButton>
           </form>
         </div>
+        <form action={writeBioAction} className="mb-4">
+          <SubmitButton className="btn-secondary btn-sm" pendingLabel={m.common.wait}>{m.cvImport.bioButton}</SubmitButton>
+        </form>
         <form action={updateProfileAction} className="grid gap-6 lg:grid-cols-[1fr_320px]">
           <div className="lg:col-span-2"><FormAutosave id={`profile-${p.id}`} text={autosaveText(m)} /></div>
           <div className="grid content-start gap-4 sm:grid-cols-2">
@@ -176,7 +196,7 @@ export default async function PlayerHome({ searchParams }: { searchParams: Promi
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="hasAgent" defaultChecked={p.hasAgent} /> {t.hasAgent}</label>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="willingToRelocate" defaultChecked={p.willingToRelocate} /> {t.relocate}</label>
             <div className="sm:col-span-2">
-              <Field label={t.bio} hint={t.bioHint}><textarea className="input min-h-28" name="bio" maxLength={1500} defaultValue={p.bio ?? ""} /></Field>
+              <Field label={t.bio} hint={sp.bio ? m.cvImport.aiNote : t.bioHint}><textarea className={`input min-h-28 ${sp.bio ? "ring-2 ring-amber-300" : ""}`} name="bio" maxLength={1500} defaultValue={sp.bio ? sp.bio.slice(0, 1500) : (p.bio ?? "")} data-no-autosave={sp.bio ? "" : undefined} dir="auto" /></Field>
             </div>
           </div>
           <div>

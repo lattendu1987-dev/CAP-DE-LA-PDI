@@ -39,6 +39,7 @@ export async function deleteAccountAction(fd: FormData) {
     const videos = await db.video.findMany({ where: { playerId: user.player.id, storageKey: { not: null } }, select: { storageKey: true } });
     for (const v of videos) await deleteStored(v.storageKey);
     await deleteStored(user.player.photoKey);
+    await deleteStored(user.player.cvKey);
   }
   await audit(null, "account.delete", { role: user.role });
   await destroySession();

@@ -148,6 +148,10 @@ model PlayerProfile {
   photoUrl      String?
   photoKey      String?
   bio           String?
+  /// CV déposé par le joueur (PDF, Word ou photo), lisible par les recruteurs vérifiés.
+  cvKey         String?
+  cvName        String?
+  cvUploadedAt  DateTime?
 
   heightCm       Int?
   weightKg       Int?

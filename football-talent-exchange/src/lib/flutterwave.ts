@@ -1,4 +1,5 @@
 import "server-only";
+import { appUrl } from "./email";
 
 const API = "https://api.flutterwave.com/v3";
 export const flutterwaveEnabled = () => !!process.env.FLW_SECRET_KEY;
@@ -34,7 +35,7 @@ export async function createFlutterwavePayment(p: {
       payment_options: p.paymentOptions,
       redirect_url: p.redirectUrl,
       customer: { email: p.email, name: p.name },
-      customizations: { title: p.title, logo: `${process.env.APP_URL ?? ""}/icon-192.png` },
+      customizations: { title: p.title, logo: `${appUrl()}/icon-192.png` },
     }),
   });
   return r.data.link;

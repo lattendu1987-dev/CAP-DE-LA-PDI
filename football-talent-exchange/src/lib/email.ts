@@ -15,4 +15,6 @@ export async function sendEmail(to: string, subject: string, text: string) {
   if (!res.ok) console.error("Échec d'envoi du courriel", res.status, await res.text());
 }
 
-export const appUrl = () => process.env.APP_URL ?? "http://localhost:3000";
+// Adresse du site : APP_URL, sinon l'adresse de production donnée par Vercel, sinon le développement local.
+export const appUrl = () =>
+  process.env.APP_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
