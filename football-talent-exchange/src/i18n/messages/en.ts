@@ -31,6 +31,8 @@ const en: Messages = {
   meta: {
     title: "Football Talent Exchange",
     description: "The international showcase for football players. Scouts find, watch and contact talent directly.",
+    tagline: "football CVs seen by scouts worldwide",
+    keywords: "football CV, football recruitment, football trials, football player, soccer player, football scout, club trial, African football",
   },
   nav: {
     myProfile: "My profile",
@@ -206,6 +208,18 @@ const en: Messages = {
     acceptPrivacy: "privacy policy",
     createButton: "Create my account",
     referredBy: (name: string) => `Invited by ${name} 🎉`,
+    forgotLink: "Forgot your password?",
+    forgotTitle: "Forgot password",
+    forgotText: "Enter your account email: you will receive a link to choose a new password.",
+    forgotButton: "Send me the link",
+    forgotSent: "If an account exists with this email, a link has just been sent. Check your spam folder too.",
+    resetTitle: "New password",
+    resetText: "Choose your new password. You will be signed out of your other devices.",
+    newPassword: "New password",
+    resetButton: "Save password",
+    resetDone: "Password changed ✓",
+    resetInvalid: "This link is no longer valid (already used or older than one hour). Request a new link.",
+    backToLogin: "← Back to sign in",
     errors: {
       invalidCredentials: "Incorrect email or password.",
       suspended: "This account is suspended. Please contact support.",
@@ -859,6 +873,9 @@ const en: Messages = {
     alertBody: (search: string) => `Matching your search "${search}".`,
   },
   email: {
+    resetSubject: "Your new Football Talent Exchange password",
+    resetBody: (name: string, link: string, minutes: number) =>
+      `Hello ${name},\n\nYou asked to change your password on Football Talent Exchange.\n\nChoose a new one here (link valid for ${minutes} minutes): ${link}\n\nIf this wasn't you, ignore this message: your current password still works.`,
     guardianSubject: (first: string) => `${first} wants to create a profile on Football Talent Exchange`,
     guardianBody: (first: string, last: string, age: number, link: string) =>
       `Hello,\n\n${first} ${last} (${age}) has created a football player profile and listed you as their parent or legal guardian.\n\nTheir profile will remain invisible to scouts until you give your consent. All messages from scouts will also be sent to you.\n\nConfirm here: ${link}\n\nIf you don't know this player, please ignore this message.`,

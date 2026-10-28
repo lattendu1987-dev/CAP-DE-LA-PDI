@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { createSession, destroySession, hashPassword, homeFor, verifyPassword } from "@/lib/auth";
+import { randomBytes } from "node:crypto";
+import { createSession, destroySession, hashPassword, hashToken, homeFor, verifyPassword } from "@/lib/auth";
 import { getLocale, getMessages, messagesFor } from "@/i18n/server";
 import { isMinor, ageOn } from "@/lib/domain/age";
 import { slugify } from "@/lib/domain/slug";
@@ -169,4 +170,50 @@ export async function loginAction(formData: FormData) {
 export async function logoutAction() {
   await destroySession();
   redirect("/");
+}
+
+const RESET_MINUTES = 60;
+
+/**
+ * Mot de passe oublié : envoie un lien valable 1 heure.
+ * Le message affiché est le même que le compte existe ou non (rien n'est révélé).
+ */
+export async function requestPasswordResetAction(formData: FormData) {
+  const m = await getMessages();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!z.string().email().safeParse(email).success) fail("/connexion/oubli", m.auth.errors.emailInvalid);
+  const user = await db.user.findUnique({ where: { email } });
+  if (user && !user.suspended) {
+    // Un seul envoi toutes les 2 minutes par compte, pour éviter les abus.
+    const recent = await db.passwordReset.findFirst({ where: { userId: user.id, createdAt: { gt: new Date(Date.now() - 2 * 60000) } } });
+    if (!recent) {
+      const token = randomBytes(32).toString("base64url");
+      await db.passwordReset.create({ data: { id: hashToken(token), userId: user.id, expiresAt: new Date(Date.now() + RESET_MINUTES * 60000) } });
+      const um = messagesFor(user.locale);
+      const link = `${appUrl()}/connexion/nouveau-mot-de-passe?jeton=${token}`;
+      await sendEmail(user.email, um.email.resetSubject, um.email.resetBody(user.name, link, RESET_MINUTES));
+      await audit(user.id, "password.reset_requested", {});
+    }
+  }
+  redirect(`/connexion/oubli?ok=${encodeURIComponent(m.auth.forgotSent)}`);
+}
+
+/** Nouveau mot de passe choisi depuis le lien reçu : déconnecte aussi tous les autres appareils. */
+export async function resetPasswordAction(formData: FormData) {
+  const m = await getMessages();
+  const token = String(formData.get("jeton") ?? "");
+  const password = String(formData.get("password") ?? "");
+  const back = `/connexion/nouveau-mot-de-passe?jeton=${encodeURIComponent(token)}`;
+  if (password.length < 8 || password.length > 200) fail(back, m.auth.errors.passwordShort);
+  const reset = token ? await db.passwordReset.findUnique({ where: { id: hashToken(token) }, include: { user: true } }) : null;
+  if (!reset || reset.usedAt || reset.expiresAt < new Date() || reset.user.suspended) fail("/connexion/oubli", m.auth.resetInvalid);
+  const passwordHash = await hashPassword(password);
+  await db.$transaction([
+    db.user.update({ where: { id: reset!.userId }, data: { passwordHash } }),
+    db.passwordReset.updateMany({ where: { userId: reset!.userId, usedAt: null }, data: { usedAt: new Date() } }),
+    db.session.deleteMany({ where: { userId: reset!.userId } }),
+  ]);
+  await audit(reset!.userId, "password.reset", {});
+  await createSession(reset!.userId);
+  redirect(`${homeFor(reset!.user.role)}?ok=${encodeURIComponent(m.auth.resetDone)}`);
 }

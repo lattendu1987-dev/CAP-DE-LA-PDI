@@ -31,6 +31,8 @@ const pt: Messages = {
   meta: {
     title: "Football Talent Exchange",
     description: "A vitrine internacional dos jogadores de futebol. Olheiros encontram, assistem e contatam os talentos diretamente.",
+    tagline: "o currículo de futebol visto por olheiros do mundo inteiro",
+    keywords: "currículo futebol, recrutamento futebol, peneira de futebol, jogador de futebol, olheiro de futebol, teste em clube, futebol africano",
   },
   nav: {
     myProfile: "Meu perfil",
@@ -206,6 +208,18 @@ const pt: Messages = {
     acceptPrivacy: "política de privacidade",
     createButton: "Criar minha conta",
     referredBy: (name: string) => `Convidado por ${name} 🎉`,
+    forgotLink: "Esqueceu a senha?",
+    forgotTitle: "Senha esquecida",
+    forgotText: "Informe o e-mail da sua conta: você receberá um link para escolher uma nova senha.",
+    forgotButton: "Receber o link",
+    forgotSent: "Se existir uma conta com este e-mail, um link acabou de ser enviado. Verifique também a pasta de spam.",
+    resetTitle: "Nova senha",
+    resetText: "Escolha sua nova senha. Você será desconectado dos outros aparelhos.",
+    newPassword: "Nova senha",
+    resetButton: "Salvar a senha",
+    resetDone: "Senha alterada ✓",
+    resetInvalid: "Este link não é mais válido (já usado ou com mais de uma hora). Peça um novo link.",
+    backToLogin: "← Voltar ao login",
     errors: {
       invalidCredentials: "E-mail ou senha incorretos.",
       suspended: "Esta conta está suspensa. Fale com o suporte.",
@@ -859,6 +873,9 @@ const pt: Messages = {
     alertBody: (search: string) => `Correspondem à sua pesquisa "${search}".`,
   },
   email: {
+    resetSubject: "Sua nova senha do Football Talent Exchange",
+    resetBody: (name: string, link: string, minutes: number) =>
+      `Olá ${name},\n\nVocê pediu para alterar sua senha no Football Talent Exchange.\n\nEscolha uma nova aqui (link válido por ${minutes} minutos): ${link}\n\nSe não foi você, ignore esta mensagem: sua senha atual continua válida.`,
     guardianSubject: (first: string) => `${first} quer criar um perfil no Football Talent Exchange`,
     guardianBody: (first: string, last: string, age: number, link: string) =>
       `Olá,\n\n${first} ${last} (${age} anos) criou um perfil de jogador de futebol e indicou você como pai, mãe ou responsável legal.\n\nO perfil ficará invisível para os olheiros até que você dê sua autorização. Todas as mensagens dos olheiros também serão enviadas a você.\n\nConfirme aqui: ${link}\n\nSe você não conhece este jogador, ignore esta mensagem.`,

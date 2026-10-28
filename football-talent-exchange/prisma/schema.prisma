@@ -100,6 +100,7 @@ model User {
   referrals        User[]   @relation("Referrals")
 
   sessions          Session[]
+  passwordResets    PasswordReset[]
   player            PlayerProfile?     @relation("PlayerUser")
   guardedPlayers    PlayerProfile[]    @relation("GuardianUser")
   recruiter         RecruiterProfile?
@@ -126,6 +127,18 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+/// Lien « mot de passe oublié » : seule l'empreinte du jeton est gardée, valable 1 heure, utilisable une fois.
+model PasswordReset {
+  id        String    @id
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model PlayerProfile {
