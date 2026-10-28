@@ -57,20 +57,32 @@ npx playwright test           # 10 parcours complets dans un navigateur (serveur
 
 ## Mettre en ligne (pas à pas, sans être développeur)
 
-1. **Base de données** — compte gratuit sur [neon.tech](https://neon.tech), crée un projet, copie la « connection string » (`postgresql://…`).
-2. **Hébergement** — compte sur [vercel.com](https://vercel.com) avec ton GitHub, « Add New → Project », choisis ce dépôt et règle **Root Directory** sur `football-talent-exchange`.
-3. **Variables** — dans Vercel → Settings → Environment Variables, ajoute au minimum `DATABASE_URL`, `AUTH_SECRET`, `CRON_SECRET` (deux longues phrases aléatoires différentes) et `APP_URL` (l'adresse de ton site).
-4. **Créer les tables** — sur ton ordinateur : `DATABASE_URL="…neon…" npx prisma db push`. Lance `npm run db:seed` pour créer le compte administrateur, puis **change immédiatement son mot de passe** (ou supprime les comptes de démo).
-5. **Vidéos et photos** (obligatoire en ligne : Vercel n'a pas de disque permanent) — sur [Cloudflare](https://dash.cloudflare.com) → R2 : crée un bucket, active l'accès public (domaine `r2.dev` ou ton domaine), crée un jeton API « Object Read & Write ». Renseigne `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PUBLIC_URL`. Dans le bucket → Settings → CORS, autorise la méthode `PUT` depuis l'adresse de ton site (en-tête `Content-Type`). R2 ne facture pas la bande passante : idéal pour la vidéo.
-5 bis. **Lecture adaptative (recommandé pour l'Afrique et la 3G)** — dans Cloudflare → Stream, active le service (environ 5 $ / 1 000 minutes stockées, 1 $ / 1 000 minutes regardées). Crée un jeton API « Stream: Edit » et renseigne `CF_ACCOUNT_ID` et `CF_STREAM_TOKEN`. Les vidéos passent alors par Stream au lieu de R2 ; les photos restent sur R2.
-6. **Carte bancaire** — sur [stripe.com](https://stripe.com) : clé secrète dans `STRIPE_SECRET_KEY` ; webhook vers `https://TON-SITE/api/stripe/webhook` avec les événements `checkout.session.completed`, `customer.subscription.*`, `invoice.paid`, `invoice.payment_failed` ; secret dans `STRIPE_WEBHOOK_SECRET`. Active le portail client et, si besoin, Stripe Tax.
-7. **Mobile money** — sur [flutterwave.com](https://flutterwave.com) : fais valider ton compte (pièces d'entreprise), copie la clé secrète dans `FLW_SECRET_KEY`. Dans Settings → Webhooks, mets `https://TON-SITE/api/flutterwave/webhook` et choisis une phrase secrète que tu recopies dans `FLW_WEBHOOK_HASH`. Ajuste les taux de change avec `FX_RATES` si besoin.
-7 ter. **Carte, actualités (facultatif)** — sans rien configurer, la carte utilise OpenStreetMap et la veille utilise des flux publics. Pour placer les détections avec Google, crée une clé « Geocoding API » sur console.cloud.google.com et copie-la dans `GOOGLE_MAPS_API_KEY`. Pour plus d'articles, crée une clé gratuite sur newsapi.org dans `NEWS_API_KEY`. Pour choisir tes propres sources, mets la liste dans `NEWS_FEEDS` (voir `.env.example`). La disponibilité d'Airtel Money pays par pays dépend de ton compte Flutterwave : vérifie-la dans son tableau de bord.
-7 bis. **Notifications sur le téléphone** — sur ton ordinateur, lance une seule fois `npx web-push generate-vapid-keys`, puis copie les deux clés dans `VAPID_PUBLIC_KEY` et `VAPID_PRIVATE_KEY` (et ton courriel dans `VAPID_SUBJECT`, ex. `mailto:toi@domaine.com`). Gratuit, aucun compte à créer. Ne change plus ces clés ensuite (sinon les téléphones devront réactiver les notifications).
-8. **Courriels** — sur [resend.com](https://resend.com), vérifie ton domaine, clé dans `RESEND_API_KEY`, règle `EMAIL_FROM`.
-9. Redéploie. Les tâches automatiques (`vercel.json`) tournent chaque jour.
+### Étape A — un site testable en 15 minutes (gratuit, depuis un téléphone)
 
-Ne lance jamais le site public en mode démo : sans clés de paiement, les abonnements s'activent sans payer.
+1. **Fusionner** — sur GitHub, ouvre la demande de fusion du site et touche « Merge pull request » puis « Confirm ».
+2. **Vercel** — sur [vercel.com](https://vercel.com), « Continue with GitHub ». Puis « Add New… → Project », choisis le dépôt `CAP-DE-LA-PDI` (s'il n'apparaît pas : « Adjust GitHub App Permissions » et autorise-le). Dans **Root Directory**, touche « Edit » et choisis `football-talent-exchange`. Touche « Deploy ». Si ce premier essai échoue, c'est normal : la base de données n'existe pas encore.
+3. **Base de données** — dans le projet Vercel : onglet **Storage → Create Database → Neon** (Postgres), offre gratuite, région la plus proche de tes joueurs (ex. Europe), puis « Connect » au projet. La variable `DATABASE_URL` est ajoutée toute seule, et les tables seront créées automatiquement au prochain déploiement.
+4. **Fichiers (photos, vidéos, CV)** — toujours dans **Storage → Create → Blob**, choisis l'accès **Public**, puis « Connect » au projet. La variable `BLOB_READ_WRITE_TOKEN` est ajoutée toute seule.
+5. **Variables** — **Settings → Environment Variables**, ajoute :
+   - `ADMIN_EMAILS` : ton adresse courriel. En t'inscrivant avec elle sur le site, tu obtiens le compte d'administration (validation des recruteurs, signalements, statistiques).
+   - `CRON_SECRET` : une longue phrase au hasard (sert aux tâches automatiques de chaque jour).
+   - `ANTHROPIC_API_KEY` (pour l'IA) : sur [console.anthropic.com](https://console.anthropic.com), crée une clé (« API Keys ») et ajoute un peu de crédit. Lire un CV coûte quelques centimes. Sans cette clé, le CV est quand même enregistré, mais pas lu automatiquement.
+6. **Redéployer** — onglet **Deployments**, sur le dernier déploiement « ⋯ → Redeploy ». Ton site est en ligne sur `https://<nom-du-projet>.vercel.app`. Inscris-toi d'abord avec ton adresse administrateur, puis partage le lien aux joueurs.
+
+À ce stade : inscription, profils, CV lus par l'IA, vidéos, détections, carte, messagerie et actualités fonctionnent. Les paiements affichent « bientôt disponibles » tant que les clés ne sont pas ajoutées (personne n'obtient d'abonnement gratuit). Les courriels ne partent pas encore (étape B) : les **mineurs** ne peuvent donc pas finir leur inscription, car l'accord de leur parent arrive par courriel. L'offre gratuite de Vercel (Hobby) est prévue pour un usage non commercial : passe à l'offre Pro avant d'encaisser des paiements.
+
+### Étape B — tout activer
+
+1. **Courriels** — sur [resend.com](https://resend.com), vérifie ton nom de domaine, copie la clé dans `RESEND_API_KEY` et règle `EMAIL_FROM`.
+2. **Carte bancaire** — sur [stripe.com](https://stripe.com) : clé secrète dans `STRIPE_SECRET_KEY` ; webhook vers `https://TON-SITE/api/stripe/webhook` avec les événements `checkout.session.completed`, `customer.subscription.*`, `invoice.paid`, `invoice.payment_failed` ; secret dans `STRIPE_WEBHOOK_SECRET`. Active le portail client et, si besoin, Stripe Tax.
+3. **Mobile money** — sur [flutterwave.com](https://flutterwave.com) : fais valider ton compte (pièces d'entreprise), copie la clé secrète dans `FLW_SECRET_KEY`. Dans Settings → Webhooks, mets `https://TON-SITE/api/flutterwave/webhook` et choisis une phrase secrète que tu recopies dans `FLW_WEBHOOK_HASH`. Ajuste les taux de change avec `FX_RATES` si besoin. La disponibilité d'Airtel Money pays par pays dépend de ton compte Flutterwave.
+4. **Notifications sur le téléphone** — sur un ordinateur, lance une seule fois `npx web-push generate-vapid-keys`, puis copie les deux clés dans `VAPID_PUBLIC_KEY` et `VAPID_PRIVATE_KEY` (et ton courriel dans `VAPID_SUBJECT`, ex. `mailto:toi@domaine.com`). Ne change plus ces clés ensuite.
+5. **Vidéo adaptative (recommandé pour la 3G)** — Cloudflare → Stream : jeton API « Stream: Edit », renseigne `CF_ACCOUNT_ID` et `CF_STREAM_TOKEN`.
+6. **Carte et actualités (facultatif)** — `GOOGLE_MAPS_API_KEY` (Geocoding API) pour placer les adresses avec Google ; `NEWS_API_KEY` (newsapi.org) pour plus d'articles ; `NEWS_FEEDS` pour choisir tes sources (voir `.env.example`).
+7. **Ton nom de domaine** — Vercel → Settings → Domains, puis mets l'adresse dans `APP_URL`.
+8. Redéploie. La tâche automatique quotidienne (`vercel.json`) s'occupe des abonnements, alertes, commissions et actualités.
+
+Autre hébergeur que Vercel : le site fonctionne aussi avec n'importe quel PostgreSQL et un stockage compatible S3 (ex. Cloudflare R2 : `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_PUBLIC_URL`, avec une règle CORS autorisant `PUT`). Tables : `npx prisma db push`.
 
 ## Parrainage : comment l'argent circule
 

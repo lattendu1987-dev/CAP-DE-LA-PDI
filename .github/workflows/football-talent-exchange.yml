@@ -32,6 +32,7 @@ jobs:
       # Tests : paiements de démonstration et réponses d'IA fixes (jamais sur le vrai site)
       PAYMENTS_DEMO: "1"
       AI_FAKE_RESPONSES: "1"
+      ADMIN_EMAILS: proprio@test.local
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

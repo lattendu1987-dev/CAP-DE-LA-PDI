@@ -33,6 +33,8 @@ async function findReferrer(fd: FormData) {
   return u && !u.suspended ? u : null;
 }
 
+const adminEmails = () => (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+
 export async function signupAction(formData: FormData) {
   const [m, locale] = await Promise.all([getMessages(), getLocale()]);
   const e = m.auth.errors;
@@ -54,6 +56,15 @@ export async function signupAction(formData: FormData) {
   const passwordHash = await hashPassword(password);
   const referrer = await findReferrer(formData);
   const common = { email, passwordHash, name, country, locale, referralCode: await uniqueReferralCode(), referredById: referrer?.id ?? null };
+
+  // Propriétaire du site : une adresse listée dans ADMIN_EMAILS devient un compte d'administration,
+  // quel que soit le type de compte choisi (premier accès au site en ligne, sans base de démo).
+  if (adminEmails().includes(email)) {
+    const user = await db.user.create({ data: { ...common, role: "ADMIN" } });
+    await audit(user.id, "signup", { role: "ADMIN" });
+    await createSession(user.id);
+    redirect("/admin");
+  }
 
   if (role === "joueur") {
     const p = z

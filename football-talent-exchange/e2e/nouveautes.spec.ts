@@ -455,3 +455,19 @@ test("CV : le joueur dépose son CV, l'IA remplit le profil, un recruteur vérif
   expect(res.headers()["content-type"]).toBe("application/pdf");
   await expect(page.getByTestId("cv-download")).toBeVisible();
 });
+
+test("site en ligne : le propriétaire s'inscrit avec son adresse et obtient l'administration", async ({ page }) => {
+  await page.goto("/inscription?role=joueur");
+  await page.fill('input[name="firstName"]', "Proprio");
+  await page.fill('input[name="lastName"]', "Site");
+  await page.fill('input[name="birthDate"]', "1990-01-01");
+  await page.fill('input[name="name"]', "Proprio du site");
+  await page.fill('input[name="email"]', "proprio@test.local");
+  await page.fill('input[name="password"]', PW);
+  await page.check('input[name="accept"]');
+  await page.click('button[type="submit"]');
+  await page.waitForURL((u) => u.pathname.startsWith("/admin") || u.search.includes("erreur="));
+  // Base déjà utilisée par un test précédent : le compte existe, on se connecte.
+  if (page.url().includes("erreur=")) await login(page, "proprio@test.local");
+  await expect(page).toHaveURL(/\/admin/);
+});
