@@ -31,6 +31,8 @@ const ar: Messages = {
   meta: {
     title: "Football Talent Exchange",
     description: "الواجهة الدولية للاعبي كرة القدم. الكشافون يجدون المواهب ويشاهدونها ويتواصلون معها مباشرة.",
+    tagline: "السيرة الكروية للاعبين أمام الكشافين في كل العالم",
+    keywords: "سيرة ذاتية كرة القدم, استكشاف المواهب, اختبارات كرة القدم, لاعب كرة القدم, كشاف كرة القدم, كرة القدم الأفريقية",
   },
   nav: {
     myProfile: "ملفي",
@@ -206,6 +208,18 @@ const ar: Messages = {
     acceptPrivacy: "سياسة الخصوصية",
     createButton: "إنشاء حسابي",
     referredBy: (name: string) => `دعوة من ${name} 🎉`,
+    forgotLink: "نسيت كلمة المرور؟",
+    forgotTitle: "نسيت كلمة المرور",
+    forgotText: "أدخل البريد الإلكتروني لحسابك: ستصلك رسالة فيها رابط لاختيار كلمة مرور جديدة.",
+    forgotButton: "أرسل لي الرابط",
+    forgotSent: "إذا كان هناك حساب بهذا البريد، فقد أُرسل الرابط الآن. تحقق أيضًا من مجلد الرسائل غير المرغوب فيها.",
+    resetTitle: "كلمة مرور جديدة",
+    resetText: "اختر كلمة المرور الجديدة. سيتم تسجيل خروجك من أجهزتك الأخرى.",
+    newPassword: "كلمة المرور الجديدة",
+    resetButton: "حفظ كلمة المرور",
+    resetDone: "تم تغيير كلمة المرور ✓",
+    resetInvalid: "هذا الرابط لم يعد صالحًا (استُخدم من قبل أو مضى عليه أكثر من ساعة). اطلب رابطًا جديدًا.",
+    backToLogin: "← العودة إلى تسجيل الدخول",
     errors: {
       invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
       suspended: "هذا الحساب موقوف. تواصل مع الدعم.",
@@ -859,6 +873,9 @@ const ar: Messages = {
     alertBody: (search: string) => `يطابقون بحثك «${search}».`,
   },
   email: {
+    resetSubject: "كلمة المرور الجديدة لحسابك في Football Talent Exchange",
+    resetBody: (name: string, link: string, minutes: number) =>
+      `مرحبًا ${name}،\n\nطلبت تغيير كلمة المرور في Football Talent Exchange.\n\nاختر كلمة جديدة من هنا (الرابط صالح ${minutes} دقيقة): ${link}\n\nإذا لم تكن أنت، تجاهل هذه الرسالة: كلمة المرور الحالية تبقى صالحة.`,
     guardianSubject: (first: string) => `${first} يرغب في إنشاء ملفه على Football Talent Exchange`,
     guardianBody: (first: string, last: string, age: number, link: string) =>
       `مرحبًا،\n\nأنشأ ${first} ${last} (${age} سنة) ملفًا كلاعب كرة قدم وذكركم كأحد الوالدين أو ولي الأمر.\n\nسيبقى ملفه غير مرئي للكشافين حتى تمنحوا موافقتكم. ستُرسل إليكم أيضًا كل رسائل الكشافين.\n\nأكّدوا هنا: ${link}\n\nإذا كنتم لا تعرفون هذا اللاعب، تجاهلوا هذه الرسالة.`,

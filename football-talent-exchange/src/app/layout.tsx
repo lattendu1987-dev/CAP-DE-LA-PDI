@@ -6,13 +6,23 @@ import { Nav } from "@/components/nav";
 import { InstallPrompt } from "@/components/install-prompt";
 import { getLocale, getMessages } from "@/i18n/server";
 import { RTL } from "@/i18n/config";
+import { SITE_NAME, siteUrl } from "@/lib/site";
+
+const OG_LOCALE: Record<string, string> = { fr: "fr_FR", en: "en_US", es: "es_ES", pt: "pt_PT", ar: "ar_AR" };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const m = await getMessages();
+  const [m, locale] = await Promise.all([getMessages(), getLocale()]);
+  const description = m.meta.description;
   return {
-    title: { default: m.meta.title, template: `%s · ${m.meta.title}` },
-    description: m.meta.description,
-    applicationName: m.meta.title,
+    metadataBase: new URL(siteUrl()),
+    title: { default: `${SITE_NAME} : ${m.meta.tagline}`, template: `%s · ${SITE_NAME}` },
+    description,
+    applicationName: SITE_NAME,
+    keywords: [SITE_NAME, "Football Talent", "Talent Exchange", ...m.meta.keywords.split(", ")],
+    openGraph: { type: "website", siteName: SITE_NAME, title: SITE_NAME, description, locale: OG_LOCALE[locale] ?? "fr_FR" },
+    twitter: { card: "summary_large_image", title: SITE_NAME, description },
+    // Code de validation Google Search Console (balise HTML), à mettre dans la variable GOOGLE_SITE_VERIFICATION.
+    verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
     appleWebApp: { capable: true, title: "TalentExchange", statusBarStyle: "default" },
     icons: { icon: "/icon-192.png", apple: "/apple-icon.png" },
   };

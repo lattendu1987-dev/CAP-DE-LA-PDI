@@ -31,6 +31,8 @@ const es: Messages = {
   meta: {
     title: "Football Talent Exchange",
     description: "La vitrina internacional de futbolistas. Los ojeadores encuentran, ven y contactan directamente con el talento.",
+    tagline: "el CV futbolístico visto por ojeadores de todo el mundo",
+    keywords: "CV fútbol, reclutamiento fútbol, pruebas de fútbol, futbolista, ojeador de fútbol, prueba en club, fútbol africano",
   },
   nav: {
     myProfile: "Mi perfil",
@@ -206,6 +208,18 @@ const es: Messages = {
     acceptPrivacy: "política de privacidad",
     createButton: "Crear mi cuenta",
     referredBy: (name: string) => `Invitado por ${name} 🎉`,
+    forgotLink: "¿Olvidaste tu contraseña?",
+    forgotTitle: "Contraseña olvidada",
+    forgotText: "Indica el correo de tu cuenta: recibirás un enlace para elegir una nueva contraseña.",
+    forgotButton: "Recibir el enlace",
+    forgotSent: "Si existe una cuenta con este correo, acabamos de enviar un enlace. Revisa también la carpeta de spam.",
+    resetTitle: "Nueva contraseña",
+    resetText: "Elige tu nueva contraseña. Se cerrará la sesión en tus otros dispositivos.",
+    newPassword: "Nueva contraseña",
+    resetButton: "Guardar la contraseña",
+    resetDone: "Contraseña cambiada ✓",
+    resetInvalid: "Este enlace ya no es válido (ya usado o con más de una hora). Pide un nuevo enlace.",
+    backToLogin: "← Volver al inicio de sesión",
     errors: {
       invalidCredentials: "Correo o contraseña incorrectos.",
       suspended: "Esta cuenta está suspendida. Contacta con el soporte.",
@@ -859,6 +873,9 @@ const es: Messages = {
     alertBody: (search: string) => `Coinciden con tu búsqueda «${search}».`,
   },
   email: {
+    resetSubject: "Tu nueva contraseña de Football Talent Exchange",
+    resetBody: (name: string, link: string, minutes: number) =>
+      `Hola ${name}:\n\nPediste cambiar tu contraseña en Football Talent Exchange.\n\nElige una nueva aquí (enlace válido ${minutes} minutos): ${link}\n\nSi no fuiste tú, ignora este mensaje: tu contraseña actual sigue siendo válida.`,
     guardianSubject: (first: string) => `${first} quiere crear su perfil en Football Talent Exchange`,
     guardianBody: (first: string, last: string, age: number, link: string) =>
       `Hola:\n\n${first} ${last} (${age} años) ha creado un perfil de futbolista y le ha indicado como padre, madre o tutor legal.\n\nSu perfil será invisible para los ojeadores hasta que usted dé su autorización. Todos los mensajes de los ojeadores también se le enviarán a usted.\n\nConfirme aquí: ${link}\n\nSi no conoce a este jugador, ignore este mensaje.`,

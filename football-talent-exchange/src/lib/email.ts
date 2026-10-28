@@ -5,6 +5,11 @@ export async function sendEmail(to: string, subject: string, text: string) {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.log(`\n[courriel simulé] À : ${to}\nSujet : ${subject}\n${text}\n`);
+    // Tests automatiques uniquement : garde une copie lisible par les tests (jamais quand Resend est configuré).
+    if (process.env.EMAIL_OUTBOX_FILE) {
+      const { appendFile } = await import("node:fs/promises");
+      await appendFile(process.env.EMAIL_OUTBOX_FILE, JSON.stringify({ to, subject, text }) + "\n");
+    }
     return;
   }
   const res = await fetch("https://api.resend.com/emails", {

@@ -33,6 +33,7 @@ jobs:
       PAYMENTS_DEMO: "1"
       AI_FAKE_RESPONSES: "1"
       ADMIN_EMAILS: proprio@test.local
+      EMAIL_OUTBOX_FILE: /tmp/fte-outbox.jsonl
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

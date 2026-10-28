@@ -1,4 +1,5 @@
 // Parrainage, mobile money, détections, langues. Prérequis : base de démo (npm run db:seed) et serveur lancé.
+import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
 
 const uid = Date.now().toString(36);
@@ -470,4 +471,59 @@ test("site en ligne : le propriétaire s'inscrit avec son adresse et obtient l'a
   // Base déjà utilisée par un test précédent : le compte existe, on se connecte.
   if (page.url().includes("erreur=")) await login(page, "proprio@test.local");
   await expect(page).toHaveURL(/\/admin/);
+});
+
+test("mot de passe oublié : lien par courriel, nouveau mot de passe, ancien refusé", async ({ page }) => {
+  const outbox = process.env.EMAIL_OUTBOX_FILE;
+  test.skip(!outbox, "EMAIL_OUTBOX_FILE non défini");
+  const email = `oubli-${uid}@test.local`;
+  await page.goto("/inscription?role=annonceur");
+  await page.fill('input[name="name"]', `Oubli ${uid}`);
+  await page.fill('input[name="email"]', email);
+  await page.fill('input[name="password"]', PW);
+  await page.selectOption('select[name="country"]', "CG");
+  await page.check('input[name="accept"]');
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL(/\/publicite\/campagnes/);
+  await logout(page);
+
+  // Demande du lien depuis la page de connexion.
+  await page.goto("/connexion");
+  await page.getByRole("link", { name: "Mot de passe oublié ?" }).click();
+  await page.fill('input[name="email"]', email);
+  await page.click('button[type="submit"]');
+  await expect(page.getByText(/Si un compte existe avec ce courriel/)).toBeVisible();
+
+  // Le lien reçu par courriel.
+  let link = "";
+  await expect.poll(async () => {
+    const lines = (await readFile(outbox!, "utf8").catch(() => "")).trim().split("\n").filter(Boolean).map((l) => JSON.parse(l));
+    const mail = lines.reverse().find((x: { to: string }) => x.to === email);
+    link = mail?.text.match(/https?:\/\/\S+nouveau-mot-de-passe\?jeton=\S+/)?.[0] ?? "";
+    return link;
+  }).toContain("jeton=");
+
+  await page.goto(new URL(link).pathname + new URL(link).search);
+  await page.fill('input[name="password"]', "nouveau-mdp-42");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL(/\/publicite\/campagnes/);
+  await expect(page.getByText("Mot de passe modifié ✓")).toBeVisible();
+
+  // Le lien ne marche qu'une fois.
+  await page.goto(new URL(link).pathname + new URL(link).search);
+  await page.fill('input[name="password"]', "encore-un-autre");
+  await page.click('button[type="submit"]');
+  await expect(page.getByText(/Ce lien n'est plus valable/)).toBeVisible();
+
+  // L'ancien mot de passe est refusé, le nouveau fonctionne.
+  await logout(page).catch(() => {});
+  await page.goto("/connexion");
+  await page.fill('input[name="email"]', email);
+  await page.fill('input[name="password"]', PW);
+  await page.click('button[type="submit"]');
+  await expect(page.getByText("Courriel ou mot de passe incorrect.")).toBeVisible();
+  await page.fill('input[name="email"]', email);
+  await page.fill('input[name="password"]', "nouveau-mdp-42");
+  await page.click('button[type="submit"]');
+  await expect(page).toHaveURL(/\/publicite\/campagnes/);
 });

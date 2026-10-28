@@ -30,6 +30,8 @@ const fr = {
   meta: {
     title: "Football Talent Exchange",
     description: "La vitrine internationale des footballeurs. Les recruteurs trouvent, regardent et contactent directement les talents.",
+    tagline: "le CV football des joueurs, vu par les recruteurs du monde entier",
+    keywords: "CV football, recrutement football, détection football, joueur de football, footballeur, recruteur football, scout football, essai club de football, football Afrique",
   },
   nav: {
     myProfile: "Mon profil",
@@ -205,6 +207,18 @@ const fr = {
     acceptPrivacy: "politique de confidentialité",
     createButton: "Créer mon compte",
     referredBy: (name: string) => `Invité par ${name} 🎉`,
+    forgotLink: "Mot de passe oublié ?",
+    forgotTitle: "Mot de passe oublié",
+    forgotText: "Indique le courriel de ton compte : tu recevras un lien pour choisir un nouveau mot de passe.",
+    forgotButton: "Recevoir le lien",
+    forgotSent: "Si un compte existe avec ce courriel, un lien vient d'être envoyé. Regarde aussi dans tes courriers indésirables.",
+    resetTitle: "Nouveau mot de passe",
+    resetText: "Choisis ton nouveau mot de passe. Tu seras déconnecté de tes autres appareils.",
+    newPassword: "Nouveau mot de passe",
+    resetButton: "Enregistrer le mot de passe",
+    resetDone: "Mot de passe modifié ✓",
+    resetInvalid: "Ce lien n'est plus valable (déjà utilisé ou plus d'une heure). Demande un nouveau lien.",
+    backToLogin: "← Retour à la connexion",
     errors: {
       invalidCredentials: "Courriel ou mot de passe incorrect.",
       suspended: "Ce compte est suspendu. Contacte le support.",
@@ -858,6 +872,9 @@ const fr = {
     alertBody: (search: string) => `Correspondent à ta recherche « ${search} ».`,
   },
   email: {
+    resetSubject: "Ton nouveau mot de passe Football Talent Exchange",
+    resetBody: (name: string, link: string, minutes: number) =>
+      `Bonjour ${name},\n\nTu as demandé à changer ton mot de passe sur Football Talent Exchange.\n\nChoisis-en un nouveau ici (lien valable ${minutes} minutes) : ${link}\n\nSi ce n'est pas toi, ignore ce message : ton mot de passe actuel reste valable.`,
     guardianSubject: (first: string) => `${first} souhaite créer son profil sur Football Talent Exchange`,
     guardianBody: (first: string, last: string, age: number, link: string) =>
       `Bonjour,\n\n${first} ${last} (${age} ans) a créé un profil de footballeur et vous a indiqué comme parent ou tuteur légal.\n\nSon profil restera invisible des recruteurs tant que vous n'aurez pas donné votre accord. Tous les messages des recruteurs vous seront aussi adressés.\n\nConfirmez ici : ${link}\n\nSi vous ne connaissez pas ce joueur, ignorez ce message.`,

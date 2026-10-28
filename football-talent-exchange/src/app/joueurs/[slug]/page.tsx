@@ -23,11 +23,11 @@ type Props = { params: Promise<{ slug: string }>; searchParams: Promise<Record<s
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const [{ slug }, m, locale] = await Promise.all([params, getMessages(), getLocale()]);
   const p = await loadPlayerBySlug(slug);
-  if (!p || !canView(p, null)) return { title: m.meta.title, robots: { index: false } };
+  if (!p || !canView(p, null)) return { title: { absolute: m.meta.title }, robots: { index: false } };
   const pos = positionLabel(m, p.mainPosition);
   const title = m.profile.metaTitle(`${p.firstName} ${p.lastName}`, pos);
   const description = m.profile.metaDescription(pos, ageOn(p.birthDate), countryName(p.country, locale));
-  return { title, description, openGraph: { title, description, images: p.photoUrl ? [p.photoUrl] : [] } };
+  return { title, description, alternates: { canonical: `/joueurs/${slug}` }, openGraph: { title, description, ...(p.photoUrl ? { images: [p.photoUrl] } : {}) } };
 }
 
 export default async function PlayerPublicPage({ params, searchParams }: Props) {

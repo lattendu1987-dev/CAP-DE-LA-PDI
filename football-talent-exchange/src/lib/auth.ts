@@ -9,7 +9,7 @@ import { db } from "./db";
 const COOKIE = "fte_session";
 const SESSION_DAYS = 30;
 
-const hashToken = (t: string) => createHash("sha256").update(t).digest("hex");
+export const hashToken = (t: string) => createHash("sha256").update(t).digest("hex");
 
 export async function hashPassword(pw: string) {
   return bcrypt.hash(pw, 11);
