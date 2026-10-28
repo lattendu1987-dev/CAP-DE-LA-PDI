@@ -490,7 +490,8 @@ test("mot de passe oublié : lien par courriel, nouveau mot de passe, ancien ref
   // Demande du lien depuis la page de connexion.
   await page.goto("/connexion");
   await page.getByRole("link", { name: "Mot de passe oublié ?" }).click();
-  await page.fill('input[name="email"]', email);
+  await expect(page.getByRole("heading", { name: "Mot de passe oublié" })).toBeVisible();
+  await page.getByTestId("forgot-form").locator('input[name="email"]').fill(email);
   await page.click('button[type="submit"]');
   await expect(page.getByText(/Si un compte existe avec ce courriel/)).toBeVisible();
 
