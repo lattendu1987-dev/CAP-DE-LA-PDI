@@ -1,0 +1,11 @@
+node_modules
+.next
+.env
+*.tsbuildinfo
+next-env.d.ts
+test-results
+playwright-report
+/uploads
+
+# Le dépôt parent ignore "public/" : on le réintègre pour cette application.
+!public/

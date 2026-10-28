@@ -1,0 +1,587 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PLAYER
+  GUARDIAN
+  RECRUITER
+  ADMIN
+  ADVERTISER
+}
+
+enum RecruiterType {
+  CLUB
+  COACH
+  SCOUT
+  AGENT
+  TECHNICAL_DIRECTOR
+}
+
+enum VerificationStatus {
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum Foot {
+  RIGHT
+  LEFT
+  BOTH
+}
+
+enum ContractStatus {
+  FREE
+  UNDER_CONTRACT
+}
+
+enum Availability {
+  IMMEDIATE
+  END_OF_SEASON
+  TRIAL_ONLY
+  NOT_AVAILABLE
+}
+
+enum CompetitionLevel {
+  PRO_TOP
+  PRO_LOWER
+  SEMI_PRO
+  AMATEUR
+  UNIVERSITY
+  YOUTH_ACADEMY
+  YOUTH
+}
+
+enum PlanCode {
+  FREE
+  PLAYER_PREMIUM
+  RECRUITER_PRO
+  RECRUITER_CLUB
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  passwordHash     String
+  name             String
+  role             Role
+  country          String   @default("CA")
+  locale           String   @default("fr")
+  identityVerified Boolean  @default(false)
+  suspended        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  referralCode     String?  @unique
+  referredById     String?
+  referredBy       User?    @relation("Referrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals        User[]   @relation("Referrals")
+
+  sessions          Session[]
+  player            PlayerProfile?     @relation("PlayerUser")
+  guardedPlayers    PlayerProfile[]    @relation("GuardianUser")
+  recruiter         RecruiterProfile?
+  subscription      Subscription?
+  participations    Participant[]
+  messages          Message[]
+  reportsMade       Report[]           @relation("Reporter")
+  reportsReceived   Report[]           @relation("Reported")
+  blocks            Block[]            @relation("Blocker")
+  blockedBy         Block[]            @relation("Blocked")
+  payments          Payment[]
+  commissionsEarned Commission[]       @relation("CommissionEarner")
+  commissionsFrom   Commission[]       @relation("CommissionSource")
+  payouts           Payout[]
+  trialsPosted      TrialEvent[]
+  adCampaigns       AdCampaign[]
+  trialApplications TrialApplication[]
+  pushSubscriptions PushSubscription[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model PlayerProfile {
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  userId            String    @unique
+  user              User      @relation("PlayerUser", fields: [userId], references: [id], onDelete: Cascade)
+  guardianId        String?
+  guardian          User?     @relation("GuardianUser", fields: [guardianId], references: [id], onDelete: SetNull)
+  guardianEmail     String?
+  guardianConsentAt DateTime?
+
+  firstName     String
+  lastName      String
+  birthDate     DateTime
+  nationalities String[]
+  country       String
+  city          String?
+  languages     String[]
+  photoUrl      String?
+  photoKey      String?
+  bio           String?
+  /// CV déposé par le joueur (PDF, Word ou photo), lisible par les recruteurs vérifiés.
+  cvKey         String?
+  cvName        String?
+  cvUploadedAt  DateTime?
+
+  heightCm       Int?
+  weightKg       Int?
+  foot           Foot?
+  mainPosition   String?
+  otherPositions String[]
+
+  currentLevel        CompetitionLevel?
+  contractStatus      ContractStatus    @default(FREE)
+  contractEnd         DateTime?
+  hasAgent            Boolean           @default(false)
+  availability        Availability      @default(IMMEDIATE)
+  willingToRelocate   Boolean           @default(false)
+  relocationCountries String[]
+
+  published     Boolean   @default(true)
+  featuredUntil DateTime?
+  /// Option « Boost » payée à l'unité : profil en tête des recherches jusqu'à cette date.
+  boostedUntil  DateTime?
+  viewCount     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  career         CareerEntry[]
+  stats          SeasonStat[]
+  videos         Video[]
+  shortlistItems ShortlistItem[]
+  evaluations    Evaluation[]
+  views          ProfileView[]
+}
+
+model CareerEntry {
+  id        String            @id @default(cuid())
+  playerId  String
+  player    PlayerProfile     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  club      String
+  kind      String            @default("CLUB")
+  level     CompetitionLevel?
+  country   String?
+  startYear Int
+  endYear   Int?
+  notes     String?
+}
+
+model SeasonStat {
+  id          String        @id @default(cuid())
+  playerId    String
+  player      PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  season      String
+  club        String
+  matches     Int           @default(0)
+  minutes     Int           @default(0)
+  goals       Int           @default(0)
+  assists     Int           @default(0)
+  yellowCards Int           @default(0)
+  redCards    Int           @default(0)
+  cleanSheets Int           @default(0)
+  saves       Int           @default(0)
+  verified    Boolean       @default(false)
+}
+
+model Video {
+  id         String        @id @default(cuid())
+  playerId   String
+  player     PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  title      String
+  url        String
+  kind       String        @default("HIGHLIGHTS")
+  storageKey String?
+  sizeBytes  Int?
+  createdAt  DateTime      @default(now())
+  moments    VideoMoment[]
+}
+
+model VideoMoment {
+  id      String @id @default(cuid())
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  seconds Int
+  label   String
+}
+
+model RecruiterProfile {
+  id           String             @id @default(cuid())
+  userId       String             @unique
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         RecruiterType
+  organization String
+  website      String?
+  fifaLicense  String?
+  country      String
+  verification VerificationStatus @default(PENDING)
+  createdAt    DateTime           @default(now())
+
+  shortlists    Shortlist[]
+  savedSearches SavedSearch[]
+  evaluations   Evaluation[]
+}
+
+model Shortlist {
+  id          String           @id @default(cuid())
+  recruiterId String
+  recruiter   RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  name        String
+  createdAt   DateTime         @default(now())
+  items       ShortlistItem[]
+}
+
+model ShortlistItem {
+  id          String        @id @default(cuid())
+  shortlistId String
+  shortlist   Shortlist     @relation(fields: [shortlistId], references: [id], onDelete: Cascade)
+  playerId    String
+  player      PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  note        String?
+  createdAt   DateTime      @default(now())
+
+  @@unique([shortlistId, playerId])
+}
+
+model Evaluation {
+  id          String           @id @default(cuid())
+  recruiterId String
+  recruiter   RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  playerId    String
+  player      PlayerProfile    @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  technical   Int
+  physical    Int
+  tactical    Int
+  mental      Int
+  comment     String?
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([recruiterId, playerId])
+}
+
+model SavedSearch {
+  id            String           @id @default(cuid())
+  recruiterId   String
+  recruiter     RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  name          String
+  query         String
+  alertsEnabled Boolean          @default(true)
+  lastAlertAt   DateTime         @default(now())
+  createdAt     DateTime         @default(now())
+}
+
+model ProfileView {
+  id        String        @id @default(cuid())
+  playerId  String
+  player    PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  viewerId  String?
+  createdAt DateTime      @default(now())
+}
+
+model Conversation {
+  id           String        @id @default(cuid())
+  playerId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  participants Participant[]
+  messages     Message[]
+}
+
+model Participant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt     DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  scamFlags      String[]
+  trialDate      DateTime?
+  trialPlace     String?
+  createdAt      DateTime     @default(now())
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  reporterId String
+  reporter   User         @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedId String
+  reported   User         @relation("Reported", fields: [reportedId], references: [id], onDelete: Cascade)
+  reason     String
+  details    String?
+  status     ReportStatus @default(OPEN)
+  createdAt  DateTime     @default(now())
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  blockerId String
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                 PlanCode
+  interval             BillingInterval    @default(MONTH)
+  status               SubscriptionStatus
+  amountCents          Int                @default(0)
+  currency             String             @default("usd")
+  currentPeriodEnd     DateTime
+  stripeCustomerId     String?
+  stripeSubscriptionId String?            @unique
+  updatedAt            DateTime           @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+/// Paiement unique (mobile money) ou facture d'abonnement (Stripe).
+model Payment {
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider        String
+  reference       String          @unique
+  /// Ce qui est acheté : un abonnement, un Boost de visibilité ou une publicité.
+  purpose         PaymentPurpose  @default(SUBSCRIPTION)
+  plan            PlanCode?
+  interval        BillingInterval?
+  boostDays       Int?
+  adCampaignId    String?
+  amountMinor     Int
+  currency        String
+  usdCents        Int
+  creditUsedCents Int             @default(0)
+  status          PaymentStatus   @default(PENDING)
+  createdAt       DateTime        @default(now())
+  paidAt          DateTime?
+  commission      Commission?
+}
+
+enum PaymentPurpose {
+  SUBSCRIPTION
+  BOOST
+  AD
+}
+
+enum CommissionStatus {
+  PENDING
+  AVAILABLE
+  CANCELED
+}
+
+/// Commission de parrainage, en cents USD. Disponible après la période de garantie.
+model Commission {
+  id          String           @id @default(cuid())
+  earnerId    String
+  earner      User             @relation("CommissionEarner", fields: [earnerId], references: [id], onDelete: Cascade)
+  sourceId    String?
+  source      User?            @relation("CommissionSource", fields: [sourceId], references: [id], onDelete: SetNull)
+  paymentId   String?          @unique
+  payment     Payment?         @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  externalRef String?          @unique
+  amountCents Int
+  status      CommissionStatus @default(PENDING)
+  availableAt DateTime
+  createdAt   DateTime         @default(now())
+}
+
+enum PayoutStatus {
+  REQUESTED
+  PAID
+  REJECTED
+}
+
+/// Mouvement du solde : retrait demandé, ou crédit utilisé pour un abonnement (method = CREDIT).
+model Payout {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountCents Int
+  method      String
+  destination String?
+  status      PayoutStatus @default(REQUESTED)
+  createdAt   DateTime     @default(now())
+  processedAt DateTime?
+}
+
+/// Détection / essai ouvert publié par un recruteur.
+model TrialEvent {
+  id           String             @id @default(cuid())
+  recruiterId  String
+  recruiter    User               @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  city         String
+  country      String
+  /// Adresse exacte du lieu (stade, terrain) et coordonnées pour la carte.
+  address      String?
+  latitude     Float?
+  longitude    Float?
+  /// Conditions de participation (équipement, documents, niveau attendu).
+  conditions   String?
+  startsAt     DateTime
+  deadline     DateTime
+  minAge       Int?
+  maxAge       Int?
+  positions    String[]
+  free         Boolean            @default(true)
+  createdAt    DateTime           @default(now())
+  applications TrialApplication[]
+}
+
+enum ApplicationStatus {
+  SENT
+  SHORTLISTED
+  INVITED
+  DECLINED
+}
+
+model TrialApplication {
+  id           String            @id @default(cuid())
+  trialId      String
+  trial        TrialEvent        @relation(fields: [trialId], references: [id], onDelete: Cascade)
+  playerUserId String
+  playerUser   User              @relation(fields: [playerUserId], references: [id], onDelete: Cascade)
+  message      String?
+  status       ApplicationStatus @default(SENT)
+  createdAt    DateTime          @default(now())
+
+  @@unique([trialId, playerUserId])
+}
+
+/// Abonnement aux notifications sur le téléphone (Web Push), un par appareil.
+model PushSubscription {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+}
+
+enum NewsKind {
+  OPPORTUNITY
+  NEWS
+}
+
+/// Actualités et opportunités repérées automatiquement dans des flux publics (titre, résumé court, lien vers la source).
+model NewsItem {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  summary     String
+  imageUrl    String?
+  source      String
+  language    String
+  kind        NewsKind
+  publishedAt DateTime
+  hidden      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([kind, language, publishedAt])
+}
+
+enum AdFormat {
+  BANNER
+  INTERSTITIAL
+}
+
+enum AdAudience {
+  ALL
+  PLAYERS
+  RECRUITERS
+}
+
+enum AdStatus {
+  PENDING_PAYMENT
+  ACTIVE
+  ENDED
+  REJECTED
+  STOPPED
+}
+
+/// Campagne publicitaire achetée en libre-service par un annonceur (sponsor, équipementier, académie…).
+model AdCampaign {
+  id           String     @id @default(cuid())
+  advertiserId String
+  advertiser   User       @relation(fields: [advertiserId], references: [id], onDelete: Cascade)
+  headline     String
+  linkUrl      String
+  mediaKey     String
+  mediaType    String
+  format       AdFormat
+  audience     AdAudience @default(ALL)
+  countries    String[]
+  days         Int
+  priceCents   Int
+  status       AdStatus   @default(PENDING_PAYMENT)
+  rejectReason String?
+  startsAt     DateTime?
+  endsAt       DateTime?
+  impressions  Int        @default(0)
+  clicks       Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  @@index([status, format, endsAt])
+}

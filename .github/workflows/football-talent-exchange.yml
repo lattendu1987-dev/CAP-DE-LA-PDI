@@ -1,0 +1,60 @@
+name: Football Talent Exchange
+
+on:
+  push:
+    paths: ["football-talent-exchange/**", ".github/workflows/football-talent-exchange.yml"]
+  pull_request:
+    paths: ["football-talent-exchange/**", ".github/workflows/football-talent-exchange.yml"]
+
+defaults:
+  run:
+    working-directory: football-talent-exchange
+
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-24.04  # Playwright 1.58 ne gère pas Ubuntu 26.04
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: fte
+          POSTGRES_PASSWORD: fte
+          POSTGRES_DB: fte
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://fte:fte@localhost:5432/fte
+      AUTH_SECRET: ci-secret
+      CRON_SECRET: ci-cron
+      APP_URL: http://localhost:3000
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Tests : paiements de démonstration et réponses d'IA fixes (jamais sur le vrai site)
+      PAYMENTS_DEMO: "1"
+      AI_FAKE_RESPONSES: "1"
+      ADMIN_EMAILS: proprio@test.local
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: football-talent-exchange/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npx prisma db push
+      - run: npm run db:seed
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Clés de notification de test
+        run: |
+          KEYS=$(npx web-push generate-vapid-keys --json)
+          echo "VAPID_PUBLIC_KEY=$(echo "$KEYS" | node -pe 'JSON.parse(require("fs").readFileSync(0)).publicKey')" >> "$GITHUB_ENV"
+          echo "VAPID_PRIVATE_KEY=$(echo "$KEYS" | node -pe 'JSON.parse(require("fs").readFileSync(0)).privateKey')" >> "$GITHUB_ENV"
+          echo "PUSH_ALLOW_LOCAL_ENDPOINTS=1" >> "$GITHUB_ENV"
+      - name: Parcours de bout en bout
+        run: |
+          npx next start &
+          npx --yes wait-on@8.0.3 http://localhost:3000
+          npx playwright test
